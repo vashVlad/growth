@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 
 interface CalendarProps {
     datesWithEntries: string[]; // ['2023-10-27', '2023-10-28']
+    selectedDate?: string | null;
+    onDateSelect?: (date: string) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries }) => {
+export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDate, onDateSelect }) => {
     const [currentDate] = useState(new Date());
 
     // Get days in current month
@@ -28,26 +30,24 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries }) => {
     }
 
     const isEntryDate = (date: Date) => {
-        const iso = date.toLocaleDateString('en-CA'); // YYYY-MM-DD in local time usually, but safest to construct manually if timezone issues arise. 
-        // Actually, let's just stick to straight YYYY-MM-DD from the input strings.
-        // To match locally created "YYYY-MM-DD" from new Date().toISOString().split('T')[0] which is UTC... 
-        // Ah, wait. new Date().toISOString() gives UTC. 
-        // In Write page I used: new Date().toISOString().split('T')[0] which captures UTC date.
-        // So here I should check matching ISO strings.
-        const dateStr = date.toISOString().split('T')[0];
+        // Use local YYYY-MM-DD for consistency with entries
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
         return datesWithEntries.includes(dateStr);
     };
 
+    const formatDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-secondary p-4 mb-6"
-            style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: '1rem',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                border: '1px solid var(--secondary)',
-                padding: '1.5rem',
-                marginBottom: '1.5rem'
-            }}
+        <div className="card mb-6"
+            style={{ marginBottom: '1.5rem' }}
         >
             <h3 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--primary)' }}>
                 {monthName} {year}
@@ -55,27 +55,51 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries }) => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.25rem', textAlign: 'center' }}>
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-                    <div key={`${d}-${i}`} style={{ fontSize: '0.75rem', color: '#888', paddingBottom: '0.5rem' }}>{d}</div>
+                    <div key={`${d}-${i}`} style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', paddingBottom: '0.5rem' }}>{d}</div>
                 ))}
 
                 {days.map((date, idx) => {
                     if (!date) return <div key={`empty-${idx}`} />;
 
                     const hasEntry = isEntryDate(date);
+                    const dateStr = formatDate(date);
+                    const isSelected = selectedDate === dateStr;
                     const isToday = date.toDateString() === new Date().toDateString();
 
+                    // Determine background color priority: Selected > Entry > Today > Default
+                    let bg = 'transparent';
+                    let color = 'inherit';
+                    let fontWeight = 'normal';
+
+                    if (isSelected) {
+                        bg = 'var(--accent)';
+                        color = 'var(--accent-foreground)';
+                        fontWeight = 'bold';
+                    } else if (hasEntry) {
+                        bg = 'var(--primary)';
+                        color = 'var(--primary-foreground)';
+                        fontWeight = 'bold';
+                    } else if (isToday) {
+                        bg = 'var(--secondary)';
+                        fontWeight = 'bold';
+                    }
+
                     return (
-                        <div key={idx} style={{
-                            aspectRatio: '1/1',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '0.875rem',
-                            borderRadius: '50%',
-                            backgroundColor: hasEntry ? 'var(--primary)' : (isToday ? '#E8E8E3' : 'transparent'),
-                            color: hasEntry ? 'white' : 'inherit',
-                            fontWeight: (hasEntry || isToday) ? 'bold' : 'normal'
-                        }}>
+                        <div key={idx}
+                            onClick={() => onDateSelect && onDateSelect(dateStr)}
+                            style={{
+                                aspectRatio: '1/1',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.875rem',
+                                borderRadius: '50%',
+                                backgroundColor: bg,
+                                color: color,
+                                fontWeight: fontWeight,
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                            }}>
                             {date.getDate()}
                         </div>
                     );

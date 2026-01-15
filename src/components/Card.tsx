@@ -11,23 +11,18 @@ export const Card: React.FC<CardProps> = ({ children, className = '', onClick, a
     return (
         <div
             onClick={onClick}
-            className={`bg-white rounded-2xl shadow-sm border border-secondary p-4 ${className}`}
+            className={`card ${className}`}
             style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: '1rem',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                border: '1px solid var(--secondary)',
-                padding: '1.5rem',
                 position: 'relative',
                 ...((onClick) ? { cursor: 'pointer' } : {})
             }}
         >
+            {children}
             {actions && (
-                <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border)' }}>
                     {actions}
                 </div>
             )}
-            {children}
-        </div>
+        </div >
     );
 };

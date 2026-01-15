@@ -1,22 +1,117 @@
 :root {
-  /* Calm, nature-inspired palette */
-  --background: #FDFDF8;
-  /* Creamy paper */
-  --foreground: #2D2D2A;
-  /* Soft charcoal */
+  /* Core Palette - Nature Inspired */
+  --color-green-800: #2D4A3E;
+  --color-green-600: #4A7C59;
+  --color-green-500: #5D9B6F;
+  --color-green-100: #E8F5E9;
 
-  --primary: #4A7C59;
-  /* Muted Green */
+  --color-cream-50: #FDFDF8;
+  --color-cream-100: #F7F7F2;
+  --color-cream-200: #E8E8E3;
+
+  --color-stone-900: #1A1A19;
+  --color-stone-800: #2D2D2A;
+  --color-stone-500: #666666;
+  --color-stone-300: #CCCCCC;
+
+  --color-gold-500: #D4A373;
+  --color-gold-600: #C29263;
+
+  /* Semantic Variables - Light Mode */
+  --background: var(--color-cream-50);
+  --surface: #FFFFFF;
+  --surface-highlight: var(--color-cream-100);
+
+  --foreground: var(--color-stone-800);
+  --foreground-muted: var(--color-stone-500);
+
+  --primary: var(--color-green-600);
   --primary-foreground: #FFFFFF;
 
-  --secondary: #E8E8E3;
-  /* Light grey/beige for specific elements */
-  --secondary-foreground: #2D2D2A;
+  --secondary: var(--color-cream-200);
+  --secondary-foreground: var(--color-stone-800);
 
-  --accent: #D4A373;
-  /* Earthy accent (optional) */
+  --accent: var(--color-gold-500);
+  --accent-foreground: #FFFFFF;
+
+  --border: var(--color-cream-200);
+  --ring: var(--color-green-500);
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius: 1rem;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(74, 124, 89, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Semantic Variables - Dark Mode */
+    --background: var(--color-stone-900);
+    --surface: var(--color-stone-800);
+    --surface-highlight: #3D3D3A;
+
+    --foreground: var(--color-cream-100);
+    --foreground-muted: var(--color-stone-300);
+
+    --primary: var(--color-green-500);
+    --primary-foreground: #FFFFFF;
+
+    --secondary: #3D3D3A;
+    --secondary-foreground: var(--color-cream-100);
+
+    --accent: var(--color-gold-600);
+    --accent-foreground: #FFFFFF;
+
+    --border: #3D3D3A;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Manual Theme Overrides */
+html.dark {
+  --background: var(--color-stone-900);
+  --surface: var(--color-stone-800);
+  --surface-highlight: #3D3D3A;
+
+  --foreground: var(--color-cream-100);
+  --foreground-muted: var(--color-stone-300);
+
+  --primary: var(--color-green-500);
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #3D3D3A;
+  --secondary-foreground: var(--color-cream-100);
+
+  --accent: var(--color-gold-600);
+  --accent-foreground: #FFFFFF;
+
+  --border: #3D3D3A;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+html.light {
+  --background: var(--color-cream-50);
+  --surface: #FFFFFF;
+  --surface-highlight: var(--color-cream-100);
+
+  --foreground: var(--color-stone-800);
+  --foreground-muted: var(--color-stone-500);
+
+  --primary: var(--color-green-600);
+  --primary-foreground: #FFFFFF;
+
+  --secondary: var(--color-cream-200);
+  --secondary-foreground: var(--color-stone-800);
+
+  --accent: var(--color-gold-500);
+  --accent-foreground: #FFFFFF;
+
+  --border: var(--color-cream-200);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(74, 124, 89, 0.1);
 }
 
 * {
@@ -35,19 +130,54 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-
 
 a {
   color: inherit;
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Utilities */
+.card {
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:active {
+  opacity: 0.9;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--foreground);
+  font-size: 1rem;
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px var(--color-green-100);
 }
 
 @keyframes fadeIn {
@@ -62,6 +192,69 @@ a {
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+
+/* Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--surface);
+  /* Fallback */
+  background-color: rgba(253, 253, 248, 0.95);
+  /* Matches --color-cream-50 */
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: calc(60px + env(safe-area-inset-bottom));
+  z-index: 100;
+  transition: background-color 0.3s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bottom-nav {
+    background-color: rgba(26, 26, 25, 0.95);
+    /* Matches --color-stone-900 */
+  }
+}
+
+html.dark .bottom-nav {
+  background-color: rgba(26, 26, 25, 0.95);
+  /* Matches --color-stone-900 */
+}
+
+html.light .bottom-nav {
+  background-color: rgba(253, 253, 248, 0.95);
+  /* Matches --color-cream-50 */
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--foreground-muted);
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  flex: 1;
+  height: 100%;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  opacity: 1;
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+.nav-label {
+  font-size: 0.75rem;
+  font-weight: 500;
 }

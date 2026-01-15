@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div style={{
+    <div className="animate-fade-in" style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -11,49 +11,72 @@ export default function Home() {
       minHeight: '100vh',
       padding: '2rem',
       textAlign: 'center',
-      background: 'linear-gradient(135deg, var(--background) 0%, #F0F4F0 100%)',
+      backgroundColor: 'var(--background)'
     }}>
       <div style={{ marginBottom: '2rem', width: '120px', height: '120px', position: 'relative' }}>
-        {/* Placeholder for icon if I had one, or just text */}
         <div style={{
-          width: '100%', height: '100%', borderRadius: '24px',
-          backgroundColor: 'var(--primary)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center',
-          color: 'white', fontSize: '3rem'
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'var(--primary)',
+          borderRadius: '24px',
+          transform: 'rotate(-5deg)',
+          opacity: 0.2,
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }} />
+        <div style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'var(--primary)',
+          borderRadius: '24px',
+          transform: 'rotate(10deg)',
+          opacity: 0.4,
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }} />
+        <div style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '3rem',
+          position: 'relative',
+          zIndex: 10
         }}>
-          🌿
+          🌱
         </div>
       </div>
 
       <h1 style={{
         fontSize: '2.5rem',
         fontWeight: 'bold',
-        color: 'var(--primary)',
-        marginBottom: '0.5rem'
+        marginBottom: '1rem',
+        color: 'var(--primary)'
       }}>
         Growth Book
       </h1>
 
       <p style={{
-        fontSize: '1.125rem',
-        color: '#666',
+        fontSize: '1.25rem',
+        color: 'var(--foreground-muted)',
         marginBottom: '3rem',
-        maxWidth: '300px'
+        maxWidth: '300px',
+        lineHeight: 1.6
       }}>
-        Your daily companion for reflection, gratitude, and personal growth.
+        Your daily companion for reflection, clarity, and personal growth.
       </p>
 
       <Link
         href="/today"
+        className="btn-primary"
         style={{
-          backgroundColor: 'var(--primary)',
-          color: 'white',
-          padding: '1rem 2.5rem',
-          borderRadius: '50px',
           fontSize: '1.125rem',
-          fontWeight: '600',
-          boxShadow: '0 4px 12px rgba(74, 124, 89, 0.3)',
-          transition: 'transform 0.2s ease',
+          padding: '1rem 3rem',
+          textDecoration: 'none',
+          boxShadow: '0 4px 14px 0 rgba(74, 124, 89, 0.39)'
         }}
       >
         Start Journaling

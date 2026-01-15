@@ -28,8 +28,11 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false, // Often desired for "app-like" feel, use with caution for a11y
-  themeColor: "#FDFDF8",
+  userScalable: false,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FDFDF8" },
+    { media: "(prefers-color-scheme: dark)", color: "#1A1A19" },
+  ],
 };
 
 export default function RootLayout({
