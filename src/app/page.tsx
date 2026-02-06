@@ -17,8 +17,8 @@ export default function Home() {
         <Image
           src="/logo.png"
           alt="Growth Book Logo"
-          width={120}
-          height={120}
+          width={220}
+          height={220}
           priority
           style={{
             objectFit: 'contain',
