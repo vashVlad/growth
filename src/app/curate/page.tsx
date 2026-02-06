@@ -16,6 +16,15 @@ const getDraftEntries = (draft: JournalDraft, allEntries: Entry[]) => {
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };
 
+// Default sections structure (formerly editable)
+const DEFAULT_SECTIONS = [
+    { id: 'opening', title: 'Start', order: 0 },
+    { id: 'breakthroughs', title: 'Breakthroughs', order: 1 },
+    { id: 'wins', title: 'Wins', order: 2 },
+    { id: 'losses', title: 'Lessons Learned', order: 3 },
+    { id: 'chronological', title: 'Daily Reflections', order: 4 },
+];
+
 export default function CurateJournalPage() {
     const router = useRouter();
     const { entries, saveDraft } = useJournal();
@@ -26,23 +35,14 @@ export default function CurateJournalPage() {
     const [includeHighlights, setIncludeHighlights] = useState(true);
     const [selectedEntryIds, setSelectedEntryIds] = useState<Set<string>>(new Set());
 
-    // Step 2: Structure State
-    const [sections, setSections] = useState([
-        { id: 'opening', title: 'Start', order: 0 },
-        { id: 'breakthroughs', title: 'Breakthroughs', order: 1 },
-        { id: 'wins', title: 'Wins', order: 2 },
-        { id: 'losses', title: 'Lessons Learned', order: 3 },
-        { id: 'chronological', title: 'Daily Reflections', order: 4 },
-    ]);
-
-    // Step 3: Design State (NEW)
+    // Step 2: Design State (NEW) -- Structure step removed
     const [selectedTheme, setSelectedTheme] = useState<PdfThemeName>('minimal');
 
-    // Step 4: Intent State
+    // Step 3: Intent State
     const [intent, setIntent] = useState('');
     const [draftTitle, setDraftTitle] = useState('My Journal');
 
-    // Step 5: Preview
+    // Step 4: Preview
     const [previewMode, setPreviewMode] = useState<'scroll' | 'book'>('book');
 
     // Memoize Filtered Entries (Step 1)
@@ -78,7 +78,7 @@ export default function CurateJournalPage() {
                 includeHighlights
             },
             includedEntryIds: Array.from(selectedEntryIds),
-            sections
+            sections: DEFAULT_SECTIONS
         };
         saveDraft(newDraft);
         router.push('/progress');
@@ -98,8 +98,8 @@ export default function CurateJournalPage() {
             includeHighlights
         },
         includedEntryIds: Array.from(selectedEntryIds),
-        sections
-    }), [draftTitle, intent, dateRange, includeHighlights, selectedEntryIds, sections]);
+        sections: DEFAULT_SECTIONS
+    }), [draftTitle, intent, dateRange, includeHighlights, selectedEntryIds]);
 
     // Memoized Preview Entries
     const previewEntries = React.useMemo(() => {
@@ -131,19 +131,26 @@ export default function CurateJournalPage() {
     return (
         <div style={{ padding: '2rem 1.5rem', minHeight: '100vh', paddingBottom: '100px' }} className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
-                <button onClick={() => router.back()} style={{ background: 'none', border: 'none', fontSize: '1.5rem', marginRight: '1rem', cursor: 'pointer', color: 'var(--foreground-muted)' }}>←</button>
+                <button
+                    onClick={() => {
+                        if (step > 1) setStep(step - 1);
+                        else router.back();
+                    }}
+                    style={{ background: 'none', border: 'none', fontSize: '1.25rem', marginRight: '1rem', cursor: 'pointer', color: 'var(--foreground-muted)' }}
+                >
+                    ← Back
+                </button>
                 <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
                     {step === 1 && "Curate Your Journal"}
-                    {step === 2 && "Structure & Flow"}
-                    {step === 3 && "Design Archetype"}
-                    {step === 4 && "Set Your Intent"}
-                    {step === 5 && "Preview Artifact"}
+                    {step === 2 && "Design Archetype"}
+                    {step === 3 && "Set Your Intent"}
+                    {step === 4 && "Preview Artifact"}
                 </h1>
             </div>
 
             {/* Progress Bar */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '2rem' }}>
-                {[1, 2, 3, 4, 5].map(s => (
+                {[1, 2, 3, 4].map(s => (
                     <div key={s} style={{ flex: 1, height: '4px', borderRadius: '2px', background: s <= step ? 'var(--primary)' : 'var(--border)' }} />
                 ))}
             </div>
@@ -162,7 +169,7 @@ export default function CurateJournalPage() {
                                     onClick={async () => {
                                         const { createStressTestEntry } = await import('@/utils/stressTest');
                                         const testEntry = createStressTestEntry();
-                                        alert("Stress test entry created. To see it in the preview:\n1. Open your browser console.\n2. Note that this architecture requires re-hydrating 'entries'.\n\nFor now, the PDF Layout Fix (wrap=true) is applied globally. You can verify it by finding any long entry you already have.");
+                                        alert("Stress test entry created.");
                                     }}
                                     style={{ fontSize: '0.7rem', color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}
                                 >
@@ -221,37 +228,12 @@ export default function CurateJournalPage() {
                         ))}
                     </div>
 
-                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(2)}>Next: Structure</button>
+                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(2)}>Next: Design</button>
                 </div>
             )}
 
-            {/* STEP 2: STRUCTURE (Unchanged Logic, visually same) */}
+            {/* STEP 2: DESIGN SELECTION */}
             {step === 2 && (
-                <div className="animate-fade-in">
-                    <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>This is how your journal will be organized. You can rename sections to make it yours.</p>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {sections.sort((a, b) => a.order - b.order).map((section, idx) => (
-                            <div key={section.id} className="card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <span style={{ color: 'var(--foreground-muted)', fontWeight: 'bold' }}>{idx + 1}</span>
-                                <input
-                                    className="input-field"
-                                    value={section.title}
-                                    onChange={(e) => {
-                                        const newSections = sections.map(s => s.id === section.id ? { ...s, title: e.target.value } : s);
-                                        setSections(newSections);
-                                    }}
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(3)}>Next: Design</button>
-                </div>
-            )}
-
-            {/* STEP 3: DESIGN SELECTION */}
-            {step === 3 && (
                 <div className="animate-fade-in">
                     <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>Choose what feels right. You can change this anytime.</p>
 
@@ -280,27 +262,17 @@ export default function CurateJournalPage() {
                                         {isSelected && <div style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Selected</div>}
                                     </div>
                                     <p style={{ fontSize: '0.9rem', color: 'var(--foreground-muted)', lineHeight: '1.5' }}>{theme.description}</p>
-
-                                    {/* Mini visual cue */}
-                                    <div style={{
-                                        marginTop: '0.5rem',
-                                        height: '6px',
-                                        width: '40px',
-                                        background: 'var(--border)',
-                                        borderRadius: '3px',
-                                        alignSelf: themeKey === 'minimal' || themeKey === 'nature' ? 'flex-start' : 'center'
-                                    }} />
                                 </div>
                             );
                         })}
                     </div>
 
-                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(4)}>Next: Intent</button>
+                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(3)}>Next: Intent</button>
                 </div>
             )}
 
-            {/* STEP 4: INTENT */}
-            {step === 4 && (
+            {/* STEP 3: INTENT */}
+            {step === 3 && (
                 <div className="animate-fade-in">
                     <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>Before you finish, take a moment to reflect.</p>
 
@@ -332,12 +304,12 @@ export default function CurateJournalPage() {
                         />
                     </div>
 
-                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(5)}>Preview Artifact</button>
+                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(4)}>Preview Artifact</button>
                 </div>
             )}
 
-            {/* STEP 5: PREVIEW */}
-            {step === 5 && (
+            {/* STEP 4: PREVIEW */}
+            {step === 4 && (
                 <div className="animate-fade-in">
                     {/* Preview Controls */}
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', gap: '1rem' }}>
@@ -460,7 +432,7 @@ export default function CurateJournalPage() {
                     </div>
 
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '4rem' }}>
-                        <button className="btn-primary" style={{ flex: 1, background: 'var(--surface)', color: 'var(--foreground)', border: '1px solid var(--border)' }} onClick={() => setStep(4)}>Edit</button>
+                        <button className="btn-primary" style={{ flex: 1, background: 'var(--surface)', color: 'var(--foreground)', border: '1px solid var(--border)' }} onClick={() => setStep(3)}>Edit</button>
                         <button className="btn-primary" style={{ flex: 1 }} onClick={handleSave}>Save to Library</button>
                     </div>
 

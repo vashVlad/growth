@@ -133,6 +133,24 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Responsive Actions */
+.responsive-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .responsive-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .responsive-actions>* {
+    width: 100%;
+    margin: 0 !important;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: none;

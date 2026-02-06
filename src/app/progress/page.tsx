@@ -255,7 +255,7 @@ export default function ProgressPage() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', position: 'relative', zIndex: 10 }}>
                 <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Your Journey</h1>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div className="responsive-actions">
                     <Link
                         href="/curate"
                         style={{
@@ -268,6 +268,7 @@ export default function ProgressPage() {
                             textDecoration: 'none',
                             display: 'flex',
                             alignItems: 'center',
+                            justifyContent: 'center',
                             gap: '0.5rem'
                         }}
                     >
@@ -573,14 +574,16 @@ export default function ProgressPage() {
                                                 {sectionEntries.map(entry => (
                                                     <div key={entry.id} className="card" style={{ padding: '1.5rem' }}>
                                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.75rem' }}>
-                                                            <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--foreground)' }}>
-                                                                {formatDateForDisplay(entry.date)}
+                                                            <div>
+                                                                <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--foreground)' }}>
+                                                                    {formatDateForDisplay(entry.date)}
+                                                                </div>
+                                                                <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '2px' }}>
+                                                                    {entry.reflectionMode === 'growth' ? 'Growth Reflection' : 'Purpose Reflection'}
+                                                                </div>
                                                             </div>
                                                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                                                 {/* Reflection Indicators */}
-                                                                {entry.reflectionMode === 'growth' && (
-                                                                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', border: '1px solid var(--primary)', borderRadius: '4px', padding: '2px 6px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Growth</span>
-                                                                )}
                                                                 {entry.reflectionAnchors?.excitedText && <span title="Excited">⚡</span>}
                                                                 {entry.reflectionAnchors?.drainedText && <span title="Drained">🔋</span>}
                                                                 {entry.reflectionAnchors?.gratefulText && <span title="Grateful">🙏</span>}
