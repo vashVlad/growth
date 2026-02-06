@@ -166,6 +166,12 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({ draft, entries, themeN
     }), [sortedEntries, draft.criteria.startDate, draft.criteria.endDate]);
 
 
+
+
+
+
+
+
     const renderStructuredResponse = (entry: Entry) => {
         // ... (render logic remains same, pure function)
         const isGrowth = entry.reflectionMode === 'growth';

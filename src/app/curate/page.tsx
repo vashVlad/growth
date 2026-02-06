@@ -147,9 +147,29 @@ export default function CurateJournalPage() {
                         if (step > 1) setStep(step - 1);
                         else router.back();
                     }}
-                    style={{ background: 'none', border: 'none', fontSize: '1.25rem', marginRight: '1rem', cursor: 'pointer', color: 'var(--foreground-muted)' }}
+                    aria-label="Go back"
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: 'var(--primary)',
+                        padding: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: '0.5rem',
+                        minWidth: '44px',
+                        minHeight: '44px',
+                        borderRadius: '50%',
+                        transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-highlight)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                    ← Back
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 12H5" />
+                        <path d="M12 19l-7-7 7-7" />
+                    </svg>
                 </button>
                 <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
                     {step === 1 && "Curate Your Journal"}

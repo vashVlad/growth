@@ -253,9 +253,103 @@ export default function ProgressPage() {
                 />
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', position: 'relative', zIndex: 10 }}>
-                <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Your Journey</h1>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '400px', marginLeft: 'auto' }}>
+            <div style={{ marginBottom: '2rem', position: 'relative', zIndex: 10 }}>
+                {/* 1. H1 Header */}
+                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'center' }}>Your Journey</h1>
+
+                {/* 2. Reflection Spark */}
+                {showContextPrompt && contextPrompt && (
+                    <div className="card animate-fade-in" style={{ marginBottom: '1.5rem', borderTop: '4px solid var(--accent)', background: 'var(--surface-highlight)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div style={{ fontSize: '1.5rem' }}>✨</div>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--primary)', fontWeight: 'bold' }}>Reflection Spark</div>
+                            <div style={{ fontSize: '1rem', color: 'var(--foreground)', marginTop: '4px' }}>{contextPrompt}</div>
+                        </div>
+                        <button onClick={() => setShowContextPrompt(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--foreground-muted)', padding: '0.5rem', lineHeight: 1 }}>×</button>
+                    </div>
+                )}
+
+                {/* 3. Search Bar */}
+                <div style={{ marginBottom: '1.5rem', position: 'relative', zIndex: 50 }}>
+                    <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                            type="search"
+                            placeholder="Search entries..."
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            onFocus={handleSearchFocus}
+                            autoComplete="off"
+                            className="input-field"
+                        />
+                    </form>
+
+                    {showDropdown && searchQuery.trim().length > 0 && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            right: 0,
+                            backgroundColor: 'var(--surface)',
+                            borderRadius: '0 0 12px 12px',
+                            boxShadow: 'var(--shadow-md)',
+                            border: '1px solid var(--border)',
+                            borderTop: 'none',
+                            marginTop: '-10px',
+                            paddingTop: '10px',
+                            zIndex: 100,
+                            overflow: 'hidden',
+                            maxHeight: '300px',
+                            overflowY: 'auto'
+                        }}>
+                            {filteredEntries.length > 0 ? (
+                                filteredEntries.slice(0, 5).map(entry => {
+                                    const lowerQuery = searchQuery.toLowerCase();
+                                    const contentMatches = (entry.content || '').toLowerCase().includes(lowerQuery);
+                                    const displayText = (contentMatches && entry.content) ? entry.content : (entry.prompt || entry.content);
+
+                                    return (
+                                        <Link
+                                            key={entry.id}
+                                            href={`/write?id=${entry.id}`}
+                                            onClick={() => setShowDropdown(false)}
+                                            style={{
+                                                display: 'block',
+                                                padding: '0.75rem 1rem',
+                                                borderBottom: '1px solid var(--border)',
+                                                color: 'var(--foreground)',
+                                                textDecoration: 'none',
+                                                transition: 'background-color 0.1s'
+                                            }}
+                                        >
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--primary)' }}>
+                                                {entry.date}
+                                            </div>
+                                            <div style={{ fontSize: '0.875rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--foreground-muted)' }}>
+                                                {displayText.substring(0, 50)}
+                                            </div>
+                                        </Link>
+                                    );
+                                })
+                            ) : (
+                                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--foreground-muted)', fontSize: '0.875rem' }}>
+                                    No matches found
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* 4. Calendar */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <Calendar
+                        datesWithEntries={entries.map(e => e.date)}
+                        selectedDate={selectedDate}
+                        onDateSelect={handleDateSelect}
+                    />
+                </div>
+
+                {/* 5. Action Buttons */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '400px', margin: '0 auto 1.5rem auto' }}>
                     <Link
                         href="/curate"
                         style={{
@@ -316,34 +410,22 @@ export default function ProgressPage() {
                         </button>
                     </div>
                 </div>
+
+                {/* 6. Migration Help */}
+                <details style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)', fontSize: '0.875rem', maxWidth: '600px', margin: '0 auto 1.5rem auto' }}>
+                    <summary style={{ cursor: 'pointer', marginBottom: '0.5rem', fontWeight: '600', userSelect: 'none', textAlign: 'center' }}>Switching to a new device?</summary>
+                    <div style={{ padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '8px', lineHeight: '1.6', marginTop: '0.5rem' }}>
+                        <p style={{ marginBottom: '0.5rem' }}>We don't store your data on any server—it lives right here on this device. To move it:</p>
+                        <ol style={{ paddingLeft: '1.5rem', margin: 0 }}>
+                            <li style={{ marginBottom: '0.5rem' }}>Tap <strong>Backup</strong> above to save your journal file.</li>
+                            <li style={{ marginBottom: '0.5rem' }}>Send that backup file to your new device (email, AirDrop, etc.).</li>
+                            <li>Open this app on the new device, tap <strong>Restore</strong>, and select the file.</li>
+                        </ol>
+                    </div>
+                </details>
             </div>
 
-            {/* Milestone 7.3: Migration Help */}
-            <details style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)', fontSize: '0.875rem' }}>
-                <summary style={{ cursor: 'pointer', marginBottom: '0.5rem', fontWeight: '600', userSelect: 'none' }}>Switching to a new device?</summary>
-                <div style={{ padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '8px', lineHeight: '1.6', marginTop: '0.5rem' }}>
-                    <p style={{ marginBottom: '0.5rem' }}>We don't store your data on any server—it lives right here on this device. To move it:</p>
-                    <ol style={{ paddingLeft: '1.5rem', margin: 0 }}>
-                        <li style={{ marginBottom: '0.5rem' }}>Tap <strong>Backup</strong> above to save your journal file.</li>
-                        <li style={{ marginBottom: '0.5rem' }}>Send that backup file to your new device (email, AirDrop, etc.).</li>
-                        <li>Open this app on the new device, tap <strong>Restore</strong>, and select the file.</li>
-                    </ol>
-                </div>
-            </details>
-
-            {/* Contextual Prompt (Milestone 5) */
-                // Note: I will just match the line before Contextual Prompt to be safe.
-            }
-            {showContextPrompt && contextPrompt && (
-                <div className="card animate-fade-in" style={{ marginBottom: '1.5rem', borderTop: '4px solid var(--accent)', background: 'var(--surface-highlight)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ fontSize: '1.5rem' }}>✨</div>
-                    <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--primary)', fontWeight: 'bold' }}>Reflection Spark</div>
-                        <div style={{ fontSize: '1rem', color: 'var(--foreground)', marginTop: '4px' }}>{contextPrompt}</div>
-                    </div>
-                    <button onClick={() => setShowContextPrompt(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--foreground-muted)', padding: '0.5rem', lineHeight: 1 }}>×</button>
-                </div>
-            )}
+            {/* Spark moved to top */}
 
             {viewMode === 'weekly' ? (
                 <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -391,82 +473,8 @@ export default function ProgressPage() {
 
 
 
-                    {/* Search Bar Container */}
-                    <div style={{ marginBottom: '1.5rem', position: 'relative', zIndex: 50 }}>
-                        <form onSubmit={(e) => e.preventDefault()}>
-                            <input
-                                type="search"
-                                placeholder="Search entries..."
-                                value={searchQuery}
-                                onChange={handleSearchChange}
-                                onFocus={handleSearchFocus}
-                                autoComplete="off"
-                                className="input-field"
-                            />
-                        </form>
-
-                        {/* Dropdown Results */}
-                        {showDropdown && searchQuery.trim().length > 0 && (
-                            <div style={{
-                                position: 'absolute',
-                                top: '100%',
-                                left: 0,
-                                right: 0,
-                                backgroundColor: 'var(--surface)',
-                                borderRadius: '0 0 12px 12px',
-                                boxShadow: 'var(--shadow-md)',
-                                border: '1px solid var(--border)',
-                                borderTop: 'none',
-                                marginTop: '-10px',
-                                paddingTop: '10px',
-                                zIndex: 100,
-                                overflow: 'hidden',
-                                maxHeight: '300px',
-                                overflowY: 'auto'
-                            }}>
-                                {filteredEntries.length > 0 ? (
-                                    filteredEntries.slice(0, 5).map(entry => {
-                                        const lowerQuery = searchQuery.toLowerCase();
-                                        const contentMatches = (entry.content || '').toLowerCase().includes(lowerQuery);
-                                        const displayText = (contentMatches && entry.content) ? entry.content : (entry.prompt || entry.content);
-
-                                        return (
-                                            <Link
-                                                key={entry.id}
-                                                href={`/write?id=${entry.id}`}
-                                                onClick={() => setShowDropdown(false)}
-                                                style={{
-                                                    display: 'block',
-                                                    padding: '0.75rem 1rem',
-                                                    borderBottom: '1px solid var(--border)',
-                                                    color: 'var(--foreground)',
-                                                    textDecoration: 'none',
-                                                    transition: 'background-color 0.1s'
-                                                }}
-                                            >
-                                                <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--primary)' }}>
-                                                    {entry.date}
-                                                </div>
-                                                <div style={{ fontSize: '0.875rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--foreground-muted)' }}>
-                                                    {displayText.substring(0, 50)}
-                                                </div>
-                                            </Link>
-                                        );
-                                    })
-                                ) : (
-                                    <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--foreground-muted)', fontSize: '0.875rem' }}>
-                                        No matches found
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <Calendar
-                        datesWithEntries={entries.map(e => e.date)}
-                        selectedDate={selectedDate}
-                        onDateSelect={handleDateSelect}
-                    />
+                    {/* Reflection History Header */}
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--foreground)', marginTop: '0' }}>Reflection History</h2>
 
                     {/* Mode Filter Toggle */}
                     <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '4px' }}>

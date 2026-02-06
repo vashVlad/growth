@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { JournalDraft, Entry } from '@/hooks/useJournal';
 import { PdfDocument } from './PdfDocument';
 import { PdfThemeName } from './themes';
-import { PDFDocument } from 'pdf-lib';
+
 
 interface PdfDownloadButtonProps {
     draft: JournalDraft;
@@ -22,43 +22,12 @@ export const PdfDownloadButton: React.FC<PdfDownloadButtonProps> = ({ draft, ent
     const handleDownload = async () => {
         setIsGenerating(true);
         try {
-            // 1. Load the Cover PDF
-            // We expect this file to exist in the public folder
-            const coverUrl = '/book-covers/Journal-Cover-User.pdf';
-            const coverBytes = await fetch(coverUrl).then(res => {
-                if (!res.ok) throw new Error('Cover not found');
-                return res.arrayBuffer();
-            }).catch(err => {
-                console.warn('Could not load cover PDF, proceeding without it.', err);
-                return null;
-            });
-
-            // 2. Generate the Journal Entries PDF
+            // Generate the Journal Entries PDF
             // Dynamically import to avoid SSR issues with @react-pdf/renderer
             const { pdf } = await import('@react-pdf/renderer');
-            const entriesBlob = await pdf(
+            const blob = await pdf(
                 <PdfDocument draft={draft} entries={entries} themeName={themeName} />
             ).toBlob();
-            const entriesBytes = await entriesBlob.arrayBuffer();
-
-            // 3. Merge PDFs
-            const mergedPdf = await PDFDocument.create();
-
-            if (coverBytes) {
-                const coverPdf = await PDFDocument.load(coverBytes);
-                const coverIndices = coverPdf.getPageIndices();
-                const copiedCoverPages = await mergedPdf.copyPages(coverPdf, coverIndices);
-                copiedCoverPages.forEach((page) => mergedPdf.addPage(page));
-            }
-
-            const entriesPdf = await PDFDocument.load(entriesBytes);
-            const entriesIndices = entriesPdf.getPageIndices();
-            const copiedEntriesPages = await mergedPdf.copyPages(entriesPdf, entriesIndices);
-            copiedEntriesPages.forEach((page) => mergedPdf.addPage(page));
-
-            // 4. Save and Download
-            const mergedPdfBytes = await mergedPdf.save();
-            const blob = new Blob([mergedPdfBytes as any], { type: 'application/pdf' });
 
             // Generate filename
             const safeParseDate = (val: string | number | undefined | null): Date | null => {
