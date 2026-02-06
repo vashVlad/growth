@@ -397,15 +397,18 @@ export default function CurateJournalPage() {
 
                     {/* Preview Container */}
                     <div className="artifact-container" style={{
-                        padding: '2rem',
+                        padding: previewMode === 'book' ? '0' : '2rem', // Full width for book
                         marginBottom: '2rem',
-                        background: previewMode === 'book' ? '#e0e0e0' : 'var(--surface)', // Slightly darker bg for book contrast
+                        background: previewMode === 'book' ? '#e0e0e0' : 'var(--surface)',
                         borderRadius: '12px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        overflow: 'auto',
-                        maxHeight: '70vh'
+                        overflow: 'auto', // Enable wrapper scroll (if iframe flattens)
+                        WebkitOverflowScrolling: 'touch',
+                        height: previewMode === 'book' ? '75vh' : 'auto', // Fixed viewport for PDF
+                        width: '100%',
+                        position: 'relative'
                     }}>
                         {previewMode === 'scroll' ? (
                             <div style={{ maxWidth: '600px', width: '100%', textAlign: 'left', fontFamily: webViewStyles.themeFont, lineHeight: webViewStyles.activeTheme.styles.lineHeight }}>
@@ -479,7 +482,7 @@ export default function CurateJournalPage() {
                                     draft={previewDraft}
                                     entries={previewEntries}
                                     themeName={selectedTheme}
-                                    style={{ minHeight: '600px', flex: 1 }}
+                                    style={{ height: '100%', width: '100%' }}
                                 />
                             </div>
                         )}

@@ -49,25 +49,32 @@ export default function TodayPage() {
                         {isComplete ? "You're all set" : "Today's Prompt"}
                     </h1>
                 </div>
-                <button
-                    onClick={toggleTheme}
-                    style={{
-                        background: 'none',
-                        border: '1px solid var(--border)',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '1.25rem',
-                        color: 'var(--foreground)'
-                    }}
-                    aria-label="Toggle Dark Mode"
-                >
-                    🌗
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button
+                        onClick={toggleTheme}
+                        style={{
+                            background: 'none',
+                            border: '1px solid var(--border)',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            fontSize: '1.25rem',
+                            color: 'var(--foreground)'
+                        }}
+                        aria-label="Toggle Dark Mode"
+                    >
+                        🌗
+                    </button>
+                    <ContextualHelp
+                        title="About Growth Book"
+                        color="var(--foreground)"
+                        content={<AboutSection />}
+                    />
+                </div>
             </header>
 
             <div className="card" style={{ padding: '2rem', textAlign: 'center', borderColor: isComplete ? 'var(--primary)' : 'var(--border)' }}>
@@ -174,7 +181,7 @@ export default function TodayPage() {
                 )}
             </div>
 
-            <AboutSection />
+
 
             <div style={{ marginTop: '2rem' }}>
                 <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--foreground)' }}>Quote of the Day</h3>
