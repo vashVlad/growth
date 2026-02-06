@@ -7,36 +7,113 @@ interface ContextualHelpProps {
     color?: string;
 }
 
+import { createPortal } from 'react-dom';
+
 export const ContextualHelp: React.FC<ContextualHelpProps> = ({ title, content, color = 'var(--primary)' }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
 
-    // Close on click outside (though backdrop handles most cases, this is safe)
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
+        setMounted(true);
+    }, []);
 
+    // Prevent scrolling background when open
+    useEffect(() => {
         if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
         }
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.body.style.overflow = '';
         };
     }, [isOpen]);
 
+    const handleClose = () => setIsOpen(false);
+
+    const sheetContent = (
+        <>
+            {/* Backdrop */}
+            <div
+                onClick={handleClose}
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 9998,
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    backdropFilter: 'blur(2px)',
+                    animation: 'fadeIn 0.2s ease-out'
+                }}
+            />
+
+            {/* Bottom Sheet / Panel */}
+            <div
+                className="animate-slide-up"
+                style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 9999,
+                    backgroundColor: 'var(--surface)',
+                    borderTopLeftRadius: '20px',
+                    borderTopRightRadius: '20px',
+                    padding: '1.5rem',
+                    paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))', // iOS Safety
+                    boxShadow: '0 -4px 20px rgba(0,0,0,0.15)',
+                    borderTop: '1px solid var(--border)',
+                    maxWidth: '600px',
+                    margin: '0 auto', // Center on desktop
+                    maxHeight: '85vh',
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}
+            >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexShrink: 0 }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary)', margin: 0 }}>
+                        {title}
+                    </h3>
+                    <button
+                        onClick={handleClose}
+                        style={{
+                            background: 'var(--surface-highlight)',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'var(--foreground)',
+                            cursor: 'pointer',
+                            fontSize: '1.25rem',
+                            lineHeight: 1
+                        }}
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+                </div>
+                <div style={{ fontSize: '1rem', lineHeight: '1.6', color: 'var(--foreground)', overflowY: 'auto' }}>
+                    {content}
+                </div>
+            </div>
+        </>
+    );
+
     return (
         <div
-            ref={containerRef}
             className="contextual-help"
             onClick={(e) => e.stopPropagation()}
             style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '0.5rem' }}
         >
             <button
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setIsOpen(true)}
                 aria-label={`Help: ${title}`}
                 style={{
                     background: 'none',
@@ -58,66 +135,7 @@ export const ContextualHelp: React.FC<ContextualHelpProps> = ({ title, content, 
                 ?
             </button>
 
-            {isOpen && (
-                <>
-                    {/* Backdrop */}
-                    <div
-                        onClick={() => setIsOpen(false)}
-                        style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            zIndex: 998,
-                            backgroundColor: 'rgba(0,0,0,0.2)'
-                        }}
-                    />
-
-                    {/* Bottom Sheet / Panel */}
-                    <div
-                        className="animate-slide-up"
-                        style={{
-                            position: 'fixed',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            zIndex: 999,
-                            backgroundColor: 'var(--surface)',
-                            borderTopLeftRadius: '16px',
-                            borderTopRightRadius: '16px',
-                            padding: '1.5rem',
-                            boxShadow: '0 -4px 12px rgba(0,0,0,0.1)',
-                            borderTop: '1px solid var(--border)',
-                            maxWidth: '600px',
-                            margin: '0 auto' // Center on desktop
-                        }}
-                    >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'var(--primary)', margin: 0 }}>
-                                {title}
-                            </h3>
-                            <button
-                                onClick={() => setIsOpen(false)}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    fontSize: '1.5rem',
-                                    color: 'var(--foreground-muted)',
-                                    cursor: 'pointer',
-                                    padding: '0.5rem',
-                                    lineHeight: 1
-                                }}
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <div style={{ fontSize: '1rem', lineHeight: '1.6', color: 'var(--foreground)' }}>
-                            {content}
-                        </div>
-                    </div>
-                </>
-            )}
+            {mounted && isOpen && createPortal(sheetContent, document.body)}
         </div>
     );
 };

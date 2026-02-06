@@ -174,14 +174,14 @@ export default function TodayPage() {
                 )}
             </div>
 
+            <AboutSection />
+
             <div style={{ marginTop: '2rem' }}>
                 <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--foreground)' }}>Quote of the Day</h3>
                 <div style={{ fontStyle: 'italic', color: 'var(--foreground-muted)', borderLeft: '3px solid var(--accent)', paddingLeft: '1rem' }}>
                     "Growth is painful. Change is painful. But nothing is as painful as staying stuck somewhere you don't belong."
                 </div>
             </div>
-
-            <AboutSection />
         </div>
     );
 }
