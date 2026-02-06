@@ -13,18 +13,41 @@ export default function Home() {
       textAlign: 'center',
       backgroundColor: 'var(--background)'
     }}>
-      <div style={{ marginBottom: '2rem', position: 'relative' }}>
-        <Image
-          src="/logo.png"
-          alt="Growth Book Logo"
-          width={220}
-          height={220}
-          priority
-          style={{
-            objectFit: 'contain',
-            borderRadius: '24px' // Optional: matches previous aesthetic if desired, or remove if logo already has shape
-          }}
-        />
+      <div style={{ marginBottom: '2rem', width: '120px', height: '120px', position: 'relative' }}>
+        <div style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'var(--primary)',
+          borderRadius: '24px',
+          transform: 'rotate(-5deg)',
+          opacity: 0.2,
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }} />
+        <div style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'var(--primary)',
+          borderRadius: '24px',
+          transform: 'rotate(10deg)',
+          opacity: 0.4,
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }} />
+        <div style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '3rem',
+          position: 'relative',
+          zIndex: 10
+        }}>
+          🌱
+        </div>
       </div>
 
       <h1 style={{

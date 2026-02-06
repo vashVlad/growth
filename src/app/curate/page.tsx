@@ -196,18 +196,7 @@ export default function CurateJournalPage() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                                 <label style={{ fontWeight: 'bold' }}>Time Period</label>
                                 {/* Dev Helper: Stress Test */}
-                                {process.env.NODE_ENV !== 'production' && (
-                                    <button
-                                        onClick={async () => {
-                                            const { createStressTestEntry } = await import('@/utils/stressTest');
-                                            const testEntry = createStressTestEntry();
-                                            alert("Stress test entry created.");
-                                        }}
-                                        style={{ fontSize: '0.7rem', color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}
-                                    >
-                                        [Dev: Logic?]
-                                    </button>
-                                )}
+
                             </div>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 {['30', '90', 'all'].map(r => (

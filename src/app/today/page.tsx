@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/Card';
+import { AboutSection } from '@/components/AboutSection';
+import { ContextualHelp } from '@/components/ContextualHelp';
 import { useJournal } from '@/hooks/useJournal';
 import { useTheme } from '@/hooks/useTheme';
 import { getLocalDateISOString, formatDateForDisplay } from '@/utils/date';
@@ -102,51 +104,71 @@ export default function TodayPage() {
                             Take a moment to reflect on this. There's no right or wrong answer.
                         </p>
                         <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                            <Link
-                                href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=free`}
-                                className="btn-secondary"
-                                style={{
-                                    flex: 1,
-                                    textDecoration: 'none',
-                                    fontSize: '0.9rem',
-                                    padding: '1rem 0.5rem',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'var(--surface)',
-                                    border: '1px solid var(--border)',
-                                    borderRadius: '12px',
-                                    color: 'var(--primary)',
-                                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-                                }}
-                            >
-                                <span style={{ fontWeight: '600', marginBottom: '4px' }}>Purpose Reflection</span>
-                                <span style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 'normal' }}>Explore meaning</span>
-                            </Link>
+                            <div style={{ flex: 1, position: 'relative' }}>
+                                <Link
+                                    href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=free`}
+                                    className="btn-secondary"
+                                    style={{
+                                        textDecoration: 'none',
+                                        fontSize: '0.9rem',
+                                        padding: '1rem 0.5rem',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'var(--surface)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: '12px',
+                                        color: 'var(--primary)',
+                                        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                                        width: '100%',
+                                        height: '100%'
+                                    }}
+                                >
+                                    <span style={{ fontWeight: '600', marginBottom: '4px' }}>Purpose Reflection</span>
+                                    <span style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 'normal' }}>Explore meaning</span>
+                                </Link>
+                                <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10 }}>
+                                    <ContextualHelp
+                                        title="Purpose Reflection"
+                                        color="var(--primary)"
+                                        content="Use this space to explore what matters to you, in your own words. Focus on meaning, direction, and understanding yourself. There are no right or wrong answers."
+                                    />
+                                </div>
+                            </div>
 
-                            <Link
-                                href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=growth`}
-                                className="btn-secondary"
-                                style={{
-                                    flex: 1,
-                                    textDecoration: 'none',
-                                    fontSize: '0.9rem',
-                                    padding: '1rem 0.5rem',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'var(--surface)',
-                                    border: '1px solid var(--border)',
-                                    borderRadius: '12px',
-                                    color: 'var(--primary)',
-                                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-                                }}
-                            >
-                                <span style={{ fontWeight: '600', marginBottom: '4px' }}>Growth Reflection</span>
-                                <span style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 'normal' }}>Align & Improve</span>
-                            </Link>
+                            <div style={{ flex: 1, position: 'relative' }}>
+                                <Link
+                                    href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=growth`}
+                                    className="btn-secondary"
+                                    style={{
+                                        textDecoration: 'none',
+                                        fontSize: '0.9rem',
+                                        padding: '1rem 0.5rem',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'var(--surface)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: '12px',
+                                        color: 'var(--primary)',
+                                        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                                        width: '100%',
+                                        height: '100%'
+                                    }}
+                                >
+                                    <span style={{ fontWeight: '600', marginBottom: '4px' }}>Growth Reflection</span>
+                                    <span style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 'normal' }}>Align & Improve</span>
+                                </Link>
+                                <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10 }}>
+                                    <ContextualHelp
+                                        title="Growth Reflection"
+                                        color="var(--primary)"
+                                        content="This reflection helps you notice what you're learning and how you're growing. It uses structured questions to focus on alignment, actionable improvements, and self-correction."
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -158,6 +180,8 @@ export default function TodayPage() {
                     "Growth is painful. Change is painful. But nothing is as painful as staying stuck somewhere you don't belong."
                 </div>
             </div>
+
+            <AboutSection />
         </div>
     );
 }

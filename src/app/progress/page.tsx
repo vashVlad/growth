@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useJournal } from '@/hooks/useJournal';
+import { ContextualHelp } from '@/components/ContextualHelp';
 import { getLocalDateISOString, getSafeDate, formatDateForDisplay } from '@/utils/date';
 import { Card } from '@/components/Card';
 import { Calendar } from '@/components/Calendar';
@@ -255,7 +256,14 @@ export default function ProgressPage() {
 
             <div style={{ marginBottom: '2rem', position: 'relative', zIndex: 10 }}>
                 {/* 1. H1 Header */}
-                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'center' }}>Your Journey</h1>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', gap: '0.5rem' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>Your Journey</h1>
+                    <ContextualHelp
+                        title="Your Journey"
+                        color="var(--primary)"
+                        content="Progress isn't about productivity—it's about understanding. Looking back at your own words helps you notice patterns, see how you've grown, and connect the dots over time. Read your entries with curiosity, not judgment."
+                    />
+                </div>
 
                 {/* 2. Reflection Spark */}
                 {showContextPrompt && contextPrompt && (
