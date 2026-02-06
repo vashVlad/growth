@@ -255,13 +255,13 @@ export default function ProgressPage() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', position: 'relative', zIndex: 10 }}>
                 <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Your Journey</h1>
-                <div className="responsive-actions">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '400px', marginLeft: 'auto' }}>
                     <Link
                         href="/curate"
                         style={{
                             background: 'var(--primary)',
                             color: 'white',
-                            padding: '0.5rem 1rem',
+                            padding: '0.75rem 1rem',
                             borderRadius: '20px',
                             fontSize: '0.875rem',
                             fontWeight: '600',
@@ -269,41 +269,52 @@ export default function ProgressPage() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '0.5rem'
+                            gap: '0.5rem',
+                            width: '100%'
                         }}
                     >
                         <span>Create Journal</span>
                     </Link>
-                    <button
-                        onClick={exportBackup}
-                        style={{
-                            background: 'none',
-                            border: '1px solid var(--primary)',
-                            color: 'var(--primary)',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '20px',
-                            fontSize: '0.875rem',
-                            fontWeight: '600',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Backup
-                    </button>
-                    <button
-                        onClick={() => fileInputRef.current?.click()}
-                        style={{
-                            background: 'none',
-                            border: '1px solid var(--primary)',
-                            color: 'var(--primary)',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '20px',
-                            fontSize: '0.875rem',
-                            fontWeight: '600',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Restore
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                        <button
+                            onClick={exportBackup}
+                            style={{
+                                flex: 1,
+                                background: 'none',
+                                border: '1px solid var(--primary)',
+                                color: 'var(--primary)',
+                                padding: '0.75rem 0.5rem',
+                                borderRadius: '20px',
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            Backup
+                        </button>
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            style={{
+                                flex: 1,
+                                background: 'none',
+                                border: '1px solid var(--primary)',
+                                color: 'var(--primary)',
+                                padding: '0.75rem 0.5rem',
+                                borderRadius: '20px',
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            Restore
+                        </button>
+                    </div>
                 </div>
             </div>
 

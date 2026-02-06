@@ -32,6 +32,7 @@ export default function CurateJournalPage() {
 
     // Step 1: Selection State
     const [dateRange, setDateRange] = useState<'30' | '90' | 'all'>('30');
+    const [reflectionTypeFilter, setReflectionTypeFilter] = useState<'all' | 'purpose' | 'growth'>('all');
     const [includeHighlights, setIncludeHighlights] = useState(true);
     const [selectedEntryIds, setSelectedEntryIds] = useState<Set<string>>(new Set());
 
@@ -55,9 +56,19 @@ export default function CurateJournalPage() {
 
         return entries.filter(e => {
             const d = new Date(e.date);
-            return d >= cutoff;
+            const inDateRange = d >= cutoff;
+
+            let typeMatch = true;
+            if (reflectionTypeFilter === 'purpose') {
+                // Purpose is default for old entries ("free" or undefined)
+                typeMatch = !e.reflectionMode || e.reflectionMode === 'free';
+            } else if (reflectionTypeFilter === 'growth') {
+                typeMatch = e.reflectionMode === 'growth';
+            }
+
+            return inDateRange && typeMatch;
         });
-    }, [entries, dateRange]);
+    }, [entries, dateRange, reflectionTypeFilter]);
 
     // Init Selection logic - only runs when filtered list identity changes
     useEffect(() => {
@@ -160,38 +171,61 @@ export default function CurateJournalPage() {
                 <div className="animate-fade-in">
                     <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>Choose the moments you want to revisit. We’ve pre-selected entries based on your range.</p>
 
-                    <div className="card" style={{ marginBottom: '1rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                            <label style={{ fontWeight: 'bold' }}>Time Period</label>
-                            {/* Dev Helper: Stress Test */}
-                            {process.env.NODE_ENV !== 'production' && (
-                                <button
-                                    onClick={async () => {
-                                        const { createStressTestEntry } = await import('@/utils/stressTest');
-                                        const testEntry = createStressTestEntry();
-                                        alert("Stress test entry created.");
-                                    }}
-                                    style={{ fontSize: '0.7rem', color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}
-                                >
-                                    [Dev: Logic?]
-                                </button>
-                            )}
+                    <div className="card" style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                <label style={{ fontWeight: 'bold' }}>Time Period</label>
+                                {/* Dev Helper: Stress Test */}
+                                {process.env.NODE_ENV !== 'production' && (
+                                    <button
+                                        onClick={async () => {
+                                            const { createStressTestEntry } = await import('@/utils/stressTest');
+                                            const testEntry = createStressTestEntry();
+                                            alert("Stress test entry created.");
+                                        }}
+                                        style={{ fontSize: '0.7rem', color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}
+                                    >
+                                        [Dev: Logic?]
+                                    </button>
+                                )}
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                {['30', '90', 'all'].map(r => (
+                                    <button key={r}
+                                        onClick={() => setDateRange(r as any)}
+                                        style={{
+                                            flex: 1, padding: '0.5rem',
+                                            borderRadius: '8px',
+                                            border: dateRange === r ? '2px solid var(--primary)' : '1px solid var(--border)',
+                                            background: dateRange === r ? 'var(--color-green-100)' : 'transparent',
+                                            color: dateRange === r ? 'var(--primary)' : 'var(--foreground)'
+                                        }}
+                                    >
+                                        {r === 'all' ? 'All Time' : `Last ${r} Days`}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            {['30', '90', 'all'].map(r => (
-                                <button key={r}
-                                    onClick={() => setDateRange(r as any)}
-                                    style={{
-                                        flex: 1, padding: '0.5rem',
-                                        borderRadius: '8px',
-                                        border: dateRange === r ? '2px solid var(--primary)' : '1px solid var(--border)',
-                                        background: dateRange === r ? 'var(--color-green-100)' : 'transparent',
-                                        color: dateRange === r ? 'var(--primary)' : 'var(--foreground)'
-                                    }}
-                                >
-                                    {r === 'all' ? 'All Time' : `Last ${r} Days`}
-                                </button>
-                            ))}
+
+                        <div>
+                            <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Reflection Type</label>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                {(['all', 'purpose', 'growth'] as const).map(type => (
+                                    <button key={type}
+                                        onClick={() => setReflectionTypeFilter(type)}
+                                        style={{
+                                            flex: 1, padding: '0.5rem',
+                                            borderRadius: '8px',
+                                            border: reflectionTypeFilter === type ? '2px solid var(--primary)' : '1px solid var(--border)',
+                                            background: reflectionTypeFilter === type ? 'var(--color-green-100)' : 'transparent',
+                                            color: reflectionTypeFilter === type ? 'var(--primary)' : 'var(--foreground)',
+                                            textTransform: 'capitalize'
+                                        }}
+                                    >
+                                        {type === 'purpose' ? 'Purpose' : type === 'growth' ? 'Growth' : 'All'}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
