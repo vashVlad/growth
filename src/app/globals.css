@@ -254,7 +254,82 @@ html.light .bottom-nav {
   margin-bottom: 2px;
 }
 
-.nav-label {
-  font-size: 0.75rem;
-  font-weight: 500;
+
+/* Print Utilities - Milestone 8: Book Format */
+@media print {
+  @page {
+    size: 6in 9in;
+    margin: 0.75in 0.6in 0.75in 0.6in;
+  }
+
+  body {
+    margin: 0;
+    background-color: white !important;
+    color: black !important;
+    font-family: "Georgia", "Times New Roman", serif !important;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide UI elements */
+  nav,
+  header,
+  button,
+  .no-print,
+  .bottom-nav,
+  .btn-primary,
+  a[href^="/"] {
+    display: none !important;
+  }
+
+  .animate-fade-in {
+    padding: 0 !important;
+    animation: none !important;
+  }
+
+  /* Book Structure Utilities */
+  .print-book-wrapper {
+    width: 100%;
+    max-width: none;
+  }
+
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Print Typography */
+  h1 {
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 24pt !important;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: black !important;
+    text-align: center;
+  }
+
+  h2 {
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 16pt !important;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: black !important;
+    border-bottom: 1px solid #000;
+    padding-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 11pt !important;
+    margin-bottom: 0.8rem;
+    text-align: justify;
+    orphans: 3;
+    widows: 3;
+  }
 }

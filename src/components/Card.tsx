@@ -5,15 +5,17 @@ interface CardProps {
     className?: string;
     onClick?: () => void;
     actions?: React.ReactNode;
+    style?: React.CSSProperties;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className = '', onClick, actions }) => {
+export const Card: React.FC<CardProps> = ({ children, className = '', onClick, actions, style = {} }) => {
     return (
         <div
             onClick={onClick}
             className={`card ${className}`}
             style={{
                 position: 'relative',
+                ...style,
                 ...((onClick) ? { cursor: 'pointer' } : {})
             }}
         >

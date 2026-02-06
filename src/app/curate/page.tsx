@@ -1,7 +1,20 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useJournal, Entry, JournalDraft } from '@/hooks/useJournal';
+import { PdfDownloadButton } from '@/components/pdf/PdfDownloadButton';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PDF_THEMES, PdfThemeName } from '@/components/pdf/themes';
+const PdfPreview = dynamic(() => import('@/components/pdf/PdfPreview').then(mod => mod.PdfPreview), { ssr: false });
+
+// Helper to get sorted entries for a draft
+const getDraftEntries = (draft: JournalDraft, allEntries: Entry[]) => {
+    return draft.includedEntryIds
+        .map(id => allEntries.find(e => e.id === id))
+        .filter((e): e is Entry => !!e)
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+};
 
 export default function CurateJournalPage() {
     const router = useRouter();
@@ -22,32 +35,36 @@ export default function CurateJournalPage() {
         { id: 'chronological', title: 'Daily Reflections', order: 4 },
     ]);
 
-    // Step 3: Intent State
+    // Step 3: Design State (NEW)
+    const [selectedTheme, setSelectedTheme] = useState<PdfThemeName>('minimal');
+
+    // Step 4: Intent State
     const [intent, setIntent] = useState('');
     const [draftTitle, setDraftTitle] = useState('My Journal');
 
-    // Init Selection logic
-    useEffect(() => {
-        if (entries.length > 0) {
-            filterEntries();
-        }
-    }, [entries, dateRange, includeHighlights]);
+    // Step 5: Preview
+    const [previewMode, setPreviewMode] = useState<'scroll' | 'book'>('book');
 
-    const filterEntries = () => {
+    // Memoize Filtered Entries (Step 1)
+    const filteredEntries = React.useMemo(() => {
         const now = new Date();
         const cutoff = new Date();
         if (dateRange === '30') cutoff.setDate(now.getDate() - 30);
         if (dateRange === '90') cutoff.setDate(now.getDate() - 90);
         if (dateRange === 'all') cutoff.setFullYear(2000); // Way back
 
-        const filtered = entries.filter(e => {
+        return entries.filter(e => {
             const d = new Date(e.date);
             return d >= cutoff;
         });
+    }, [entries, dateRange]);
 
-        // Default all to selected initially
-        setSelectedEntryIds(new Set(filtered.map(e => e.id)));
-    };
+    // Init Selection logic - only runs when filtered list identity changes
+    useEffect(() => {
+        if (filteredEntries.length > 0) {
+            setSelectedEntryIds(new Set(filteredEntries.map(e => e.id)));
+        }
+    }, [filteredEntries]); // Dependency is now stable filteredEntries
 
     const handleSave = () => {
         const newDraft: JournalDraft = {
@@ -67,9 +84,50 @@ export default function CurateJournalPage() {
         router.push('/progress');
     };
 
-    // Render Steps
-    // ... Implementation of UI ...
-    // Simplified for tool size limits, will expand in next step
+    // Memoized Preview Draft (Step 5)
+    // This ensures the object identity is stable unless inputs change
+    const previewDraft = React.useMemo<JournalDraft>(() => ({
+        id: 'preview',
+        title: draftTitle,
+        createdAt: Date.now(), // This will change on mount/unmount but inside render cycle it's fine. 
+        // Ideally fixed timestamp or ignored.
+        updatedAt: Date.now(),
+        intent,
+        criteria: {
+            startDate: dateRange !== 'all' ? new Date(Date.now() - ((parseInt(dateRange) || 0) * 86400000)).toISOString().split('T')[0] : undefined,
+            includeHighlights
+        },
+        includedEntryIds: Array.from(selectedEntryIds),
+        sections
+    }), [draftTitle, intent, dateRange, includeHighlights, selectedEntryIds, sections]);
+
+    // Memoized Preview Entries
+    const previewEntries = React.useMemo(() => {
+        return getDraftEntries(previewDraft, entries);
+    }, [previewDraft, entries]);
+
+    const previewStartDate = React.useMemo(() =>
+        previewEntries.length > 0 ? previewEntries[0].date : previewDraft.criteria.startDate,
+        [previewEntries, previewDraft.criteria.startDate]);
+
+    const previewEndDate = React.useMemo(() =>
+        previewEntries.length > 0 ? previewEntries[previewEntries.length - 1].date : previewDraft.criteria.endDate,
+        [previewEntries, previewDraft.criteria.endDate]);
+
+    // Memoize Theme fonts for Web View
+    const webViewStyles = React.useMemo(() => {
+        const activeTheme = PDF_THEMES[selectedTheme];
+        const serifFont = '"Georgia", "Times New Roman", serif';
+        const sansFont = '"Helvetica", "Arial", sans-serif';
+        const isSerif = (fontName: string) => fontName.includes('Crimson') || fontName.includes('Lora');
+
+        return {
+            themeFont: isSerif(activeTheme.fonts.body) ? serifFont : sansFont,
+            headerFont: isSerif(activeTheme.fonts.header) ? serifFont : sansFont,
+            activeTheme
+        };
+    }, [selectedTheme]);
+
     return (
         <div style={{ padding: '2rem 1.5rem', minHeight: '100vh', paddingBottom: '100px' }} className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
@@ -77,14 +135,15 @@ export default function CurateJournalPage() {
                 <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
                     {step === 1 && "Curate Your Journal"}
                     {step === 2 && "Structure & Flow"}
-                    {step === 3 && "Set Your Intent"}
-                    {step === 4 && "Preview Artifact"}
+                    {step === 3 && "Design Archetype"}
+                    {step === 4 && "Set Your Intent"}
+                    {step === 5 && "Preview Artifact"}
                 </h1>
             </div>
 
             {/* Progress Bar */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '2rem' }}>
-                {[1, 2, 3, 4].map(s => (
+                {[1, 2, 3, 4, 5].map(s => (
                     <div key={s} style={{ flex: 1, height: '4px', borderRadius: '2px', background: s <= step ? 'var(--primary)' : 'var(--border)' }} />
                 ))}
             </div>
@@ -95,7 +154,22 @@ export default function CurateJournalPage() {
                     <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>Choose the moments you want to revisit. We’ve pre-selected entries based on your range.</p>
 
                     <div className="card" style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Time Period</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold' }}>Time Period</label>
+                            {/* Dev Helper: Stress Test */}
+                            {process.env.NODE_ENV !== 'production' && (
+                                <button
+                                    onClick={async () => {
+                                        const { createStressTestEntry } = await import('@/utils/stressTest');
+                                        const testEntry = createStressTestEntry();
+                                        alert("Stress test entry created. To see it in the preview:\n1. Open your browser console.\n2. Note that this architecture requires re-hydrating 'entries'.\n\nFor now, the PDF Layout Fix (wrap=true) is applied globally. You can verify it by finding any long entry you already have.");
+                                    }}
+                                    style={{ fontSize: '0.7rem', color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}
+                                >
+                                    [Dev: Logic?]
+                                </button>
+                            )}
+                        </div>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                             {['30', '90', 'all'].map(r => (
                                 <button key={r}
@@ -119,14 +193,7 @@ export default function CurateJournalPage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        {entries.filter(e => {
-                            const now = new Date();
-                            const cutoff = new Date();
-                            if (dateRange === '30') cutoff.setDate(now.getDate() - 30);
-                            if (dateRange === '90') cutoff.setDate(now.getDate() - 90);
-                            if (dateRange === 'all') cutoff.setFullYear(2000);
-                            return new Date(e.date) >= cutoff;
-                        }).map(entry => (
+                        {filteredEntries.map(entry => (
                             <div key={entry.id}
                                 onClick={() => {
                                     const newSet = new Set(selectedEntryIds);
@@ -158,7 +225,7 @@ export default function CurateJournalPage() {
                 </div>
             )}
 
-            {/* STEP 2: STRUCTURE */}
+            {/* STEP 2: STRUCTURE (Unchanged Logic, visually same) */}
             {step === 2 && (
                 <div className="animate-fade-in">
                     <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>This is how your journal will be organized. You can rename sections to make it yours.</p>
@@ -179,12 +246,61 @@ export default function CurateJournalPage() {
                         ))}
                     </div>
 
-                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(3)}>Next: Intent</button>
+                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(3)}>Next: Design</button>
                 </div>
             )}
 
-            {/* STEP 3: INTENT */}
+            {/* STEP 3: DESIGN SELECTION */}
             {step === 3 && (
+                <div className="animate-fade-in">
+                    <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>Choose what feels right. You can change this anytime.</p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {(Object.keys(PDF_THEMES) as PdfThemeName[]).map(themeKey => {
+                            const theme = PDF_THEMES[themeKey];
+                            const isSelected = selectedTheme === themeKey;
+                            return (
+                                <div
+                                    key={themeKey}
+                                    onClick={() => setSelectedTheme(themeKey)}
+                                    className="card"
+                                    style={{
+                                        padding: '1.5rem',
+                                        cursor: 'pointer',
+                                        border: isSelected ? '2px solid var(--primary)' : '1px solid var(--border)',
+                                        background: isSelected ? 'var(--surface-highlight)' : 'var(--surface)',
+                                        transition: 'all 0.2s',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '0.5rem'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--foreground)' }}>{theme.name}</h3>
+                                        {isSelected && <div style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Selected</div>}
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: 'var(--foreground-muted)', lineHeight: '1.5' }}>{theme.description}</p>
+
+                                    {/* Mini visual cue */}
+                                    <div style={{
+                                        marginTop: '0.5rem',
+                                        height: '6px',
+                                        width: '40px',
+                                        background: 'var(--border)',
+                                        borderRadius: '3px',
+                                        alignSelf: themeKey === 'minimal' || themeKey === 'nature' ? 'flex-start' : 'center'
+                                    }} />
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(4)}>Next: Intent</button>
+                </div>
+            )}
+
+            {/* STEP 4: INTENT */}
+            {step === 4 && (
                 <div className="animate-fade-in">
                     <p style={{ marginBottom: '1.5rem', color: 'var(--foreground-muted)' }}>Before you finish, take a moment to reflect.</p>
 
@@ -216,37 +332,150 @@ export default function CurateJournalPage() {
                         />
                     </div>
 
-                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(4)}>Preview Artifact</button>
+                    <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setStep(5)}>Preview Artifact</button>
                 </div>
             )}
 
-            {/* STEP 4: PREVIEW */}
-            {step === 4 && (
+            {/* STEP 5: PREVIEW */}
+            {step === 5 && (
                 <div className="animate-fade-in">
-                    <div className="card" style={{ textAlign: 'center', padding: '2rem', marginBottom: '2rem', border: '2px solid var(--accent)' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📚</div>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{draftTitle}</h2>
-                        <div style={{ color: 'var(--foreground-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>{new Date().toLocaleDateString()}</div>
+                    {/* Preview Controls */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', gap: '1rem' }}>
+                        <button
+                            onClick={() => setPreviewMode('scroll')}
+                            style={{
+                                padding: '0.5rem 1rem',
+                                borderRadius: '20px',
+                                border: '1px solid var(--border)',
+                                background: previewMode === 'scroll' ? 'var(--primary)' : 'var(--surface)',
+                                color: previewMode === 'scroll' ? 'white' : 'var(--foreground)',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Web View
+                        </button>
+                        <button
+                            onClick={() => setPreviewMode('book')}
+                            style={{
+                                padding: '0.5rem 1rem',
+                                borderRadius: '20px',
+                                border: '1px solid var(--border)',
+                                background: previewMode === 'book' ? 'var(--primary)' : 'var(--surface)',
+                                color: previewMode === 'book' ? 'white' : 'var(--foreground)',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Book Preview (6"x9")
+                        </button>
+                    </div>
 
-                        <div style={{ textAlign: 'left', fontSize: '0.875rem', color: 'var(--foreground)', lineHeight: '1.6', fontStyle: 'italic', marginBottom: '2rem' }}>
-                            "{intent || "A collection of my thoughts and growth."}"
-                        </div>
+                    {/* Preview Container */}
+                    <div className="artifact-container" style={{
+                        padding: '2rem',
+                        marginBottom: '2rem',
+                        background: previewMode === 'book' ? '#e0e0e0' : 'var(--surface)', // Slightly darker bg for book contrast
+                        borderRadius: '12px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        overflow: 'auto',
+                        maxHeight: '70vh'
+                    }}>
+                        {previewMode === 'scroll' ? (
+                            <div style={{ maxWidth: '600px', width: '100%', textAlign: 'left', fontFamily: webViewStyles.themeFont, lineHeight: webViewStyles.activeTheme.styles.lineHeight }}>
+                                <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: 'var(--primary)', fontFamily: webViewStyles.headerFont, textTransform: webViewStyles.activeTheme.styles.headerTransform }}>{previewDraft.title}</h1>
 
-                        <div style={{ textAlign: 'left' }}>
-                            <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '0.75rem', color: 'var(--primary)' }}>Contents</div>
-                            {sections.sort((a, b) => a.order - b.order).map(s => (
-                                <div key={s.id} style={{ padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
-                                    {s.title}
+                                <div style={{ color: 'var(--foreground-muted)', marginBottom: '2rem' }}>
+                                    {previewStartDate ? new Date(previewStartDate).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : ''} —
+                                    {previewEndDate ? new Date(previewEndDate).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
                                 </div>
-                            ))}
-                        </div>
+
+                                {previewDraft.intent && (
+                                    <div style={{ fontStyle: 'italic', marginBottom: '2rem', padding: '1rem', borderLeft: '3px solid var(--primary)', background: 'var(--surface-highlight)' }}>
+                                        "{previewDraft.intent}"
+                                    </div>
+                                )}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                    {previewEntries.map(entry => (
+                                        <div key={entry.id}>
+                                            <div style={{
+                                                fontWeight: 'bold',
+                                                color: 'var(--foreground-muted)',
+                                                marginBottom: '0.5rem',
+                                                textTransform: webViewStyles.activeTheme.styles.headerTransform,
+                                                fontSize: '0.85rem',
+                                                fontFamily: webViewStyles.headerFont
+                                            }}>
+                                                {new Date(entry.date).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                                            </div>
+                                            {entry.prompt !== 'Free Write' && (
+                                                <div style={{ fontStyle: 'italic', color: 'var(--primary)', marginBottom: '0.5rem' }}>{entry.prompt}</div>
+                                            )}
+                                            <div style={{ whiteSpace: 'pre-wrap', lineHeight: webViewStyles.activeTheme.styles.lineHeight }}>{entry.content}</div>
+
+                                            {/* Structured Response - Web View */}
+                                            {(entry.reflectionMode === 'growth' || entry.reflectionAnchors) && (
+                                                <div style={{ marginTop: '1rem', padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '8px' }}>
+                                                    {entry.reflectionMode === 'growth' ? (
+                                                        <>
+                                                            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem', color: 'var(--primary)' }}>Growth Reflection</div>
+                                                            {entry.learnedText && <div style={{ marginBottom: '0.5rem' }}><span style={{ fontWeight: '600' }}>Learned:</span> {entry.learnedText}</div>}
+                                                            {entry.alignmentText && <div style={{ marginBottom: '0.5rem' }}><span style={{ fontWeight: '600' }}>Alignment:</span> {entry.alignmentText}</div>}
+                                                            {entry.improveTomorrowText && <div style={{ marginBottom: '0.5rem' }}><span style={{ fontWeight: '600' }}>Improve:</span> {entry.improveTomorrowText}</div>}
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem', color: 'var(--primary)' }}>Purpose Reflection</div>
+                                                            {entry.reflectionAnchors?.excitedText && <div style={{ marginBottom: '0.5rem' }}><span style={{ fontWeight: '600' }}>Excited:</span> {entry.reflectionAnchors.excitedText}</div>}
+                                                            {entry.reflectionAnchors?.drainedText && <div style={{ marginBottom: '0.5rem' }}><span style={{ fontWeight: '600' }}>Drained:</span> {entry.reflectionAnchors.drainedText}</div>}
+                                                            {entry.reflectionAnchors?.gratefulText && <div style={{ marginBottom: '0.5rem' }}><span style={{ fontWeight: '600' }}>Grateful:</span> {entry.reflectionAnchors.gratefulText}</div>}
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <div style={{
+                                    marginBottom: '1rem',
+                                    fontSize: '0.875rem',
+                                    fontWeight: '600',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em',
+                                    color: 'var(--foreground-muted)'
+                                }}>
+                                    This is your Growth Book
+                                </div>
+                                <PdfPreview
+                                    draft={previewDraft}
+                                    entries={previewEntries}
+                                    themeName={selectedTheme}
+                                    style={{ minHeight: '600px', flex: 1 }}
+                                />
+                            </div>
+                        )}
                     </div>
 
-                    <div style={{ fontSize: '0.875rem', color: 'var(--foreground-muted)', textAlign: 'center', marginBottom: '1rem' }}>
-                        This draft will be saved locally.
+                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '4rem' }}>
+                        <button className="btn-primary" style={{ flex: 1, background: 'var(--surface)', color: 'var(--foreground)', border: '1px solid var(--border)' }} onClick={() => setStep(4)}>Edit</button>
+                        <button className="btn-primary" style={{ flex: 1 }} onClick={handleSave}>Save to Library</button>
                     </div>
 
-                    <button className="btn-primary" style={{ width: '100%' }} onClick={handleSave}>Save as Personal Artifact</button>
+                    {/* Independent PDF Download for Preview */}
+                    <div style={{ textAlign: 'center' }}>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', marginBottom: '0.5rem' }}>Ready to print?</p>
+                        <PdfDownloadButton
+                            draft={previewDraft}
+                            entries={previewEntries}
+                            // PASS THE SELECTED THEME HERE
+                            themeName={selectedTheme}
+                            className="btn-primary"
+                            style={{ background: 'var(--primary)', color: 'white', display: 'inline-flex' }}
+                        />
+                    </div>
                 </div>
             )}
 

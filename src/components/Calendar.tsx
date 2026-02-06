@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { getLocalDateISOString } from '@/utils/date';
 
 interface CalendarProps {
     datesWithEntries: string[]; // ['2023-10-27', '2023-10-28']
@@ -8,7 +9,7 @@ interface CalendarProps {
 }
 
 export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDate, onDateSelect }) => {
-    const [currentDate] = useState(new Date());
+    const [currentDate, setCurrentDate] = useState(new Date());
 
     // Get days in current month
     const year = currentDate.getFullYear();
@@ -18,6 +19,11 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDa
     const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 = Sunday
 
     const monthName = currentDate.toLocaleString('default', { month: 'long' });
+
+    const changeMonth = (offset: number) => {
+        const newDate = new Date(currentDate.setMonth(currentDate.getMonth() + offset));
+        setCurrentDate(new Date(newDate));
+    };
 
     const days = [];
     // Fill empty slots for previous month days
@@ -49,13 +55,27 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDa
         <div className="card mb-6"
             style={{ marginBottom: '1.5rem' }}
         >
-            <h3 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--primary)' }}>
-                {monthName} {year}
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <button
+                    onClick={() => changeMonth(-1)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', fontSize: '1.25rem', color: 'var(--primary)' }}
+                >
+                    &lt;
+                </button>
+                <h3 style={{ textAlign: 'center', fontWeight: 'bold', color: 'var(--primary)', margin: 0 }}>
+                    {monthName} {year}
+                </h3>
+                <button
+                    onClick={() => changeMonth(1)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', fontSize: '1.25rem', color: 'var(--primary)' }}
+                >
+                    &gt;
+                </button>
+            </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.25rem', textAlign: 'center' }}>
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-                    <div key={`${d}-${i}`} style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', paddingBottom: '0.5rem' }}>{d}</div>
+                    <div key={`${d}-${i}`} style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--primary)', paddingBottom: '0.5rem' }}>{d}</div>
                 ))}
 
                 {days.map((date, idx) => {
@@ -64,7 +84,7 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDa
                     const hasEntry = isEntryDate(date);
                     const dateStr = formatDate(date);
                     const isSelected = selectedDate === dateStr;
-                    const isToday = date.toDateString() === new Date().toDateString();
+                    const isToday = dateStr === getLocalDateISOString();
 
                     // Determine background color priority: Selected > Entry > Today > Default
                     let bg = 'transparent';
@@ -80,7 +100,7 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDa
                         color = 'var(--primary-foreground)';
                         fontWeight = 'bold';
                     } else if (isToday) {
-                        bg = 'var(--secondary)';
+                        bg = 'var(--secondary)'; // Grayish as requested/default, distinct from green entry
                         fontWeight = 'bold';
                     }
 

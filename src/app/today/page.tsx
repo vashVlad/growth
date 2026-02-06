@@ -3,45 +3,23 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/Card';
 import { useJournal } from '@/hooks/useJournal';
+import { useTheme } from '@/hooks/useTheme';
+import { getLocalDateISOString, formatDateForDisplay } from '@/utils/date';
 
 export default function TodayPage() {
     const { getEntryByDate } = useJournal();
     const [date, setDate] = useState('');
     const [isComplete, setIsComplete] = useState(false);
 
-    // Theme Management
-    useEffect(() => {
-        // Initialize theme from local storage or system preference
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-        } else {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-        }
-    }, []);
+    const { toggleTheme } = useTheme();
 
-    const toggleTheme = () => {
-        const isDark = document.documentElement.classList.contains('dark');
-        if (isDark) {
-            document.documentElement.classList.remove('dark');
-            document.documentElement.classList.add('light');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.classList.remove('light');
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    };
-
+    // Date Logic
     useEffect(() => {
-        const todayStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-        setDate(todayStr);
+        const todayISO = getLocalDateISOString();
+        setDate(formatDateForDisplay(todayISO));
 
         // Check for existing entry
-        const isoDate = new Date().toISOString().split('T')[0];
-        const existing = getEntryByDate(isoDate);
+        const existing = getEntryByDate(todayISO);
         if (existing) {
             setIsComplete(true);
         }
@@ -123,17 +101,53 @@ export default function TodayPage() {
                         <p style={{ fontSize: '1.125rem', lineHeight: '1.6', marginBottom: '1.5rem', color: 'var(--foreground)' }}>
                             Take a moment to reflect on this. There's no right or wrong answer.
                         </p>
-                        <Link
-                            href={`/write?prompt=${encodeURIComponent(todayPrompt)}`}
-                            className="btn-primary"
-                            style={{
-                                display: 'inline-block',
-                                textDecoration: 'none',
-                                fontSize: '1rem'
-                            }}
-                        >
-                            Start Writing
-                        </Link>
+                        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                            <Link
+                                href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=free`}
+                                className="btn-secondary"
+                                style={{
+                                    flex: 1,
+                                    textDecoration: 'none',
+                                    fontSize: '0.9rem',
+                                    padding: '1rem 0.5rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'var(--surface)',
+                                    border: '1px solid var(--border)',
+                                    borderRadius: '12px',
+                                    color: 'var(--primary)',
+                                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                                }}
+                            >
+                                <span style={{ fontWeight: '600', marginBottom: '4px' }}>Purpose Reflection</span>
+                                <span style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 'normal' }}>Explore meaning</span>
+                            </Link>
+
+                            <Link
+                                href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=growth`}
+                                className="btn-secondary"
+                                style={{
+                                    flex: 1,
+                                    textDecoration: 'none',
+                                    fontSize: '0.9rem',
+                                    padding: '1rem 0.5rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'var(--surface)',
+                                    border: '1px solid var(--border)',
+                                    borderRadius: '12px',
+                                    color: 'var(--primary)',
+                                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                                }}
+                            >
+                                <span style={{ fontWeight: '600', marginBottom: '4px' }}>Growth Reflection</span>
+                                <span style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 'normal' }}>Align & Improve</span>
+                            </Link>
+                        </div>
                     </>
                 )}
             </div>
