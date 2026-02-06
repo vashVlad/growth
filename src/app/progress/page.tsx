@@ -583,63 +583,69 @@ export default function ProgressPage() {
                                             </h3>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                                 {sectionEntries.map(entry => (
-                                                    <div key={entry.id} className="card" style={{ padding: '1.5rem' }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.75rem' }}>
-                                                            <div>
-                                                                <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--foreground)' }}>
-                                                                    {formatDateForDisplay(entry.date)}
-                                                                </div>
-                                                                <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '2px' }}>
-                                                                    {entry.reflectionMode === 'growth' ? 'Growth Reflection' : 'Purpose Reflection'}
-                                                                </div>
+                                                    <div key={entry.id} className="card" style={{ padding: '1.25rem' }}>
+                                                        {/* Line 1: Date & Icons */}
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                            <div style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--foreground)' }}>
+                                                                {formatDateForDisplay(entry.date)}
                                                             </div>
                                                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                                                {/* Reflection Indicators */}
+                                                                {entry.highlight && (
+                                                                    <div style={{
+                                                                        padding: '2px 6px',
+                                                                        borderRadius: '4px',
+                                                                        background: 'var(--surface-highlight)',
+                                                                        color: 'var(--primary)',
+                                                                        fontSize: '0.7rem',
+                                                                        fontWeight: 'bold',
+                                                                        textTransform: 'uppercase',
+                                                                        letterSpacing: '0.05em'
+                                                                    }}>
+                                                                        {entry.highlight.type}
+                                                                    </div>
+                                                                )}
                                                                 {entry.reflectionAnchors?.excitedText && <span title="Excited">⚡</span>}
                                                                 {entry.reflectionAnchors?.drainedText && <span title="Drained">🔋</span>}
                                                                 {entry.reflectionAnchors?.gratefulText && <span title="Grateful">🙏</span>}
                                                             </div>
                                                         </div>
 
-                                                        {entry.highlight && (
-                                                            <div style={{
-                                                                display: 'inline-block',
-                                                                padding: '2px 8px',
-                                                                borderRadius: '4px',
-                                                                background: 'var(--surface-highlight)',
-                                                                color: 'var(--primary)',
-                                                                fontSize: '0.75rem',
-                                                                fontWeight: 'bold',
-                                                                textTransform: 'uppercase',
-                                                                marginBottom: '0.5rem',
-                                                                letterSpacing: '0.05em'
-                                                            }}>
-                                                                {entry.highlight.type}
-                                                            </div>
-                                                        )}
-
-                                                        <div style={{ fontSize: '0.9rem', color: 'var(--foreground-muted)', marginBottom: '0.5rem', fontStyle: 'italic' }}>
-                                                            {entry.prompt}
-                                                        </div>
-
-                                                        <p style={{ fontSize: '1rem', lineHeight: '1.6', color: 'var(--foreground)', whiteSpace: 'pre-wrap', marginBottom: '1.5rem' }}>
-                                                            {entry.content}
+                                                        {/* Line 2: Excerpt */}
+                                                        <p style={{
+                                                            fontSize: '1rem',
+                                                            lineHeight: '1.5',
+                                                            color: 'var(--foreground)',
+                                                            marginBottom: '0.75rem',
+                                                            display: '-webkit-box',
+                                                            WebkitLineClamp: 2,
+                                                            WebkitBoxOrient: 'vertical',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis'
+                                                        }}>
+                                                            {(entry.content || "").replace(/\s+/g, ' ') || <span style={{ color: 'var(--foreground-muted)', fontStyle: 'italic', fontSize: '0.9rem' }}>No free write yet</span>}
                                                         </p>
 
-                                                        <div style={{ display: 'flex', gap: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-                                                            <Link href={`/write?id=${entry.id}`} style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--primary)', textDecoration: 'none' }}>
-                                                                Edit
-                                                            </Link>
-                                                            <button
-                                                                onClick={() => {
-                                                                    if (confirm('Are you sure you want to delete this entry?')) {
-                                                                        deleteEntry(entry.id);
-                                                                    }
-                                                                }}
-                                                                style={{ background: 'none', border: 'none', fontSize: '0.875rem', cursor: 'pointer', color: 'var(--foreground-muted)' }}
-                                                            >
-                                                                Delete
-                                                            </button>
+                                                        {/* Line 3: Type Label & Actions */}
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.5rem', borderTop: '1px solid var(--border-light, rgba(0,0,0,0.05))' }}>
+                                                            <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)' }}>
+                                                                {entry.reflectionMode === 'growth' ? 'Growth Reflection' : 'Purpose Reflection'}
+                                                            </div>
+
+                                                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                                                <Link href={`/write?id=${entry.id}`} style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--primary)', textDecoration: 'none' }}>
+                                                                    Edit
+                                                                </Link>
+                                                                <button
+                                                                    onClick={() => {
+                                                                        if (confirm('Are you sure you want to delete this entry?')) {
+                                                                            deleteEntry(entry.id);
+                                                                        }
+                                                                    }}
+                                                                    style={{ background: 'none', border: 'none', fontSize: '0.875rem', cursor: 'pointer', color: 'var(--foreground-muted)' }}
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ))}

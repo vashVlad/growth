@@ -253,11 +253,22 @@ export default function CurateJournalPage() {
                                     alignItems: 'center'
                                 }}
                             >
-                                <div>
-                                    <div style={{ fontWeight: 'bold', fontSize: '0.875rem' }}>{entry.date}</div>
-                                    <div style={{ fontSize: '0.875rem', color: 'var(--foreground-muted)' }}>{(entry.prompt || entry.content).substring(0, 40)}...</div>
+                                <div style={{ flex: 1, minWidth: 0, marginRight: '1rem' }}>
+                                    <div style={{ fontWeight: 'bold', fontSize: '0.875rem', marginBottom: '0.25rem' }}>{entry.date}</div>
+                                    <div style={{
+                                        fontSize: '0.875rem',
+                                        color: 'var(--foreground-muted)',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: 'vertical',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        lineHeight: '1.4'
+                                    }}>
+                                        {(entry.content || "").replace(/\s+/g, ' ') || "No free write added"}
+                                    </div>
                                 </div>
-                                {selectedEntryIds.has(entry.id) && <span style={{ color: 'var(--primary)' }}>✓</span>}
+                                {selectedEntryIds.has(entry.id) && <span style={{ color: 'var(--primary)', flexShrink: 0 }}>✓</span>}
                             </div>
                         ))}
                     </div>
