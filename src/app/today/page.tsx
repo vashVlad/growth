@@ -38,6 +38,8 @@ export default function TodayPage() {
     // Simple daily rotation based on day of month
     const todayPrompt = prompts[new Date().getDate() % prompts.length];
 
+
+
     return (
         <div className="animate-fade-in" style={{ padding: '2rem 1.5rem', paddingBottom: '100px' }}>
             <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -189,6 +191,18 @@ export default function TodayPage() {
                     "Growth is painful. Change is painful. But nothing is as painful as staying stuck somewhere you don't belong."
                 </div>
             </div>
+
+            <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.25rem' }}>Add to Home Screen</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--foreground)', margin: 0 }}>
+                    On iPhone: Tap the Share icon in Safari, then select “Add to Home Screen”.
+                </p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', margin: 0 }}>
+                    This lets you use the app like a native app.
+                </p>
+            </div>
+
+
         </div>
     );
 }
