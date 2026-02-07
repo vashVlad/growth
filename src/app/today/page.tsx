@@ -8,10 +8,14 @@ import { useJournal } from '@/hooks/useJournal';
 import { useTheme } from '@/hooks/useTheme';
 import { getLocalDateISOString, formatDateForDisplay } from '@/utils/date';
 
+import { DAILY_PROMPTS, DAILY_QUOTES } from '@/data/dailyContent';
+
 export default function TodayPage() {
     const { getEntryByDate } = useJournal();
     const [date, setDate] = useState('');
     const [isComplete, setIsComplete] = useState(false);
+    const [prompt, setPrompt] = useState(DAILY_PROMPTS[0]);
+    const [quote, setQuote] = useState(DAILY_QUOTES[0]);
 
     const { toggleTheme } = useTheme();
 
@@ -20,6 +24,15 @@ export default function TodayPage() {
         const todayISO = getLocalDateISOString();
         setDate(formatDateForDisplay(todayISO));
 
+        // Calculate stable day index based on local calendar date (not just 24h chunks)
+        const todayDate = new Date();
+        const startOfEpoch = new Date(2025, 0, 1); // Fixed epoch
+        const dayIndex = Math.floor((todayDate.getTime() - startOfEpoch.getTime()) / (1000 * 60 * 60 * 24));
+
+        // Rotate Content
+        setPrompt(DAILY_PROMPTS[Math.abs(dayIndex) % DAILY_PROMPTS.length]);
+        setQuote(DAILY_QUOTES[Math.abs(dayIndex) % DAILY_QUOTES.length]);
+
         // Check for existing entry
         const existing = getEntryByDate(todayISO);
         if (existing) {
@@ -27,16 +40,7 @@ export default function TodayPage() {
         }
     }, [getEntryByDate]);
 
-    const prompts = [
-        "What is one small win you had today?",
-        "What are you grateful for right now?",
-        "What is challenging you today, and how are you handling it?",
-        "How did you help someone today?",
-        "What is one thing you learned today?"
-    ];
 
-    // Simple daily rotation based on day of month
-    const todayPrompt = prompts[new Date().getDate() % prompts.length];
 
 
 
@@ -79,6 +83,12 @@ export default function TodayPage() {
                 </div>
             </header>
 
+            <div className="animate-fade-in" style={{ marginBottom: '2.5rem', marginTop: '-1rem' }}>
+                <div style={{ fontStyle: 'italic', color: 'var(--foreground-muted)', borderLeft: '3px solid var(--accent)', paddingLeft: '1rem', fontSize: '1rem' }}>
+                    "{quote}"
+                </div>
+            </div>
+
             <div className="card" style={{ padding: '2rem', textAlign: 'center', borderColor: isComplete ? 'var(--primary)' : 'var(--border)' }}>
                 {isComplete ? (
                     <div className="animate-fade-in">
@@ -107,7 +117,7 @@ export default function TodayPage() {
                 ) : (
                     <>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--primary)' }}>
-                            {todayPrompt}
+                            {prompt}
                         </h3>
                         <p style={{ fontSize: '1.125rem', lineHeight: '1.6', marginBottom: '1.5rem', color: 'var(--foreground)' }}>
                             Take a moment to reflect on this. There's no right or wrong answer.
@@ -115,7 +125,7 @@ export default function TodayPage() {
                         <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                             <div style={{ flex: 1, position: 'relative' }}>
                                 <Link
-                                    href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=free`}
+                                    href={`/write?prompt=${encodeURIComponent(prompt)}&mode=free`}
                                     className="btn-secondary"
                                     style={{
                                         textDecoration: 'none',
@@ -148,7 +158,7 @@ export default function TodayPage() {
 
                             <div style={{ flex: 1, position: 'relative' }}>
                                 <Link
-                                    href={`/write?prompt=${encodeURIComponent(todayPrompt)}&mode=growth`}
+                                    href={`/write?prompt=${encodeURIComponent(prompt)}&mode=growth`}
                                     className="btn-secondary"
                                     style={{
                                         textDecoration: 'none',
@@ -185,12 +195,7 @@ export default function TodayPage() {
 
 
 
-            <div style={{ marginTop: '2rem' }}>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--foreground)' }}>Quote of the Day</h3>
-                <div style={{ fontStyle: 'italic', color: 'var(--foreground-muted)', borderLeft: '3px solid var(--accent)', paddingLeft: '1rem' }}>
-                    "Growth is painful. Change is painful. But nothing is as painful as staying stuck somewhere you don't belong."
-                </div>
-            </div>
+
 
             <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.25rem' }}>Add to Home Screen</h3>
