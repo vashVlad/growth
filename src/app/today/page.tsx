@@ -9,6 +9,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { getLocalDateISOString, formatDateForDisplay } from '@/utils/date';
 
 import { DAILY_PROMPTS, DAILY_QUOTES } from '@/data/dailyContent';
+import { FeedbackCard } from '@/components/FeedbackCard';
 
 export default function TodayPage() {
     const { getEntryByDate } = useJournal();
@@ -39,10 +40,6 @@ export default function TodayPage() {
             setIsComplete(true);
         }
     }, [getEntryByDate]);
-
-
-
-
 
     return (
         <div className="animate-fade-in" style={{ padding: '2rem 1.5rem', paddingBottom: '100px' }}>
@@ -193,10 +190,6 @@ export default function TodayPage() {
                 )}
             </div>
 
-
-
-
-
             <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.25rem' }}>Add to Home Screen</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--foreground)', margin: 0 }}>
@@ -207,7 +200,11 @@ export default function TodayPage() {
                 </p>
             </div>
 
+            <FeedbackCard />
 
+            <div style={{ marginTop: '3rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--foreground-muted)', opacity: 0.7 }}>
+                Created by Vladyslav Vashchuk
+            </div>
         </div>
     );
 }

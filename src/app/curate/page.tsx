@@ -404,9 +404,10 @@ export default function CurateJournalPage() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        overflow: 'auto', // Enable wrapper scroll (if iframe flattens)
+                        overflow: 'hidden', // PDFViewer / Iframe handles internal scrolling
                         WebkitOverflowScrolling: 'touch',
-                        height: previewMode === 'book' ? '75vh' : 'auto', // Fixed viewport for PDF
+                        height: previewMode === 'book' ? '85vh' : 'auto', // Taller viewport for better visibility
+                        minHeight: previewMode === 'book' ? '600px' : 'auto',
                         width: '100%',
                         position: 'relative'
                     }}>
