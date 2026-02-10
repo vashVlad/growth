@@ -17,6 +17,7 @@ export default function TodayPage() {
     const [isComplete, setIsComplete] = useState(false);
     const [prompt, setPrompt] = useState(DAILY_PROMPTS[0]);
     const [quote, setQuote] = useState(DAILY_QUOTES[0]);
+    const [showInstallHelp, setShowInstallHelp] = useState(true);
 
     const { toggleTheme } = useTheme();
 
@@ -127,7 +128,7 @@ export default function TodayPage() {
                                     style={{
                                         textDecoration: 'none',
                                         fontSize: '0.9rem',
-                                        padding: '1rem 0.5rem',
+                                        padding: '1rem 2.5rem', // Symmetric padding to keep text centered & avoid icon
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
@@ -160,7 +161,7 @@ export default function TodayPage() {
                                     style={{
                                         textDecoration: 'none',
                                         fontSize: '0.9rem',
-                                        padding: '1rem 0.5rem',
+                                        padding: '1rem 2.5rem', // Symmetric padding to keep text centered & avoid icon
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
@@ -190,15 +191,39 @@ export default function TodayPage() {
                 )}
             </div>
 
-            <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.25rem' }}>Add to Home Screen</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--foreground)', margin: 0 }}>
-                    On iPhone: Tap the Share icon in Safari, then select “Add to Home Screen”.
-                </p>
-                <p style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', margin: 0 }}>
-                    This lets you use the app like a native app.
-                </p>
-            </div>
+            {showInstallHelp && (
+                <div className="animate-fade-in" style={{ marginTop: '2rem', padding: '1rem', background: 'var(--surface-highlight)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem', position: 'relative' }}>
+                    <button
+                        onClick={() => setShowInstallHelp(false)}
+                        style={{
+                            position: 'absolute',
+                            top: '8px',
+                            right: '8px',
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: 'var(--foreground-muted)',
+                            fontSize: '1.25rem',
+                            lineHeight: 1,
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: 0.7
+                        }}
+                        aria-label="Dismiss"
+                    >
+                        ×
+                    </button>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.25rem', paddingRight: '1.5rem' }}>Add to Home Screen</h3>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--foreground)', margin: 0 }}>
+                        On iPhone: Tap the Share icon in Safari, then select “Add to Home Screen”.
+                    </p>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', margin: 0 }}>
+                        This lets you use the app like a native app.
+                    </p>
+                </div>
+            )}
 
             <FeedbackCard />
 

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { SafeStorage } from '@/utils/storage';
 
 export interface Entry {
     id: string;
@@ -99,33 +100,21 @@ export function useJournal() {
 
     useEffect(() => {
         // Load Entries
-        const storedEntries = localStorage.getItem(STORAGE_KEY);
-        if (storedEntries) {
-            try {
-                setEntries(JSON.parse(storedEntries));
-            } catch (e) {
-                console.error("Failed to parse entries", e);
-            }
+        const storedEntries = SafeStorage.getItem<Entry[]>(STORAGE_KEY, []);
+        if (storedEntries.length > 0) {
+            setEntries(storedEntries);
         }
 
         // Load Weekly Reflections
-        const storedReflections = localStorage.getItem(WEEKLY_REFLECTIONS_KEY);
-        if (storedReflections) {
-            try {
-                setWeeklyReflections(JSON.parse(storedReflections));
-            } catch (e) {
-                console.error("Failed to parse weekly reflections", e);
-            }
+        const storedReflections = SafeStorage.getItem<WeeklyReflection[]>(WEEKLY_REFLECTIONS_KEY, []);
+        if (storedReflections.length > 0) {
+            setWeeklyReflections(storedReflections);
         }
 
         // Load Journal Drafts
-        const storedDrafts = localStorage.getItem(JOURNAL_DRAFTS_KEY);
-        if (storedDrafts) {
-            try {
-                setDrafts(JSON.parse(storedDrafts));
-            } catch (e) {
-                console.error("Failed to parse journal drafts", e);
-            }
+        const storedDrafts = SafeStorage.getItem<JournalDraft[]>(JOURNAL_DRAFTS_KEY, []);
+        if (storedDrafts.length > 0) {
+            setDrafts(storedDrafts);
         }
 
         setLoading(false);
@@ -149,7 +138,7 @@ export function useJournal() {
             } else {
                 updatedEntries = [newEntry, ...prevEntries];
             }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEntries));
+            SafeStorage.setItem(STORAGE_KEY, updatedEntries);
             return updatedEntries;
         });
     }, []);
@@ -157,7 +146,7 @@ export function useJournal() {
     const updateEntry = useCallback((entry: Entry) => {
         setEntries(prevEntries => {
             const updatedEntries = prevEntries.map(e => e.id === entry.id ? { ...e, ...entry, timestamp: Date.now() } : e);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEntries));
+            SafeStorage.setItem(STORAGE_KEY, updatedEntries);
             return updatedEntries;
         });
     }, []);
@@ -165,7 +154,7 @@ export function useJournal() {
     const deleteEntry = useCallback((id: string) => {
         setEntries(prevEntries => {
             const updatedEntries = prevEntries.filter(e => e.id !== id);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEntries));
+            SafeStorage.setItem(STORAGE_KEY, updatedEntries);
             return updatedEntries;
         });
     }, []);
@@ -182,7 +171,7 @@ export function useJournal() {
             } else {
                 updatedReflections = [...prevReflections, { weekId, content, timestamp }];
             }
-            localStorage.setItem(WEEKLY_REFLECTIONS_KEY, JSON.stringify(updatedReflections));
+            SafeStorage.setItem(WEEKLY_REFLECTIONS_KEY, updatedReflections);
             return updatedReflections;
         });
     }, []);
@@ -202,7 +191,7 @@ export function useJournal() {
     const saveDraft = useCallback((draft: JournalDraft) => {
         setDrafts(prevDrafts => {
             const updatedDrafts = [...prevDrafts.filter(d => d.id !== draft.id), draft];
-            localStorage.setItem(JOURNAL_DRAFTS_KEY, JSON.stringify(updatedDrafts));
+            SafeStorage.setItem(JOURNAL_DRAFTS_KEY, updatedDrafts);
             return updatedDrafts;
         });
     }, []);
@@ -210,7 +199,7 @@ export function useJournal() {
     const deleteDraft = useCallback((id: string) => {
         setDrafts(prevDrafts => {
             const updatedDrafts = prevDrafts.filter(d => d.id !== id);
-            localStorage.setItem(JOURNAL_DRAFTS_KEY, JSON.stringify(updatedDrafts));
+            SafeStorage.setItem(JOURNAL_DRAFTS_KEY, updatedDrafts);
             return updatedDrafts;
         });
     }, []);
@@ -226,7 +215,7 @@ export function useJournal() {
                 exportDate: new Date().toISOString(),
                 appVersion: '0.1.0',
                 schemaVersion: 1,
-                themePreference: localStorage.getItem('theme') as 'light' | 'dark' | null
+                themePreference: SafeStorage.getItem('theme', null) as 'light' | 'dark' | null
             },
             data: {
                 entries,
@@ -244,97 +233,7 @@ export function useJournal() {
         downloadAnchorNode.remove();
     }, [entries, weeklyReflections, drafts]);
 
-    const importBackup = useCallback((backup: any): { added: number; updated: number; skipped: number } => {
-        if (!backup.data) throw new Error("Invalid backup format");
-
-        let added = 0;
-        let updated = 0;
-        let skipped = 0;
-
-        // Note: For import, we need access to the current state to merge.
-        // Using callbacks with functional updates is tricky for complex logic like this 
-        // because we need to read AND write. The cleanest way here is to rely on the current 'entries' closure
-        // but that means importBackup changes whenever entries changes. That's acceptable.
-
-        // Actually, we can do it purely functionally if we want absolute stability, but the merge logic is complex.
-        // Let's stick to dependency on state for now, but ensure it's in the dependency array.
-
-        // 1. Merge Entries
-        const backupEntries: Entry[] = backup.data.entries || [];
-        setEntries(currentEntries => {
-            const newEntries = [...currentEntries];
-            backupEntries.forEach(remote => {
-                const localIndex = newEntries.findIndex(e => e.id === remote.id);
-                if (localIndex === -1) {
-                    newEntries.push(remote);
-                    added++;
-                } else {
-                    const local = newEntries[localIndex];
-                    if ((remote.timestamp || 0) > (local.timestamp || 0)) {
-                        newEntries[localIndex] = remote;
-                        updated++;
-                    } else {
-                        skipped++;
-                    }
-                }
-            });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(newEntries));
-            return newEntries;
-        });
-
-
-        // 2. Merge Weekly Reflections
-        const backupReflections: WeeklyReflection[] = backup.data.weeklyReflections || [];
-        setWeeklyReflections(currentReflections => {
-            const newReflections = [...currentReflections];
-            backupReflections.forEach(remote => {
-                const localIndex = newReflections.findIndex(w => w.weekId === remote.weekId);
-                if (localIndex === -1) {
-                    newReflections.push(remote);
-                } else {
-                    const local = newReflections[localIndex];
-                    if ((remote.timestamp || 0) > (local.timestamp || 0)) {
-                        newReflections[localIndex] = remote;
-                    }
-                }
-            });
-            localStorage.setItem(WEEKLY_REFLECTIONS_KEY, JSON.stringify(newReflections));
-            return newReflections;
-        });
-
-        // 3. Merge Drafts
-        const backupDrafts: JournalDraft[] = backup.data.drafts || [];
-        setDrafts(currentDrafts => {
-            const newDrafts = [...currentDrafts];
-            backupDrafts.forEach(remote => {
-                const localIndex = newDrafts.findIndex(d => d.id === remote.id);
-                if (localIndex === -1) {
-                    newDrafts.push(remote);
-                } else {
-                    const local = newDrafts[localIndex];
-                    if ((remote.updatedAt || 0) > (local.updatedAt || 0)) {
-                        newDrafts[localIndex] = remote;
-                    }
-                }
-            });
-            localStorage.setItem(JOURNAL_DRAFTS_KEY, JSON.stringify(newDrafts));
-            return newDrafts;
-        });
-
-        // Restore theme if set
-        if (backup.metadata?.themePreference) {
-            localStorage.setItem('theme', backup.metadata.themePreference);
-            if (backup.metadata.themePreference === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.documentElement.classList.remove('light');
-            } else {
-                document.documentElement.classList.add('light');
-                document.documentElement.classList.remove('dark');
-            }
-        }
-
-        return { added, updated, skipped };
-    }, []); // Removed state dependencies because we used functional updates for setters! 
+    // Old importBackup removed
     // WAIT: The stats 'added/updated/skipped' need to be returned synchronously.
     // With functional updates, we calculate inside the setter, so we can't easily return them.
     // Correction: For importBackup, we DO need to read the current state to compute the diff stats to return.
@@ -406,17 +305,17 @@ export function useJournal() {
 
         // Commit
         setEntries(newEntries);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newEntries));
+        SafeStorage.setItem(STORAGE_KEY, newEntries);
 
         setWeeklyReflections(newReflections);
-        localStorage.setItem(WEEKLY_REFLECTIONS_KEY, JSON.stringify(newReflections));
+        SafeStorage.setItem(WEEKLY_REFLECTIONS_KEY, newReflections);
 
         setDrafts(newDrafts);
-        localStorage.setItem(JOURNAL_DRAFTS_KEY, JSON.stringify(newDrafts));
+        SafeStorage.setItem(JOURNAL_DRAFTS_KEY, newDrafts);
 
         // Restore theme if set
         if (backup.metadata?.themePreference) {
-            localStorage.setItem('theme', backup.metadata.themePreference);
+            SafeStorage.setItem('theme', backup.metadata.themePreference);
             if (backup.metadata.themePreference === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.documentElement.classList.remove('light');

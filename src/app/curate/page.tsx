@@ -27,7 +27,7 @@ const DEFAULT_SECTIONS = [
 
 export default function CurateJournalPage() {
     const router = useRouter();
-    const { entries, saveDraft } = useJournal();
+    const { entries } = useJournal();
     const [step, setStep] = useState(1);
 
     // Step 1: Selection State
@@ -77,23 +77,7 @@ export default function CurateJournalPage() {
         }
     }, [filteredEntries]); // Dependency is now stable filteredEntries
 
-    const handleSave = () => {
-        const newDraft: JournalDraft = {
-            id: crypto.randomUUID(),
-            title: draftTitle,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            intent,
-            criteria: {
-                startDate: dateRange !== 'all' ? new Date(Date.now() - (parseInt(dateRange) * 24 * 60 * 60 * 1000)).toISOString().split('T')[0] : undefined,
-                includeHighlights
-            },
-            includedEntryIds: Array.from(selectedEntryIds),
-            sections: DEFAULT_SECTIONS
-        };
-        saveDraft(newDraft);
-        router.push('/progress');
-    };
+    // handleSave removed - usage replaced by direct PDF download
 
     // Memoized Preview Draft (Step 5)
     // This ensures the object identity is stable unless inputs change
@@ -491,19 +475,13 @@ export default function CurateJournalPage() {
 
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '4rem' }}>
                         <button className="btn-primary" style={{ flex: 1, background: 'var(--surface)', color: 'var(--foreground)', border: '1px solid var(--border)' }} onClick={() => setStep(3)}>Edit</button>
-                        <button className="btn-primary" style={{ flex: 1 }} onClick={handleSave}>Save to Library</button>
-                    </div>
-
-                    {/* Independent PDF Download for Preview */}
-                    <div style={{ textAlign: 'center' }}>
-                        <p style={{ fontSize: '0.8rem', color: 'var(--foreground-muted)', marginBottom: '0.5rem' }}>Ready to print?</p>
                         <PdfDownloadButton
                             draft={previewDraft}
                             entries={previewEntries}
-                            // PASS THE SELECTED THEME HERE
                             themeName={selectedTheme}
                             className="btn-primary"
-                            style={{ background: 'var(--primary)', color: 'white', display: 'inline-flex' }}
+                            style={{ flex: 1 }}
+                            label="Save PDF"
                         />
                     </div>
                 </div>

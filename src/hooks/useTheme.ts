@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { SafeStorage } from '@/utils/storage';
 
 export function useTheme() {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
     useEffect(() => {
         // Initialize theme from local storage or system preference
-        const savedTheme = localStorage.getItem('theme');
+        const savedTheme = SafeStorage.getItem<string | null>('theme', null);
+
         if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             setTheme('dark');
             document.documentElement.classList.add('dark');
@@ -21,12 +23,12 @@ export function useTheme() {
         if (theme === 'dark') {
             document.documentElement.classList.remove('dark');
             document.documentElement.classList.add('light');
-            localStorage.setItem('theme', 'light');
+            SafeStorage.setItem('theme', 'light');
             setTheme('light');
         } else {
             document.documentElement.classList.remove('light');
             document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
+            SafeStorage.setItem('theme', 'dark');
             setTheme('dark');
         }
     };

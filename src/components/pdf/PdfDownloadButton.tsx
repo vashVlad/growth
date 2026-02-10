@@ -11,9 +11,10 @@ interface PdfDownloadButtonProps {
     themeName?: PdfThemeName;
     className?: string;
     style?: React.CSSProperties;
+    label?: string; // Optional custom label
 }
 
-export const PdfDownloadButton: React.FC<PdfDownloadButtonProps> = ({ draft, entries, themeName = 'minimal', className, style }) => {
+export const PdfDownloadButton: React.FC<PdfDownloadButtonProps> = ({ draft, entries, themeName = 'minimal', className, style, label }) => {
     const [isGenerating, setIsGenerating] = useState(false);
 
     // Slugify helper: allows a-z and 0-9
@@ -68,7 +69,7 @@ export const PdfDownloadButton: React.FC<PdfDownloadButtonProps> = ({ draft, ent
             onClick={handleDownload}
             disabled={isGenerating}
         >
-            {isGenerating ? 'Preparing PDF...' : 'Save as PDF'}
+            {isGenerating ? 'Preparing PDF...' : (label || 'Save as PDF')}
         </button>
     );
 };

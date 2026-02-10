@@ -58,7 +58,8 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDa
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <button
                     onClick={() => changeMonth(-1)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', fontSize: '1.25rem', color: 'var(--primary)' }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.75rem', fontSize: '1.25rem', color: 'var(--primary)' }}
+                    aria-label="Previous month"
                 >
                     &lt;
                 </button>
@@ -67,7 +68,8 @@ export const Calendar: React.FC<CalendarProps> = ({ datesWithEntries, selectedDa
                 </h3>
                 <button
                     onClick={() => changeMonth(1)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', fontSize: '1.25rem', color: 'var(--primary)' }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.75rem', fontSize: '1.25rem', color: 'var(--primary)' }}
+                    aria-label="Next month"
                 >
                     &gt;
                 </button>

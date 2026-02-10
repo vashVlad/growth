@@ -270,7 +270,9 @@ function WriteContent() {
                 ref={textareaRef}
                 value={content}
                 onChange={handleInput}
-                placeholder="How are you feeling right now? What's on your mind?"
+                placeholder={prompt === 'Free Write'
+                    ? "Write whatever comes up for you..."
+                    : "Write a few thoughts in response to this prompt..."}
                 style={{
                     width: '100%',
                     minHeight: '10vh',

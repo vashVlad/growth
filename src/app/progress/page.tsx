@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useJournal } from '@/hooks/useJournal';
+import { useDebounce } from '@/hooks/useDebounce';
 import { ContextualHelp } from '@/components/ContextualHelp';
 import { getLocalDateISOString, getSafeDate, formatDateForDisplay } from '@/utils/date';
 import { Card } from '@/components/Card';
@@ -11,6 +12,7 @@ import { Calendar } from '@/components/Calendar';
 export default function ProgressPage() {
     const { entries, loading, deleteEntry, weeklyReflections, saveWeeklyReflection, exportBackup, importBackup } = useJournal();
     const [searchQuery, setSearchQuery] = React.useState('');
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
     const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
     const [showDropdown, setShowDropdown] = React.useState(false);
     const router = useRouter();
@@ -80,8 +82,8 @@ export default function ProgressPage() {
             if (selectedDate && entry.date !== selectedDate) return false;
 
             // 2. Search Filter
-            if (searchQuery.trim()) {
-                const query = searchQuery.toLowerCase();
+            if (debouncedSearchQuery.trim()) {
+                const query = debouncedSearchQuery.toLowerCase();
                 const contentMatch = (entry.content || '').toLowerCase().includes(query);
                 const promptMatch = (entry.prompt !== 'Free Write') && (entry.prompt || '').toLowerCase().includes(query);
                 if (!contentMatch && !promptMatch) return false;
@@ -98,7 +100,7 @@ export default function ProgressPage() {
 
             return true;
         });
-    }, [entries, selectedDate, searchQuery, filterMode]);
+    }, [entries, selectedDate, debouncedSearchQuery, filterMode]);
 
     // Group entries for "List View" (Memoized)
     // We lift this state up from the render function to avoid recalculation
@@ -273,7 +275,7 @@ export default function ProgressPage() {
                             <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--primary)', fontWeight: 'bold' }}>Reflection Spark</div>
                             <div style={{ fontSize: '1rem', color: 'var(--foreground)', marginTop: '4px' }}>{contextPrompt}</div>
                         </div>
-                        <button onClick={() => setShowContextPrompt(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--foreground-muted)', padding: '0.5rem', lineHeight: 1 }}>×</button>
+                        <button onClick={() => setShowContextPrompt(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--foreground-muted)', padding: '0.5rem', lineHeight: 1 }} aria-label="Dismiss reflection spark">×</button>
                     </div>
                 )}
 
