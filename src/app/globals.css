@@ -351,3 +351,19 @@ html.light .bottom-nav {
     widows: 3;
   }
 }
+
+/* Reflection Card Utilities */
+.reflection-buttons-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reflection-button-wrapper {
+  flex: 1;
+  position: relative;
+  min-width: 140px;
+  /* Prevent squishing too small */
+}

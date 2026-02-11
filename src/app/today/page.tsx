@@ -87,7 +87,7 @@ export default function TodayPage() {
                 </div>
             </div>
 
-            <div className="card" style={{ padding: '2rem', textAlign: 'center', borderColor: isComplete ? 'var(--primary)' : 'var(--border)' }}>
+            <div className="card" style={{ padding: '20px 10px', textAlign: 'center', borderColor: isComplete ? 'var(--primary)' : 'var(--border)' }}>
                 {isComplete ? (
                     <div className="animate-fade-in">
                         <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
@@ -120,8 +120,8 @@ export default function TodayPage() {
                         <p style={{ fontSize: '1.125rem', lineHeight: '1.6', marginBottom: '1.5rem', color: 'var(--foreground)' }}>
                             Take a moment to reflect on this. There's no right or wrong answer.
                         </p>
-                        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                            <div style={{ flex: 1, position: 'relative' }}>
+                        <div className="reflection-buttons-container">
+                            <div className="reflection-button-wrapper">
                                 <Link
                                     href={`/write?prompt=${encodeURIComponent(prompt)}&mode=free`}
                                     className="btn-secondary"
@@ -154,7 +154,7 @@ export default function TodayPage() {
                                 </div>
                             </div>
 
-                            <div style={{ flex: 1, position: 'relative' }}>
+                            <div className="reflection-button-wrapper">
                                 <Link
                                     href={`/write?prompt=${encodeURIComponent(prompt)}&mode=growth`}
                                     className="btn-secondary"
