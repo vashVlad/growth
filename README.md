@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌱 Growth Book
 
-## Getting Started
+Growth Book is a minimalist, offline-first journaling Progressive Web App (PWA) designed to support intentional self-reflection and personal growth. It combines guided prompts, distraction-free writing, and progress tracking with PDF export — bridging digital journaling with a physical journal experience.
 
-First, run the development server:
+🔗 **Live Website:**  
+https://growth-w-vash.vercel.app/
+
+---
+
+## ✨ Features
+
+- 📅 Daily guided reflection prompts  
+- ✍️ Distraction-free journaling interface  
+- 💾 Local storage persistence (privacy-focused)  
+- 📈 Progress and entry history tracking  
+- 📄 PDF export for printing  
+- 📱 Installable PWA (works offline)
+
+---
+
+## 🧠 Project Vision
+
+Growth Book is built around the idea that reflection should be:
+
+- Simple  
+- Consistent  
+- Intentional  
+- Long-term  
+
+The goal is to help users build awareness and preserve their thoughts — not just digitally, but in a format that can be printed and kept as a physical journal.
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework:** Next.js (React)
+- **Language:** JavaScript / TypeScript
+- **Styling:** CSS Modules / Custom CSS
+- **Storage:** Browser Local Storage
+- **PWA Support:** Service Workers + Web App Manifest
+- **Deployment:** Vercel
+
+---
+
+## 🚀 Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/growth.git
+cd growth
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📌 Future Improvements
 
-To learn more about Next.js, take a look at the following resources:
+- User authentication & cloud sync  
+- Reflection streak tracking  
+- Customizable prompt templates  
+- Enhanced PDF formatting & print pipeline  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 👤 Author
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vladyslav Vashchuk  
+Computer Science Student — Susquehanna University  
+LinkedIn: https://linkedin.com/in/your-link
