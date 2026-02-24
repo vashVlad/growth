@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { HomeFocusController } from "@/components/focus/HomeFocusController";
 import { Guidance } from "@/components/ai/Guidance";
 import { getWeekStartDateNY } from "@/lib/dates/weekStart";
-import { unstable_noStore as noStore } from "next/cache";
+import { CompleteGoalButton } from "@/components/goals/CompleteGoalButton";
 
 type Pillar = "career" | "personal" | "internal";
 
@@ -107,7 +107,7 @@ function SoftGoalCard({
           {goal.milestone?.trim() ? goal.milestone : "—"}
         </div>
         <div>
-          <span className="text-foreground/80">Current next step:</span>
+          <span className="text-foreground/80">Current next step: </span>
           {goal.next_action?.trim() ? goal.next_action : "—"}
         </div>
       </div>
@@ -118,14 +118,12 @@ function SoftGoalCard({
           <Link href={`/reflections/new?goalId=${goal.id}`}>Update</Link>
         </Button>
 
+        <CompleteGoalButton goalId={goal.id} />
+
         {reflectionId ? (
           <Guidance reflectionId={reflectionId} />
         ) : (
-          <Button
-            variant="ghost"
-            disabled
-            className="rounded-xl opacity-50 cursor-not-allowed"
-          >
+          <Button variant="ghost" disabled className="rounded-xl opacity-50 cursor-not-allowed">
             Guidance
           </Button>
         )}
@@ -135,10 +133,8 @@ function SoftGoalCard({
 }
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export default async function HomePage() {
-  noStore();
   const supabase = await supabaseServer();
 
   const {

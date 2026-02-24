@@ -88,7 +88,6 @@ export default async function NewReflectionPage({
       easier_harder,
       alignment,
       next_step,
-      updated_at: new Date().toISOString(), // ensure reflections.updated_at exists (recommended)
     };
 
     const { data: saved, error } = await supabase
@@ -114,7 +113,6 @@ export default async function NewReflectionPage({
     .from("goals")
     .update({
         next_action: next_step,
-        updated_at: new Date().toISOString(),
     })
     .eq("id", goalId)
     .eq("user_id", user.id)

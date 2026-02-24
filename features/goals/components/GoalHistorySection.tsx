@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
+import { SoftDisclosure } from "@/components/ui/SoftDisclosure";
+import { CompletionSummaryButton } from "@/components/ai/CompletionSummaryButton";
 
 type Pillar = "career" | "personal" | "internal";
 type GoalStatus = "active" | "completed" | "archived";
@@ -9,7 +10,6 @@ type DbGoal = {
   pillar: Pillar;
   title: string;
   milestone: string | null;
-  next_action: string | null;
   status: GoalStatus;
   created_at: string;
   updated_at: string;
@@ -18,20 +18,13 @@ type DbGoal = {
 type DbReflection = {
   id: string;
   goal_id: string;
-  week_start_date: string;
-  next_step: string | null;
+  week_start_date: string; // date
+  action_taken: string;
+  easier_harder: string;
+  alignment: "yes" | "partial" | "no" | string;
+  next_step: string;
   created_at: string;
   updated_at: string | null;
-};
-
-type HistoryItem = DbGoal & {
-  latest_reflection?: {
-    id: string;
-    week_start_date: string;
-    next_step: string | null;
-    updated_at: string | null;
-    created_at: string;
-  };
 };
 
 function pillarLabel(p: Pillar) {
@@ -44,6 +37,47 @@ function statusLabel(s: GoalStatus) {
   if (s === "completed") return "Completed";
   if (s === "archived") return "Archived";
   return "Active";
+}
+
+function formatStamp(iso: string | null | undefined) {
+  if (!iso) return "";
+  return String(iso).slice(0, 16).replace("T", " ");
+}
+
+function prettyAlignment(a: string | null | undefined) {
+  const v = String(a ?? "").trim().toLowerCase();
+  if (!v) return "—";
+  if (v === "yes") return "Yes";
+  if (v === "no") return "No";
+  if (v === "partial") return "Partial";
+  return v.charAt(0).toUpperCase() + v.slice(1);
+}
+
+function alignmentTone(a: string | null | undefined) {
+  const v = prettyAlignment(a);
+  if (v === "Yes") return "Aligned";
+  if (v === "No") return "Misaligned";
+  if (v === "Partial") return "Partially aligned";
+  return v;
+}
+
+// "2026-02-23" -> "Feb 23"
+function formatShortDate(iso: string | null | undefined) {
+  const s = String(iso ?? "").slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return "—";
+  const [, m, d] = s.split("-").map(Number);
+  const months = [
+    "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+  ];
+  return `${months[(m ?? 1) - 1] ?? "—"} ${d}`;
+}
+
+function chip(text: string) {
+  return (
+    <span className="inline-flex items-center rounded-full border border-border/50 bg-background/40 px-2.5 py-1 text-xs text-muted-foreground">
+      {text}
+    </span>
+  );
 }
 
 export default async function GoalHistorySection() {
@@ -61,14 +95,16 @@ export default async function GoalHistorySection() {
     );
   }
 
-  // 1) Load NON-active goals from DB
   const { data: goals, error: goalsErr } = await supabase
     .from("goals")
-    .select("id, pillar, title, milestone, next_action, status, created_at, updated_at")
-    .eq("user_id", user.id)
+    .select(
+      `
+      id, pillar, title, milestone, status, created_at, updated_at,
+      reflections (week_start_date, alignment, next_step, updated_at, created_at)
+    `
+    )
     .in("status", ["completed", "archived"])
-    .order("updated_at", { ascending: false })
-    .order("created_at", { ascending: false });
+    .order("updated_at", { ascending: false });
 
   if (goalsErr) {
     return (
@@ -88,104 +124,160 @@ export default async function GoalHistorySection() {
     );
   }
 
-  // 2) Load reflections for these goals (latest per goal)
   const goalIds = goalRows.map((g) => g.id);
 
   const { data: reflections, error: refErr } = await supabase
     .from("reflections")
-    .select("id, goal_id, week_start_date, next_step, created_at, updated_at")
+    .select(
+      "id, goal_id, week_start_date, action_taken, easier_harder, alignment, next_step, created_at, updated_at"
+    )
     .eq("user_id", user.id)
     .in("goal_id", goalIds)
-    // newest reflections first
     .order("week_start_date", { ascending: false })
     .order("updated_at", { ascending: false })
     .order("created_at", { ascending: false });
 
-  // Even if reflections fail, still show goals history
-  const reflectionByGoal = new Map<string, DbReflection>();
+  const reflectionsByGoal = new Map<string, DbReflection[]>();
   if (!refErr) {
     for (const r of (reflections ?? []) as DbReflection[]) {
-      if (!reflectionByGoal.has(r.goal_id)) reflectionByGoal.set(r.goal_id, r);
+      const arr = reflectionsByGoal.get(r.goal_id) ?? [];
+      arr.push(r);
+      reflectionsByGoal.set(r.goal_id, arr);
     }
   }
 
-  const items: HistoryItem[] = goalRows.map((g) => {
-    const r = reflectionByGoal.get(g.id);
-    return {
-      ...g,
-      latest_reflection: r
-        ? {
-            id: r.id,
-            week_start_date: r.week_start_date,
-            next_step: r.next_step ?? null,
-            updated_at: r.updated_at ?? null,
-            created_at: r.created_at,
-          }
-        : undefined,
-    };
-  });
-
   return (
     <section className="space-y-3">
-      {items.map((g) => (
-        <div
-          key={g.id}
-          className="rounded-2xl border border-border/60 bg-background/60 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-        >
-          <div className="flex items-start justify-between gap-4">
+      {goalRows.map((g) => {
+        const list = reflectionsByGoal.get(g.id) ?? [];
+        const latest = list[0];
+        const chronological = [...list].reverse();
+
+        const checkIns = list.length;
+
+        const firstWeek = chronological[0]?.week_start_date;
+        const lastWeek = chronological[chronological.length - 1]?.week_start_date;
+
+        const span =
+        firstWeek && lastWeek
+          ? (() => {
+              const a = formatShortDate(firstWeek); // "Feb 16"
+              const b = formatShortDate(lastWeek);  // "Feb 23"
+              if (a === b) return a;
+
+              const [am, ad] = a.split(" ");
+              const [bm, bd] = b.split(" ");
+
+              // Same month: "Feb 16–23"
+              if (am && bm && am === bm) return `${am} ${ad}–${bd}`;
+
+              // Different month: keep "Feb 28–Mar 3"
+              return `${a}–${b}`;
+            })()
+          : "—";
+
+        const isCompleted = g.status === "completed";
+
+        const milestone = g.milestone?.trim() ? g.milestone.trim() : null;
+        const lastAlignment = latest ? prettyAlignment(latest.alignment) : "—";
+        const lastIntention = latest?.next_step?.trim()
+          ? latest.next_step.trim()
+          : null;
+
+        return (
+          <div
+            key={g.id}
+            className="rounded-2xl border border-border/60 bg-background/60 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+          >
             <div className="text-xs uppercase tracking-widest text-muted-foreground">
               {pillarLabel(g.pillar)} • {statusLabel(g.status)}
             </div>
 
-            <Link
-              href={`/goals/${g.id}/adjust`}
-              className="rounded-full border border-border px-3 py-1 text-xs text-foreground/80 hover:bg-muted transition-colors"
-            >
-              View
-            </Link>
-          </div>
-
-          <div className="mt-2 text-lg font-medium leading-snug text-foreground">
-            {g.title}
-          </div>
-
-          <div className="mt-3 space-y-1 text-sm text-muted-foreground">
-            <div>
-              <span className="text-foreground/80">Milestone:</span>{" "}
-              {g.milestone?.trim() ? g.milestone : "—"}
+            <div className="mt-2 text-[22px] font-semibold tracking-tight leading-snug text-foreground">
+              {g.title}
             </div>
-            <div>
-              <span className="text-foreground/80">Next action:</span>{" "}
-              {g.next_action?.trim() ? g.next_action : "—"}
-            </div>
-            <div>
-              <span className="text-foreground/80">Latest weekly next step:</span>{" "}
-              {g.latest_reflection?.next_step?.trim()
-                ? g.latest_reflection.next_step
-                : "—"}
-            </div>
-          </div>
-          
-          {g.latest_reflection?.week_start_date ? (
-            <div className="mt-2 text-[11px] text-muted-foreground/70">
-              Last check-in week: {g.latest_reflection.week_start_date}
-            </div>
-          ) : null}
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Link
-              className="rounded-xl border border-border px-3 py-2 text-xs hover:bg-muted transition-colors"
-              href={`/reflections/new?goalId=${g.id}`}
-            >
-              Open weekly check-in
-            </Link>
-          </div>
+            {milestone ? (
+              <div className="mt-1 text-sm text-muted-foreground">
+                <span className="text-foreground/70">Milestone:</span>{" "}
+                <span className="text-muted-foreground">{milestone}</span>
+              </div>
+            ) : null}
 
-          <div className="mt-3 text-[11px] text-muted-foreground/70">
-            Goal id: {g.id}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {chip(alignmentTone(latest?.alignment))}
+              {chip(`${checkIns} check-in${checkIns === 1 ? "" : "s"}`)}
+              {chip(span)}
+            </div>
+
+            {lastIntention ? (
+              <div className="mt-4">
+                <div className="text-[11px] uppercase tracking-widest text-muted-foreground/70">
+                  Last intention
+                </div>
+                <div className="mt-1 text-sm text-foreground/85 line-clamp-2">
+                  {lastIntention}
+                </div>
+              </div>
+            ) : null}
+
+            {isCompleted ? (
+              <div className="mt-4">
+                <CompletionSummaryButton goalId={g.id} />
+              </div>
+            ) : null}
+
+            <div className="mt-4">
+              <SoftDisclosure title="View journey">
+                {chronological.length === 0 ? (
+                  <div className="text-xs text-muted-foreground">
+                    No check-ins found for this goal.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {chronological.map((r) => (
+                      <div
+                        key={r.id}
+                        className="rounded-xl border border-border/30 bg-background/30 p-4"
+                      >
+                        <div>
+                          <div className="text-xs text-muted-foreground">
+                            {formatShortDate(r.week_start_date)}
+                          </div>
+                          <div className="mt-0.5 text-sm text-foreground/80">
+                            {alignmentTone(r.alignment)}
+                          </div>
+                        </div>
+
+                        {r.updated_at || r.created_at ? (
+                          <div className="mt-1 text-[10px] text-muted-foreground/50">
+                            Edited: {formatStamp(r.updated_at ?? r.created_at)}
+                          </div>
+                        ) : null}
+
+                        <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+                          <div>
+                            <span className="text-foreground/80">Action:</span>{" "}
+                            {r.action_taken}
+                          </div>
+                          <div>
+                            <span className="text-foreground/80">Easier/Harder:</span>{" "}
+                            {r.easier_harder}
+                          </div>
+                          <div>
+                            <span className="text-foreground/80">Intention:</span>{" "}
+                            {r.next_step}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SoftDisclosure>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }

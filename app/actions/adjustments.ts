@@ -92,7 +92,7 @@ export async function adjustProfileIdentity(fd: FormData): Promise<ActionResult>
 
     const { error: uErr } = await supabase
       .from('profile')
-      .update({ identity_statement: nextIdentity, updated_at: new Date().toISOString() })
+      .update({ identity_statement: nextIdentity })
       .eq('user_id', userId);
 
     if (uErr) return { ok: false, error: `Failed to update profile: ${uErr.message}` };
@@ -174,7 +174,7 @@ export async function adjustGoal(fd: FormData): Promise<ActionResult> {
     if (aErr) return { ok: false, error: `Failed to save adjustment reflection: ${aErr.message}` };
 
     // Apply edit after (FORCE updated_at + REQUIRE returned row)
-    const updatePayload = { ...payload, updated_at: new Date().toISOString() };
+    const updatePayload = { ...payload };
 
     const { data: updated, error: uErr } = await supabase
       .from('goals')
