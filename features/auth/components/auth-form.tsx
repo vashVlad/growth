@@ -77,109 +77,109 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <main className="min-h-screen bg-background px-4 py-10">
-      <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-md items-center">
-        <div className="w-full space-y-6">
-          {/* Header */}
-          <header className="space-y-2 text-center">
-            <h1 className="font-serif text-3xl font-medium tracking-tight text-foreground text-balance">
-              {isLogin ? "Welcome back" : "Create an account"}
-            </h1>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {isLogin
-                ? "Sign in to continue where you left off."
-                : "Start tracking your goals today."}
-            </p>
-          </header>
+  <main className="min-h-screen bg-background px-4 py-10">
+    <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full items-center justify-center">
+      <div className="w-full max-w-md space-y-6">
+        {/* Header */}
+        <header className="space-y-2 text-center">
+          <h1 className="font-serif text-3xl font-medium tracking-tight text-foreground text-balance">
+            {isLogin ? "Welcome back" : "Create an account"}
+          </h1>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {isLogin
+              ? "Sign in to continue where you left off."
+              : "Start tracking your goals today."}
+          </p>
+        </header>
 
-          {/* Card */}
-          <div className="rounded-2xl border bg-card p-6 shadow-sm">
-            <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-              {!isLogin && (
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="name" className="text-foreground">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Your name"
-                    autoComplete="name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    disabled={loading}
-                  />
-                </div>
-              )}
-
+        {/* Card (hard width cap here) */}
+        <div className="mx-auto w-full max-w-md rounded-2xl border bg-card p-6 shadow-sm">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+            {!isLogin && (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="email" className="text-foreground">
-                  Email
+                <Label htmlFor="name" className="text-foreground">
+                  Name
                 </Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="email"
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  autoComplete="name"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   disabled={loading}
                 />
               </div>
+            )}
 
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="password" className="text-foreground">
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder={isLogin ? "Enter your password" : "Create a password"}
-                  autoComplete={isLogin ? "current-password" : "new-password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={loading}
-                />
-              </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email" className="text-foreground">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+              />
+            </div>
 
-              {error ? (
-                <p className="text-sm text-red-600 leading-relaxed">{error}</p>
-              ) : null}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="password" className="text-foreground">
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder={isLogin ? "Enter your password" : "Create a password"}
+                autoComplete={isLogin ? "current-password" : "new-password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
+            </div>
 
-              <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
-                {loading ? (isLogin ? "Signing in..." : "Creating...") : isLogin ? "Sign in" : "Sign up"}
-              </Button>
-            </form>
+            {error ? (
+              <p className="text-sm text-red-600 leading-relaxed">{error}</p>
+            ) : null}
 
-            <p className="mt-5 text-center text-sm text-muted-foreground">
-              {isLogin ? (
-                <>
-                  {"Don't have an account? "}
-                  <Link
-                    href="/signup"
-                    className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-                  >
-                    Sign up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  {"Already have an account? "}
-                  <Link
-                    href="/login"
-                    className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-                  >
-                    Sign in
-                  </Link>
-                </>
-              )}
-            </p>
-          </div>
+            <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+              {loading ? (isLogin ? "Signing in..." : "Creating...") : isLogin ? "Sign in" : "Sign up"}
+            </Button>
+          </form>
+
+          <p className="mt-5 text-center text-sm text-muted-foreground">
+            {isLogin ? (
+              <>
+                {"Don't have an account? "}
+                <Link
+                  href="/signup"
+                  className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                >
+                  Sign up
+                </Link>
+              </>
+            ) : (
+              <>
+                {"Already have an account? "}
+                <Link
+                  href="/login"
+                  className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                >
+                  Sign in
+                </Link>
+              </>
+            )}
+          </p>
         </div>
       </div>
-    </main>
-  );
+    </div>
+  </main>
+);
 }
