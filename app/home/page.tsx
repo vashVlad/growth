@@ -30,10 +30,10 @@ function pillarLabel(pillar: Pillar) {
 function sortGoals(goals: GoalRow[]) {
   const map = new Map<Pillar, GoalRow>();
 
-  // goals are sorted newest -> oldest, so keep the first goal per pillar
-  for (const g of goals) if (!map.has(g.pillar)) map.set(g.pillar, g);
+  for (const g of goals)
+    if (!map.has(g.pillar)) map.set(g.pillar, g);
 
-  return PILLAR_ORDER.map((p) => map.get(p)).filter(Boolean) as GoalRow[];
+  return PILLAR_ORDER.map((p) => map.get(p) ?? null);
 }
 
 function InlineError({ message }: { message: string }) {
@@ -196,7 +196,7 @@ export default async function HomePage() {
   }));
 
   const ordered = sortGoals(normalized);
-  const availablePillars = ordered.map((g) => g.pillar);
+  const availablePillars = ordered.filter(Boolean).map((g) => (g as GoalRow).pillar); 
   const identityLine = identityStatement || "Becoming, one day at a time.";
 
   // Calm, inline error handling instead of throwing
@@ -242,17 +242,46 @@ export default async function HomePage() {
         ) : null}
 
         <section className="mt-10 grid gap-4">
-          {ordered.length === 0 ? (
-            <EmptyGoalsState />
-          ) : (
-            ordered.map((g) => (
+          {ordered.map((g, idx) => {
+            const pillar = PILLAR_ORDER[idx];
+
+            if (!g) {
+              return (
+                <section
+                  key={pillar}
+                  className="rounded-2xl border border-border/60 bg-background/60 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+                >
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                    {pillarLabel(pillar)}
+                  </div>
+
+                  <div className="mt-3 text-xl font-medium leading-snug text-foreground">
+                    No active goal
+                  </div>
+
+                  <div className="mt-3 text-sm text-muted-foreground max-w-[60ch]">
+                    Create a goal for this pillar to keep your cycle balanced.
+                  </div>
+
+                  <div className="mt-6">
+                    <Button asChild className="rounded-xl">
+                      <Link href={`/goals/new?pillar=${pillar}`}>
+                        Create goal
+                      </Link>
+                    </Button>
+                  </div>
+                </section>
+              );
+            }
+
+            return (
               <SoftGoalCard
                 key={g.pillar}
                 goal={g}
                 reflectionId={reflectionByGoal.get(g.id)}
               />
-            ))
-          )}
+            );
+          })}
         </section>
 
         <div className="mt-10 max-w-[65ch] text-xs text-muted-foreground">

@@ -101,16 +101,13 @@ export default function StepGoal({
         </div>
       </div>
 
-      <div className="mt-8 flex items-center justify-between px-1">
-        <Button variant="ghost" onClick={onBack}>
-          Back
+      <div className="mt-8 flex items-center justify-between">
+        <Button variant="ghost" onClick={onBack} className="h-9 rounded-xl px-2">
+          ← Back
         </Button>
-        <Button
-          onClick={onNext}
-          disabled={!canProceed}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
-        >
-          Next
+
+        <Button onClick={onNext} disabled={!canProceed} className="h-9 rounded-xl px-4">
+          Next →
         </Button>
       </div>
     </div>
