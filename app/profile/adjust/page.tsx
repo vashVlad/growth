@@ -1,4 +1,4 @@
-import { supabaseServer } from '@/lib/supabase/supabaseServer';
+import { supabaseServer } from "@/lib/supabase/server";
 import ProfileAdjustForm from '@/components/adjust/ProfileAdjustForm';
 
 export default async function ProfileAdjustPage() {
