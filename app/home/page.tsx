@@ -258,6 +258,7 @@ export default async function HomePage() {
         <div className="mt-10 max-w-[65ch] text-xs text-muted-foreground">
           Small steps, repeated daily, become identity.
         </div>
+        <a href="/api/auth/logout">Logout</a>
       </div>
     </main>
   );

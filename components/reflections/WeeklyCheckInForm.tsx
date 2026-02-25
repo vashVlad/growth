@@ -2,18 +2,27 @@
 
 import * as React from "react";
 
-type ActionResult = { ok: false; message: string } | undefined;
+type ActionResult =
+  | { ok: true }
+  | { ok: false; message: string }
+  | undefined;
+
+type WeeklyCheckInAction = (
+  prevState: ActionResult,
+  formData: FormData
+) => Promise<ActionResult>;
 
 export default function WeeklyCheckInForm({
   action,
   goalId,
   weekStartDate,
 }: {
-  action: (formData: FormData) => Promise<ActionResult>;
+  action: WeeklyCheckInAction;
   goalId: string;
-  weekStartDate: string; // "YYYY-MM-DD"
+  weekStartDate: string;
 }) {
-  const [state, formAction, isPending] = React.useActionState(action, undefined);
+  const [state, formAction, isPending] =
+    React.useActionState<ActionResult, FormData>(action, undefined);
 
   // --- AI suggestion state (Step 9) ---
   const [suggestion, setSuggestion] = React.useState<string | null>(null);
@@ -158,7 +167,7 @@ export default function WeeklyCheckInForm({
         ) : null}
       </div>
 
-      {state?.message ? (
+      {state && !state.ok ? (
         <div className="rounded-2xl border border-border bg-background px-4 py-3 text-sm">
           {state.message}
         </div>

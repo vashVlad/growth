@@ -1,9 +1,8 @@
 "use client";
-
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { OnboardingState, Pillar } from "@/lib/onboarding/types";
-import { t, validateAll, validateIdentity, validatePillar } from "../schema";
+import type { OnboardingData, Pillar } from "./types";
+import { t, validateAll, validateIdentity, validatePillar, type OnboardingState as LegacyOnboardingState,} from "../schema";
 
 import IntroStep from "./steps/IntroStep";
 import IdentityStep from "./steps/IdentityStep";
@@ -25,21 +24,30 @@ const steps: Step[] = [
   { kind: "summary" },
 ];
 
-const initialState: OnboardingState = {
-  identityStatement: "",
-  identityBehaviors: "",
-  goals: {
-    career: { title: "", milestone: "", nextAction: "" },
-    personal: { title: "", milestone: "", nextAction: "" },
-    internal: { title: "", milestone: "", nextAction: "" },
-  },
+const initialState: OnboardingData = {
+  identity: { becoming: "", consistently: "" },
+  career: { title: "", milestone: "", nextAction: "" },
+  personal: { title: "", milestone: "", nextAction: "" },
+  internal: { title: "", milestone: "", nextAction: "" },
 };
+
+function toLegacyValidationState(s: OnboardingData): LegacyOnboardingState {
+  return {
+    identityStatement: s.identity.becoming,
+    identityBehaviors: s.identity.consistently,
+    goals: {
+      career: s.career,
+      personal: s.personal,
+      internal: s.internal,
+    },
+  };
+}
 
 export default function OnboardingWizard() {
   const router = useRouter();
 
   const [idx, setIdx] = useState(0);
-  const [state, setState] = useState<OnboardingState>(initialState);
+  const [state, setState] = useState<OnboardingData>(initialState);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -54,11 +62,11 @@ export default function OnboardingWizard() {
     setError(null);
 
     if (current.kind === "identity") {
-      const e = validateIdentity(state);
+      const e = validateIdentity(toLegacyValidationState(state));
       if (e) return setError(e);
     }
     if (current.kind === "pillar") {
-      const e = validatePillar(state, current.pillar);
+      const e = validatePillar(toLegacyValidationState(state), current.pillar);
       if (e) return setError(e);
     }
 
@@ -66,17 +74,33 @@ export default function OnboardingWizard() {
   };
 
   const summary = useMemo(() => {
-    return {
-      identityStatement: t(state.identityStatement),
-      identityBehaviors: t(state.identityBehaviors),
-      goals: state.goals,
-    };
-  }, [state]);
+  return {
+    identityStatement: t(state.identity.becoming),
+    identityBehaviors: t(state.identity.consistently),
+    goals: {
+      career: {
+        title: t(state.career.title),
+        milestone: t(state.career.milestone),
+        nextAction: t(state.career.nextAction),
+      },
+      personal: {
+        title: t(state.personal.title),
+        milestone: t(state.personal.milestone),
+        nextAction: t(state.personal.nextAction),
+      },
+      internal: {
+        title: t(state.internal.title),
+        milestone: t(state.internal.milestone),
+        nextAction: t(state.internal.nextAction),
+      },
+    },
+  };
+}, [state]);
 
   const finalSubmit = async () => {
     setError(null);
 
-    const e = validateAll(state);
+    const e = validateAll(toLegacyValidationState(state));
     if (e) return setError(e);
 
     if (submitting) return;
@@ -84,23 +108,23 @@ export default function OnboardingWizard() {
 
     try {
       const payload = {
-        identity_statement: t(state.identityStatement),
-        identity_behaviors: t(state.identityBehaviors),
+        identity_statement: t(state.identity.becoming),
+        identity_behaviors: t(state.identity.consistently),
         goals: {
           career: {
-            title: t(state.goals.career.title),
-            milestone: t(state.goals.career.milestone),
-            next_action: t(state.goals.career.nextAction),
+            title: t(state.career.title),
+            milestone: t(state.career.milestone),
+            next_action: t(state.career.nextAction),
           },
           personal: {
-            title: t(state.goals.personal.title),
-            milestone: t(state.goals.personal.milestone),
-            next_action: t(state.goals.personal.nextAction),
+            title: t(state.personal.title),
+            milestone: t(state.personal.milestone),
+            next_action: t(state.personal.nextAction),
           },
           internal: {
-            title: t(state.goals.internal.title),
-            milestone: t(state.goals.internal.milestone),
-            next_action: t(state.goals.internal.nextAction),
+            title: t(state.internal.title),
+            milestone: t(state.internal.milestone),
+            next_action: t(state.internal.nextAction),
           },
         },
       };
@@ -132,10 +156,18 @@ export default function OnboardingWizard() {
       {current.kind === "identity" && (
         <IdentityStep
           value={{
-            identityStatement: state.identityStatement,
-            identityBehaviors: state.identityBehaviors,
+            identityStatement: state.identity.becoming,
+            identityBehaviors: state.identity.consistently,
           }}
-          onChange={(patch) => setState((s) => ({ ...s, ...patch }))}
+          onChange={(patch) =>
+            setState((s) => ({
+              ...s,
+              identity: {
+                becoming: patch.identityStatement ?? s.identity.becoming,
+                consistently: patch.identityBehaviors ?? s.identity.consistently,
+              },
+            }))
+          }
           onBack={goBack}
           onContinue={goNext}
           error={error}
@@ -145,10 +177,8 @@ export default function OnboardingWizard() {
       {current.kind === "pillar" && (
         <PillarStep
           pillar={current.pillar}
-          value={state.goals[current.pillar]}
-          onChange={(g) =>
-            setState((s) => ({ ...s, goals: { ...s.goals, [current.pillar]: g } }))
-          }
+          value={state[current.pillar]}
+          onChange={(g) => setState((s) => ({ ...s, [current.pillar]: g }))}
           onBack={goBack}
           onContinue={goNext}
           error={error}

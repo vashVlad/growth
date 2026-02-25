@@ -1,11 +1,25 @@
 "use client";
 
-import type { OnboardingState } from "@/lib/onboarding/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+type Pillar = "career" | "personal" | "internal";
+
+type SummaryData = {
+  identityStatement: string;
+  identityBehaviors: string;
+  goals: Record<
+    Pillar,
+    {
+      title: string;
+      milestone: string;
+      nextAction: string;
+    }
+  >;
+};
+
 export default function SummaryStep(props: {
-  data: OnboardingState;
+  data: SummaryData;
   onBack: () => void;
   onSubmit: () => void;
   submitting: boolean;
@@ -26,7 +40,11 @@ export default function SummaryStep(props: {
         {(["career", "personal", "internal"] as const).map((p) => (
           <div key={p} className="rounded-xl border p-4 space-y-1">
             <div className="text-xs text-muted-foreground">
-              {p === "career" ? "Career Goal" : p === "personal" ? "Personal Goal" : "Internal Goal"}
+              {p === "career"
+                ? "Career Goal"
+                : p === "personal"
+                ? "Personal Goal"
+                : "Internal Goal"}
             </div>
             <div className="leading-relaxed">{data.goals[p].title}</div>
           </div>
@@ -34,11 +52,22 @@ export default function SummaryStep(props: {
 
         {error && <div className="text-sm text-red-600">{error}</div>}
 
-        <div className="mt-8 flex items-center justify-between px-1">
-          <Button variant="outline" className="w-full" onClick={onBack} disabled={submitting}>
+        <div className="mt-8 flex items-center justify-between px-1 gap-3">
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={onBack}
+            disabled={submitting}
+            type="button"
+          >
             Back
           </Button>
-          <Button className="w-full" onClick={onSubmit} disabled={submitting}>
+          <Button
+            className="w-full"
+            onClick={onSubmit}
+            disabled={submitting}
+            type="button"
+          >
             {submitting ? "Submitting…" : "Begin 90-Day Cycle"}
           </Button>
         </div>

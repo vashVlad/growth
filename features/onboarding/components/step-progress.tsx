@@ -24,7 +24,7 @@ export default function StepProgress({ current }: StepProgressProps) {
       <p className="text-xs text-muted-foreground tabular-nums">
         {current + 1} of {STEP_LABELS.length}
         <span className="ml-2 text-foreground/50">
-          {STEP_LABELS[current]}
+          {current === 0 ? null : STEP_LABELS[current - 1]}
         </span>
       </p>
     </div>

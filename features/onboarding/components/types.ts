@@ -1,3 +1,5 @@
+export type Pillar = "career" | "personal" | "internal";
+
 export type GoalEntry = {
   title: string
   milestone: string

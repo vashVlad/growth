@@ -1,6 +1,6 @@
 "use client";
 
-import type { Pillar } from "@/lib/onboarding/types";
+import type { Pillar } from "../types";
 import { LIMITS } from "@/features/onboarding/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
