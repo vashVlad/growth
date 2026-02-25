@@ -90,7 +90,9 @@ export default function NewGoalForm({
                   disabled
                     ? "cursor-not-allowed opacity-50"
                     : "hover:bg-muted",
-                  selected ? "border-foreground/30 bg-muted" : "border-border",
+                  selected
+                    ? "border-primary bg-primary/10 text-foreground"
+                    : "border-border"
                 ].join(" ")}
                 aria-disabled={disabled}
               >
@@ -151,7 +153,7 @@ export default function NewGoalForm({
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
       <div className="flex items-center justify-end pt-2">
-        <Button className="rounded-xl" disabled={!canSubmit || loading} type="submit">
+        <Button className="rounded-xl px-6" disabled={!canSubmit || loading} type="submit">
           {loading ? "Creating..." : "Create goal"}
         </Button>
       </div>

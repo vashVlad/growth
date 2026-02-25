@@ -38,15 +38,16 @@ export default async function NewGoalPage({
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-6 py-10">
         <div className="flex items-center justify-between">
-          <Link
-            href="/home"
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            ← Back
-          </Link>
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-            Create goal
-          </div>
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                Create goal
+            </div>
+
+            <Link
+                href="/home"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+                ← Back
+            </Link>
         </div>
 
         <div className="mt-10 max-w-[60ch]">

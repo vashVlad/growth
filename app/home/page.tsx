@@ -256,7 +256,7 @@ export default async function HomePage() {
                   </div>
 
                   <div className="mt-3 text-xl font-medium leading-snug text-foreground">
-                    No active goal
+                    No active goal yet
                   </div>
 
                   <div className="mt-3 text-sm text-muted-foreground max-w-[60ch]">
@@ -264,7 +264,7 @@ export default async function HomePage() {
                   </div>
 
                   <div className="mt-6">
-                    <Button asChild className="rounded-xl">
+                    <Button asChild variant="outline" className="rounded-xl">
                       <Link href={`/goals/new?pillar=${pillar}`}>
                         Create goal
                       </Link>
