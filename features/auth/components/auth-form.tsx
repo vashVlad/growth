@@ -56,12 +56,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
         });
         setLoading(false);
         if (error) return setError(error.message);
-
         router.push("/home");
         return;
       }
 
-      // Signup
       const { error } = await supabase.auth.signUp({
         email: trimmedEmail,
         password,
@@ -79,106 +77,109 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-background px-4 py-12">
-      <div className="mx-auto flex w-full max-w-sm flex-col gap-8">
-        {/* Header */}
-        <header className="flex flex-col gap-2 text-center">
-          <h1 className="font-serif text-3xl font-medium tracking-tight text-foreground text-balance">
-            {isLogin ? "Welcome back" : "Create an account"}
-          </h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {isLogin
-              ? "Sign in to continue where you left off."
-              : "Start tracking your goals today."}
-          </p>
-        </header>
+    <main className="min-h-screen bg-background px-4 py-10">
+      <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-md items-center">
+        <div className="w-full space-y-6">
+          {/* Header */}
+          <header className="space-y-2 text-center">
+            <h1 className="font-serif text-3xl font-medium tracking-tight text-foreground text-balance">
+              {isLogin ? "Welcome back" : "Create an account"}
+            </h1>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {isLogin
+                ? "Sign in to continue where you left off."
+                : "Start tracking your goals today."}
+            </p>
+          </header>
 
-        {/* Form */}
-        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-          {!isLogin && (
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name" className="text-foreground">
-                Name
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Your name"
-                autoComplete="name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-          )}
+          {/* Card */}
+          <div className="rounded-2xl border bg-card p-6 shadow-sm">
+            <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+              {!isLogin && (
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name" className="text-foreground">
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    autoComplete="name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+              )}
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="email" className="text-foreground">
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-            />
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="email" className="text-foreground">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="password" className="text-foreground">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder={isLogin ? "Enter your password" : "Create a password"}
+                  autoComplete={isLogin ? "current-password" : "new-password"}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
+              {error ? (
+                <p className="text-sm text-red-600 leading-relaxed">{error}</p>
+              ) : null}
+
+              <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
+                {loading ? (isLogin ? "Signing in..." : "Creating...") : isLogin ? "Sign in" : "Sign up"}
+              </Button>
+            </form>
+
+            <p className="mt-5 text-center text-sm text-muted-foreground">
+              {isLogin ? (
+                <>
+                  {"Don't have an account? "}
+                  <Link
+                    href="/signup"
+                    className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {"Already have an account? "}
+                  <Link
+                    href="/login"
+                    className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                  >
+                    Sign in
+                  </Link>
+                </>
+              )}
+            </p>
           </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="password" className="text-foreground">
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder={isLogin ? "Enter your password" : "Create a password"}
-              autoComplete={isLogin ? "current-password" : "new-password"}
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-            />
-          </div>
-
-          {error ? (
-            <p className="text-sm text-red-600 leading-relaxed">{error}</p>
-          ) : null}
-
-          <Button type="submit" size="lg" className="mt-1 w-full" disabled={loading}>
-            {loading ? (isLogin ? "Signing in..." : "Creating...") : isLogin ? "Sign in" : "Sign up"}
-          </Button>
-        </form>
-
-        {/* Footer link */}
-        <p className="text-center text-sm text-muted-foreground">
-          {isLogin ? (
-            <>
-              {"Don't have an account? "}
-              <Link
-                href="/signup"
-                className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-              >
-                Sign up
-              </Link>
-            </>
-          ) : (
-            <>
-              {"Already have an account? "}
-              <Link
-                href="/login"
-                className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-              >
-                Sign in
-              </Link>
-            </>
-          )}
-        </p>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
