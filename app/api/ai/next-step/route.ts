@@ -24,25 +24,30 @@ function buildPrompt(input: {
           .join("\n");
 
   return `
-You are an assistant inside "Growth", a calm structured reflection app.
+You are the weekly planner inside Growth.
 
-Task: Suggest ONE next intentional step for the user to type into their weekly reflection.
+Task: Write ONE next-step sentence for the coming week.
+This is a real weekly commitment — not a tiny task.
 
-Rules:
+RULES:
 - Output exactly ONE sentence.
 - No commands ("must", "should", "try to").
-- No motivational talk, no therapy language.
-- Make it specific and doable in one sitting.
-- If recent alignment is "no" or "partial", make the step smaller and clearer.
+- Calm and practical tone.
+- Make it concrete and measurable by including:
+  (a) a timebox OR frequency,
+  (b) a clear deliverable,
+  (c) a simple constraint that reduces friction (when/how).
 
-Goal:
+If recent alignment was "no" or "partial", reduce scope slightly — but keep it meaningful.
+
+GOAL:
 - Title: ${input.goalTitle}
 - Milestone: ${input.milestone ?? "N/A"}
 
 Recent history (most recent first):
 ${history}
 
-Write the one-sentence next step now.
+Write the one-sentence weekly plan now.
 `.trim();
 }
 
@@ -113,7 +118,7 @@ export async function POST(req: Request) {
       model,
       input: prompt,
       temperature: 0.4,
-      max_output_tokens: 60,
+      max_output_tokens: 80,
     });
 
     const suggestion = safeTrim(llm.output_text);
@@ -125,7 +130,13 @@ export async function POST(req: Request) {
     // Optional: enforce one sentence-ish
     const oneLine = suggestion.replace(/\s+/g, " ").trim();
 
-    return NextResponse.json({ suggestion: oneLine, cached: false }, { status: 200 });
+    const hasNumber = /\b\d+\b/.test(oneLine); // 2, 3, 45, etc.
+    const hasTimeWord = /\b(min|minute|hour|hr|times|sessions|days|week)\b/i.test(oneLine);
+
+const finalSuggestion =
+  hasNumber || hasTimeWord ? oneLine : `${oneLine} (3 sessions this week).`;  
+
+    return NextResponse.json({ suggestion: finalSuggestion, cached: false }, { status: 200 });
   } catch (err) {
     console.error("[NEXT_STEP_AI_FAIL]", err);
     return NextResponse.json({ suggestion: "" }, { status: 200 });

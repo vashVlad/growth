@@ -23,46 +23,39 @@ function buildMirrorPrompt(input: {
     input;
 
   return `
-You are "Mirror": a calm analytical margin-note layer inside a structured clarity system.
+You are "Guidance": a calm and thoughtful mentor inside Growth.
 
-Your role is to increase behavioral clarity — not to coach, motivate, or advise.
+Purpose: help the user move forward next week with clarity.
+Not a summary. Not a report. Not motivation. Not therapy.
 
 OUTPUT RULES (strict):
-- 4–6 sentences maximum.
-- Tone: calm, analytical, precise.
-- Never command. Avoid "you must", "you should", "try to".
-- No productivity advice.
-- No therapy language.
-- No resume or career framing.
-- Structure:
-  1) Observation (1–2 sentences)
-  2) Insight (2–3 sentences)
-  3) Optional question (0–1 sentence, max 1 question)
+- 3–5 sentences total.
+- Calm, steady, human.
+- No commands ("you must", "you should", "try to").
+- Do not restate the reflection word-for-word.
+- If referencing history, do so briefly and naturally (max one short phrase).
+
+STRUCTURE:
+1) A grounded observation about what truly mattered this week (1 sentence).
+2) A quiet insight about what this suggests (1–2 sentences).
+3) End with either:
+   - one thoughtful question OR
+   - one gentle guiding principle (max 1 sentence).
 
 CONTEXT:
 - Pillar: ${pillar}
-- Goal title: ${goalTitle}
-- Identity statement: ${identityStatement ?? "N/A"}
+- Goal: ${goalTitle}
+- Identity: ${identityStatement ?? "N/A"}
 
-PATTERN SNAPSHOT (most recent first):
-${patternSnapshot}
+Recent alignment snapshot (optional, brief): ${patternSnapshot}
 
-CURRENT WEEKLY REFLECTION:
+This week:
 - Action taken: ${reflection.action_taken}
-- Easier or harder: ${reflection.easier_harder}
+- Easier/harder: ${reflection.easier_harder}
 - Alignment: ${reflection.alignment}
-- Next step: ${reflection.next_step}
+- Draft next step: ${reflection.next_step}
 
-Focus on:
-- Behavioral consistency or drift
-- Execution structure or hesitation
-- Increasing or decreasing clarity
-- Identity-action alignment
-- Subtle signals of skill formation (without naming specific career skills)
-
-If pattern data exists, reference it briefly in one sentence only.
-
-Write the Mirror note now.
+Write the Guidance now.
 `.trim();
 }
 
@@ -94,13 +87,13 @@ function violatesTone(text: string) {
   );
 }
 
-function mirrorOutputOk(text: string) {
+function guidanceOutputOk(text: string) {
   const sentences = countSentences(text);
   const questions = countQuestions(text);
   return (
     text.trim().length > 0 &&
-    sentences >= 4 &&
-    sentences <= 6 &&
+    sentences >= 3 &&
+    sentences <= 5 &&
     questions <= 1 &&
     !violatesTone(text)
   );
@@ -265,13 +258,12 @@ export async function POST(req: Request) {
     let content = (llm.output_text ?? "").trim();
 
     // ✅ Stabilization B: Enforce output constraints (retry once)
-    if (!content || !mirrorOutputOk(content)) {
+    if (!content || !guidanceOutputOk(content)) {
       const retry = await client.responses.create({
         model,
         input: `${prompt}
-
-STRICT FIX:
-Rewrite to 4–6 sentences total, max 1 question, no commands. Avoid "must/should/try to".`,
+          STRICT FIX:
+          Rewrite to 3–5 sentences total, max 1 question, no commands. Avoid "must/should/try to". Not a summary.`,
         temperature: 0.2,
         max_output_tokens: 180,
       });
@@ -279,7 +271,7 @@ Rewrite to 4–6 sentences total, max 1 question, no commands. Avoid "must/shoul
       content = (retry.output_text ?? "").trim();
     }
 
-    if (!content || !mirrorOutputOk(content)) {
+    if (!content || guidanceOutputOk(content)) {
       return NextResponse.json(
         { error: "AI response did not meet format constraints" },
         { status: 502 }
