@@ -211,12 +211,6 @@ export default async function HomePage() {
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-3xl px-5 pt-12 pb-10">
         <div className="flex items-center justify-end">
-          <Button asChild variant="ghost" className="h-8 rounded-xl px-2">
-            <Link href="/identity" className="text-sm">
-              Becoming → View
-            </Link>
-          </Button>
-        </div>
 
         <div className="mt-10 max-w-[60ch]">
           <div className="font-serif text-3xl leading-snug text-foreground">

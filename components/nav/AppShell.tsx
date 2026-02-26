@@ -33,14 +33,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Top bar */}
       <div className="sticky top-0 z-20 bg-background/70 backdrop-blur-sm md:border-b md:border-border/50">
         <div className="mx-auto w-full max-w-3xl px-5 py-4 flex items-center justify-between">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Growth
           </div>
 
           <div className="hidden md:flex items-center gap-2">
             <NavItem href="/home" label="Home" />
             <NavItem href="/progress" label="Progress" />
-            <NavItem href="/identity" label="Identity" />
+            <Button asChild variant="ghost" className="h-9 rounded-xl px-3 text-muted-foreground hover:text-foreground">
+                <Link href="/identity">Becoming</Link>
+            </Button>
           </div>
         </div>
       </div>
