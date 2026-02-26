@@ -221,7 +221,7 @@ export default async function HomePage() {
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">
       {/* HERO */}
-      <section className="space-y-3 sm:space-y-4">
+      <section className="space-y-3">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">
           Today
         </div>
@@ -235,49 +235,48 @@ export default async function HomePage() {
         </div>
 
         {/* Focus (tight spacing, no giant whitespace) */}
-        <div className="pt-2">
+        <div className="pt-1">
           <HomeFocusController availablePillars={activePillars} />
         </div>
       </section>
 
       {/* Errors */}
       {loadError ? (
-        <div className="mt-6">
+        <div className="space-y-3">
           <InlineError message={loadError} />
         </div>
       ) : null}
 
-      {/* GOALS GRID */}
-      <section className="mt-8 sm:mt-10 grid gap-4">
-        {ordered.every((g) => !g) ? (
-          <SoftCardShell>
-            <div className="text-sm text-muted-foreground">
-              No active goals found. If this happens, refresh or re-check onboarding.
+        {/* HERO + FOCUS (grouped) */}
+ 
+        <section className="space-y-5 sm:space-y-6">
+          <div className="space-y-3">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              Today
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Button asChild variant="secondary" className="rounded-xl">
-                <Link href="/onboarding">Review onboarding</Link>
-              </Button>
-              <Button asChild variant="outline" className="rounded-xl">
-                <Link href="/home">Refresh</Link>
-              </Button>
-            </div>
-          </SoftCardShell>
-        ) : (
-          ordered.map((g, idx) => {
-            const pillar = PILLAR_ORDER[idx];
-            if (!g) return <EmptyPillarCard key={pillar} pillar={pillar} />;
 
-            return (
-              <SoftGoalCard
-                key={g.id}
-                goal={g}
-                reflectionId={reflectionByGoal.get(g.id)}
-              />
-            );
-          })
-        )}
-      </section>
+            <h1 className="font-serif text-[2rem] leading-[1.08] tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+              {identityLine}
+            </h1>
+
+            <div className="text-sm text-muted-foreground">
+              Your current pillars are active.
+            </div>
+          </div>
+
+          {/* Focus block */}
+          <div className="space-y-3 pt-2">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              Today’s Focus
+            </div>
+
+            <HomeFocusController availablePillars={activePillars} />
+
+            <div className="text-sm text-muted-foreground">
+              Choose one pillar to move forward today.
+            </div>
+          </div>
+        </section>
 
       {/* Footer */}
       <div className="mt-8 sm:mt-10 max-w-[65ch] text-xs text-muted-foreground">
