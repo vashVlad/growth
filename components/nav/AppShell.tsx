@@ -40,10 +40,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="hidden md:flex items-center gap-2">
             <NavItem href="/home" label="Home" />
             <NavItem href="/progress" label="Progress" />
-            <Button asChild variant="ghost" className="h-9 rounded-xl px-3 text-muted-foreground hover:text-foreground">
-                <Link href="/identity">Becoming</Link>
-            </Button>
-            </div>
+            <NavItem href="/identity" label="Identity" />
+          </div>
         </div>
       </div>
 
