@@ -134,7 +134,7 @@ function SoftGoalCard({
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage(){
   const supabase = await supabaseServer();
 
   const {
@@ -208,10 +208,7 @@ export default async function HomePage() {
       : "";
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-3xl px-5 pt-12 pb-10">
-        <div className="flex items-center justify-end">
-
+    <main>
         <div className="mt-10 max-w-[60ch]">
           <div className="font-serif text-3xl leading-snug text-foreground">
             {identityLine}
@@ -278,7 +275,6 @@ export default async function HomePage() {
           Small steps, repeated daily, become identity.
         </div>
         <a href="/api/auth/logout">Logout</a>
-      </div>
     </main>
   );
 }
