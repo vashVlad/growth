@@ -209,12 +209,8 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-3xl px-5 py-10">
-        <div className="flex items-center justify-between">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-            Home
-          </div>
-
+      <div className="mx-auto w-full max-w-3xl px-5 pt-12 pb-10">
+        <div className="flex items-center justify-end">
           <Button asChild variant="ghost" className="h-8 rounded-xl px-2">
             <Link href="/identity" className="text-sm">
               Becoming → View
