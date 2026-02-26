@@ -14,9 +14,6 @@ export default async function ProgressPage() {
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-10">
         <div className="flex items-center justify-between">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-            Progress
-          </div>
 
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost" className="h-8 rounded-xl px-2">

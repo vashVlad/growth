@@ -149,9 +149,6 @@
         </div>
 
         <div className="mt-8 mb-10">
-          <div className="text-xs tracking-wide text-muted-foreground">
-            Weekly Check-In • <span className="capitalize">{goal.pillar}</span>
-          </div>
           <h1 className="mt-2 text-2xl font-semibold leading-snug">
             {goal.title}
           </h1>

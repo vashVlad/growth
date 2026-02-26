@@ -30,9 +30,6 @@ export default async function IdentityPage() {
       <div className="mx-auto w-full max-w-3xl px-5 py-10">
         {/* IDENTITY label + Adjust */}
         <div className="flex items-center justify-between mb-12">
-          <div className="text-xs tracking-wide text-muted-foreground">
-            IDENTITY
-          </div>
 
           <Button asChild variant="ghost" className="h-8 rounded-xl px-2">
             <Link href="/identity/adjust" className="text-sm">

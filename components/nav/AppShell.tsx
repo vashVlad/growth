@@ -16,11 +16,13 @@ function NavItem({
 
   return (
     <Button
-      asChild
-      variant={active ? "secondary" : "ghost"}
-      className="h-9 rounded-xl px-3"
-    >
-      <Link href={href}>{label}</Link>
+        asChild
+        variant="ghost"
+        className={`h-9 rounded-xl px-3 ${
+            active ? "text-foreground font-medium" : "text-muted-foreground"
+        }`}
+        >
+        <Link href={href}>{label}</Link>
     </Button>
   );
 }
@@ -29,7 +31,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       {/* Top bar */}
-      <div className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
+      <div className="sticky top-0 z-20 bg-background/70 backdrop-blur-sm">
         <div className="mx-auto w-full max-w-3xl px-5 py-3 flex items-center justify-between">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">
             Growth
