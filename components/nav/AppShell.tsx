@@ -31,8 +31,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       {/* Top bar */}
-      <div className="sticky top-0 z-20 bg-background/70 backdrop-blur-sm">
-        <div className="mx-auto w-full max-w-3xl px-5 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-20 bg-background/70 backdrop-blur-sm md:border-b md:border-border/50">
+        <div className="mx-auto w-full max-w-3xl px-5 py-4 flex items-center justify-between">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">
             Growth
           </div>
