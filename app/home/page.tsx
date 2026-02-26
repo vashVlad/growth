@@ -220,33 +220,6 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">
-      {/* HERO */}
-      <section className="space-y-3">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          Today
-        </div>
-
-        <h1 className="font-serif text-[2.1rem] leading-[1.05] tracking-tight text-foreground sm:text-4xl sm:leading-snug">
-          {identityLine}
-        </h1>
-
-        <div className="text-sm text-muted-foreground">
-          Your current pillars are active.
-        </div>
-
-        {/* Focus (tight spacing, no giant whitespace) */}
-        <div className="pt-1">
-          <HomeFocusController availablePillars={activePillars} />
-        </div>
-      </section>
-
-      {/* Errors */}
-      {loadError ? (
-        <div className="space-y-3">
-          <InlineError message={loadError} />
-        </div>
-      ) : null}
-
         {/* HERO + FOCUS (grouped) */}
  
         <section className="space-y-5 sm:space-y-6">
