@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/button";
 
 type Pillar = "career" | "personal" | "internal";
 
@@ -29,45 +28,47 @@ export function TodayFocus({
     setActive(p);
     onChange?.(p);
 
-    // Fade button selection after 2 seconds
+    // Fade selection after 2 seconds
     window.setTimeout(() => {
       setActive(null);
     }, 2000);
   }
 
   return (
-    <div className="mt-8 max-w-[65ch]">
+    <div className="space-y-2 max-w-[65ch]">
+      {/* Label */}
       <div className="text-xs uppercase tracking-widest text-muted-foreground">
-        Today’s focus
+        Today’s Focus
       </div>
 
-      <div className="mt-3">
-        <div className="inline-grid grid-cols-3 rounded-xl border border-border/50 bg-background/60 p-1">
-{PILLARS.filter((p) => available.includes(p.value)).map((p) => {
-    const isActive = p.value === active;
+      {/* Pill container */}
+      <div className="rounded-2xl border border-border/60 bg-background/60 p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="grid grid-cols-3 gap-1.5">
+          {PILLARS.filter((p) => available.includes(p.value)).map((p) => {
+            const isActive = p.value === active;
 
-    return (
-        <button
-            key={p.value}
-            type="button"
-            onClick={() => handleClick(p.value)}
-            className={[
-                "h-9 px-3 text-sm rounded-lg transition-colors duration-200",
-                "flex items-center justify-center",
-                isActive
-              ? "bg-primary/10 text-foreground"
-              : "text-muted-foreground hover:bg-primary/5 hover:text-foreground",
-          ].join(" ")}
-        >
-          {p.label}
-        </button>
-      );
-    })}
-  </div>
-</div>
+            return (
+              <button
+                key={p.value}
+                type="button"
+                onClick={() => handleClick(p.value)}
+                className={[
+                  "h-9 rounded-xl text-sm transition-all duration-200",
+                  "flex items-center justify-center",
+                  isActive
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ].join(" ")}
+              >
+                {p.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-
-      <div className="mt-3 text-sm text-muted-foreground">
+      {/* Instruction */}
+      <div className="text-sm text-muted-foreground leading-relaxed">
         Choose one pillar to move forward today.
       </div>
     </div>
