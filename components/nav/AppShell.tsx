@@ -43,7 +43,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <Button asChild variant="ghost" className="h-9 rounded-xl px-3 text-muted-foreground hover:text-foreground">
                 <Link href="/identity">Becoming</Link>
             </Button>
-          </div>
+            </div>
         </div>
       </div>
 
