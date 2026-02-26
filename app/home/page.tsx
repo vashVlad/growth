@@ -176,7 +176,9 @@ export default async function HomePage() {
   // Load active goals (ordered so "most recent" for each pillar wins)
   const { data: goals, error: goalsError } = await supabase
     .from("goals")
-    .select("id, pillar, title, milestone, next_action, status, updated_at, created_at")
+    .select(
+      "id, pillar, title, milestone, next_action, status, updated_at, created_at"
+    )
     .eq("user_id", user.id)
     .eq("status", "active")
     .order("updated_at", { ascending: false })
@@ -220,36 +222,49 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">
-        {/* HERO + FOCUS (grouped) */}
- 
-        <section className="space-y-5 sm:space-y-6">
-          <div className="space-y-3">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              Today
-            </div>
+      {/* HERO + FOCUS (single instance) */}
+      <section className="space-y-3">
+        <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          Today
+        </div>
 
-            <h1 className="font-serif text-[2rem] leading-[1.08] tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-              {identityLine}
-            </h1>
+        <h1 className="font-serif text-[2.05rem] leading-[1.06] tracking-tight text-foreground sm:text-4xl sm:leading-snug">
+          {identityLine}
+        </h1>
 
-            <div className="text-sm text-muted-foreground">
-              Your current pillars are active.
-            </div>
-          </div>
+        <div className="text-sm text-muted-foreground">
+          Your current pillars are active.
+        </div>
 
-          {/* Focus block */}
-          <div className="space-y-3 pt-2">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              Today’s Focus
-            </div>
+        {/* TodayFocus handles its own label + instruction now */}
+        <div className="pt-2">
+          <HomeFocusController availablePillars={activePillars} />
+        </div>
+      </section>
 
-            <HomeFocusController availablePillars={activePillars} />
+      {/* Errors */}
+      {loadError ? (
+        <div className="mt-6">
+          <InlineError message={loadError} />
+        </div>
+      ) : null}
 
-            <div className="text-sm text-muted-foreground">
-              Choose one pillar to move forward today.
-            </div>
-          </div>
-        </section>
+      {/* GOALS GRID (restored) */}
+      <section className="mt-6 sm:mt-8 grid gap-4">
+        {ordered.map((g, idx) => {
+          const pillar = PILLAR_ORDER[idx];
+
+          if (!g) return <EmptyPillarCard key={pillar} pillar={pillar} />;
+
+          return (
+            <SoftGoalCard
+              key={g.id}
+              goal={g}
+              reflectionId={reflectionByGoal.get(g.id)}
+            />
+          );
+        })}
+      </section>
 
       {/* Footer */}
       <div className="mt-8 sm:mt-10 max-w-[65ch] text-xs text-muted-foreground">
@@ -257,7 +272,11 @@ export default async function HomePage() {
       </div>
 
       <div className="mt-4">
-        <Button asChild variant="ghost" className="rounded-xl text-muted-foreground">
+        <Button
+          asChild
+          variant="ghost"
+          className="rounded-xl text-muted-foreground"
+        >
           <a href="/api/auth/logout">Logout</a>
         </Button>
       </div>
