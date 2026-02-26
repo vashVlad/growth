@@ -9,21 +9,15 @@ export default async function HomePage() {
 
   const { data: profile } = await supabase
     .from("profile")
-    .select("identity_statement")
+    .select("identity_statement, onboarding_complete")
     .eq("user_id", auth.user.id)
     .maybeSingle();
 
-  if (!profile?.identity_statement) redirect("/onboarding");
+  const ready =
+    Boolean(profile?.onboarding_complete) &&
+    Boolean(profile?.identity_statement?.trim());
 
-  // Minimal skeleton (no dashboards)
-  return (
-    <main className="min-h-svh bg-background">
-      <div className="mx-auto max-w-lg px-4 py-10 space-y-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Home</h1>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Home skeleton. Protected. Identity present.
-        </p>
-      </div>
-    </main>
-  );
+  if (!ready) redirect("/onboarding");
+
+  redirect("/home");
 }
