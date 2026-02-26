@@ -209,7 +209,7 @@ export default async function HomePage(){
 
   return (
     <main>
-        <div className="mt-10 max-w-[60ch]">
+      <div className="font-serif text-[2.1rem] leading-[1.05] tracking-tight text-foreground sm:text-4xl sm:leading-snug">
           <div className="font-serif text-3xl leading-snug text-foreground">
             {identityLine}
           </div>
@@ -228,7 +228,7 @@ export default async function HomePage(){
           </div>
         ) : null}
 
-        <section className="mt-10 grid gap-4">
+        <section className="mt-8 sm:mt-10 grid gap-4">
           {ordered.map((g, idx) => {
             const pillar = PILLAR_ORDER[idx];
 
