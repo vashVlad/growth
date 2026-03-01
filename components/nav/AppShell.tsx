@@ -2,63 +2,58 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
-function NavItem({
+function TopLink({
   href,
   label,
+  active,
 }: {
   href: string;
   label: string;
+  active?: boolean;
 }) {
-  const pathname = usePathname();
-  const active = pathname === href || pathname.startsWith(href + "/");
-
   return (
-    <Button
-        asChild
-        variant="ghost"
-        className={`h-9 rounded-xl px-3 ${
-            active ? "text-foreground font-medium" : "text-muted-foreground"
-        }`}
-        >
-        <Link href={href}>{label}</Link>
-    </Button>
+    <Link
+      href={href}
+      className={[
+        "rounded-full px-3 py-1.5 text-sm transition",
+        active
+          ? "bg-muted text-foreground"
+          : "text-muted-foreground hover:text-foreground hover:bg-muted",
+      ].join(" ")}
+    >
+      {label}
+    </Link>
   );
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  const onHome = pathname === "/home" || pathname?.startsWith("/home/");
+  const onProgress = pathname === "/progress" || pathname?.startsWith("/progress/");
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Top bar */}
-      <div className="sticky top-0 z-20 bg-background/70 backdrop-blur-sm md:border-b md:border-border/50">
-        <div className="mx-auto w-full max-w-3xl px-5 py-4 flex items-center justify-between">
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      {/* Calm sticky top bar */}
+      <header className="sticky top-0 z-30 border-b border-border/50 bg-background/80 backdrop-blur">
+        <div className="mx-auto flex h-14 w-full max-w-3xl items-center justify-between px-5">
+          <Link
+            href="/home"
+            className="font-serif text-lg tracking-tight text-foreground hover:opacity-80 transition"
+          >
             Growth
-          </div>
+          </Link>
 
-          <div className="hidden md:flex items-center gap-2">
-            <NavItem href="/home" label="Home" />
-            <NavItem href="/progress" label="Progress" />
-            <NavItem href="/identity" label="Identity" />
-          </div>
+          <nav className="flex items-center gap-2">
+            {!onHome ? <TopLink href="/home" label="Home" /> : null}
+            <TopLink href="/progress" label="Progress" active={onProgress} />
+          </nav>
         </div>
-      </div>
+      </header>
 
-      {/* Page content */}
-      <div className="pb-24 md:pb-10">{children}</div>
-
-      {/* Mobile bottom nav */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/90 backdrop-blur md:hidden">
-        <div className="mx-auto w-full max-w-3xl px-4 py-2 flex items-center justify-between gap-2">
-          <NavItem href="/home" label="Home" />
-          <NavItem href="/progress" label="Progress" />
-          <NavItem href="/identity" label="Identity" />
-          <Button asChild className="h-9 rounded-xl px-3">
-            <Link href="/goals/new">Create</Link>
-          </Button>
-        </div>
-      </div>
+      {/* Content */}
+      <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">{children}</div>
     </div>
   );
 }
