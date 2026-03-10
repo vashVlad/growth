@@ -1,5 +1,6 @@
 import { supabaseServer } from '@/lib/supabase/server';
 import ProfileAdjustForm from '@/components/adjust/ProfileAdjustForm';
+import { BackButton } from "@/components/nav/BackButton";
 
 export default async function IdentityAdjustPage() {
   const supabase = await supabaseServer();
@@ -22,7 +23,10 @@ export default async function IdentityAdjustPage() {
   return (
     <div className="mx-auto max-w-2xl p-6">
       <div className="mb-6">
-        <h1 className="ext-xs uppercase tracking-widest text-muted-foregroundx">Adjust identity</h1>
+        <div className="mb-6">
+          <BackButton fallbackHref="/home" />
+        </div>
+        <h1 className="text-xs uppercase tracking-widest text-muted-foreground">Adjust identity</h1>
         <p className="mt-1 text-sm text-neutral-600">
           Make a soft adjustment — but leave a brief reflection first.
         </p>

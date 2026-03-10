@@ -100,7 +100,7 @@ function SoftGoalCard({
 
         <Link
           href={`/goals/${goal.id}/adjust`}
-          className="rounded-full border border-border px-3 py-1 text-xs text-foreground/80 hover:bg-muted transition-colors"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           Adjust
         </Link>
@@ -223,23 +223,22 @@ export default async function HomePage() {
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">
       {/* HERO + FOCUS (single instance) */}
-      <section className="space-y-3">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          Today
+      <section className="space-y-5 sm:space-y-6">
+        <div className="space-y-3">
+          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+            Today
+          </div>
+
+          <h1 className="font-serif text-[2rem] leading-[1.08] tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+            {identityLine}
+          </h1>
+
+          <div className="text-sm text-muted-foreground">
+            Your current pillars are active.
+          </div>
         </div>
 
-        <h1 className="font-serif text-[2.05rem] leading-[1.06] tracking-tight text-foreground sm:text-4xl sm:leading-snug">
-          {identityLine}
-        </h1>
-
-        <div className="text-sm text-muted-foreground">
-          Your current pillars are active.
-        </div>
-
-        {/* TodayFocus handles its own label + instruction now */}
-        <div className="pt-2">
-          <HomeFocusController availablePillars={activePillars} />
-        </div>
+        <HomeFocusController availablePillars={activePillars} />
       </section>
 
       {/* Errors */}

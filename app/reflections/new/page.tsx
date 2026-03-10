@@ -5,7 +5,6 @@
   import WeeklyCheckInForm from "@/components/reflections/WeeklyCheckInForm";
   import { getWeekStartDateNY } from "@/lib/dates/weekStart";
   import { BackButton } from "@/components/nav/BackButton";
-
   type Alignment = "yes" | "partial" | "no";
 
   type ActionResult =
@@ -143,9 +142,11 @@
 
     return (
     <main className="min-h-screen bg-background">
+      <div className="mb-6">
+        <BackButton fallbackHref="/home" />
+      </div>
       <div className="mx-auto w-full max-w-2xl px-6 py-10">
         <div className="flex items-center justify-between">
-          <BackButton fallbackHref="/home" />
         </div>
 
         <div className="mt-8 mb-10">

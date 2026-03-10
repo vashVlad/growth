@@ -1,5 +1,7 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import ProfileAdjustForm from '@/components/adjust/ProfileAdjustForm';
+import { BackButton } from "@/components/nav/BackButton";
+
 
 export default async function ProfileAdjustPage() {
   const supabase = await supabaseServer();
@@ -20,6 +22,9 @@ export default async function ProfileAdjustPage() {
 
   return (
     <div className="mx-auto max-w-2xl p-6">
+      <div className="mb-6">
+        <BackButton fallbackHref="/home" />
+      </div>
       <div className="mb-6">
         <h1 className="text-xl font-semibold tracking-tight">Adjust identity</h1>
         <p className="mt-1 text-sm text-neutral-600">

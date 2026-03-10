@@ -2,6 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import NewGoalForm from "@/components/goals/NewGoalForm";
+import { BackButton } from "@/components/nav/BackButton";
+
 
 type Pillar = "career" | "personal" | "internal";
 const PILLARS: Pillar[] = ["career", "personal", "internal"];
@@ -37,14 +39,8 @@ export default async function NewGoalPage({
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-6 py-10">
-        <div className="flex items-center justify-between">
-
-            <Link
-                href="/home"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-                ← Back
-            </Link>
+        <div className="mb-6">
+          <BackButton fallbackHref="/home" />
         </div>
 
         <div className="mt-10 max-w-[60ch]">

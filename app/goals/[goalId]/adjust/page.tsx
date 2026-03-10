@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import GoalAdjustForm from "@/components/adjust/GoalAdjustForm";
+import { BackButton } from "@/components/nav/BackButton";
 
 export default async function GoalAdjustPage({
   params,
@@ -24,6 +25,9 @@ export default async function GoalAdjustPage({
     return (
       <main className="min-h-screen bg-background">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">
+        <div className="mb-6">
+          <BackButton fallbackHref="/home" />
+        </div>
             Adjust goal
         </div>
       </main>

@@ -152,9 +152,9 @@ export default function NewGoalForm({
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-      <div className="flex items-center justify-end pt-2">
-        <Button className="rounded-xl px-6" disabled={!canSubmit || loading} type="submit">
-          {loading ? "Creating..." : "Create goal"}
+      <div className="pt-6">
+        <Button type="submit" className="w-full h-11 rounded-xl">
+          Create goal
         </Button>
       </div>
     </form>
