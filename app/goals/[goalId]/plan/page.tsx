@@ -3,7 +3,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { BackButton } from "@/components/nav/BackButton";
 import { Button } from "@/components/ui/button";
 import { GoalPlanSetupCard } from "@/components/goals/GoalPlanSetupCard";
-import { ExecutionSteps } from "@/components/goals/ExecutionSteps";
+import { GoalPlanCard } from "@/components/goals/GoalPlanCard";
 
 type GoalPlanRow = {
   id: string;
@@ -123,8 +123,12 @@ export default async function GoalPlanPage({
 
         <GoalPlanSetupCard hasPlan={Boolean(plan)} goalId={goal.id} />
 
-        {plan?.plan_json?.execution_steps?.length ? (
-        <ExecutionSteps steps={plan.plan_json.execution_steps} />
+        {plan?.plan_json ? (
+        <GoalPlanCard
+            plan={plan.plan_json}
+            version={plan.version}
+            savedAt={plan.updated_at ?? plan.created_at}
+        />
         ) : (
         <section className="rounded-2xl border border-border/40 bg-background/40 p-6 text-sm text-muted-foreground">
             Plan output will render here.
