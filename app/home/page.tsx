@@ -132,9 +132,7 @@ function SoftGoalCard({
         </Button>
 
         <Button asChild variant="outline" className="rounded-xl">
-          <Link href={`/goals/${goal.id}/plan`}>
-            Plan
-          </Link>
+          <Link href={`/goals/${goal.id}/plan`}>Plan</Link>
         </Button>
       </div>
     </SoftCardShell>
