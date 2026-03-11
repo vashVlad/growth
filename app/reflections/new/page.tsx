@@ -60,7 +60,11 @@ export default async function NewReflectionPage({
     .limit(1)
     .maybeSingle();
 
-  const executionSteps = plan?.plan_json?.execution_steps ?? [];
+  const executionSteps = plan?.plan_json?.next_3_actions?.map((a: any) => ({
+    step: a.action,
+    definition_of_done: a.definition_of_done,
+    completed: false,
+  })) ?? [];
 
   const currentStep =
     executionSteps.find((s: any) => !s.completed) ?? null;
