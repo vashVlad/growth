@@ -1,18 +1,59 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 type Props = {
   hasPlan: boolean;
+  goalId: string;
 };
 
-export function GoalPlanSetupCard({ hasPlan }: Props) {
+export function GoalPlanSetupCard({ hasPlan, goalId }: Props) {
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [timeframeWeeks, setTimeframeWeeks] = useState("4");
   const [weeklyHours, setWeeklyHours] = useState("5");
   const [constraints, setConstraints] = useState("");
   const [intensity, setIntensity] = useState("balanced");
+
+  async function generatePlan() {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/ai/goal-plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          goalId,
+          timeframeWeeks: Number(timeframeWeeks),
+          weeklyHours: Number(weeklyHours),
+          constraints,
+          intensity,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json?.error ?? "Failed to generate plan");
+      }
+
+      setOpen(false);
+      router.refresh();
+    } catch (e: any) {
+      setError(e?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-4">
@@ -33,6 +74,7 @@ export function GoalPlanSetupCard({ hasPlan }: Props) {
           variant="outline"
           className="rounded-xl"
           onClick={() => setOpen((v) => !v)}
+          disabled={loading}
         >
           {open ? "Close" : hasPlan ? "Rebuild Plan" : "Break into Plan"}
         </Button>
@@ -93,9 +135,17 @@ export function GoalPlanSetupCard({ hasPlan }: Props) {
             </select>
           </label>
 
+          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+
           <div className="pt-2">
-            <Button type="button" className="rounded-xl">
-              Generate Plan
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl"
+              onClick={generatePlan}
+              disabled={loading}
+            >
+              {loading ? "Building a plan..." : "Generate Plan"}
             </Button>
           </div>
         </div>

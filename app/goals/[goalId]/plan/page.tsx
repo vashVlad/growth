@@ -121,7 +121,7 @@ export default async function GoalPlanPage({
           </div>
         </section>
 
-        <GoalPlanSetupCard hasPlan={Boolean(plan)} />
+        <GoalPlanSetupCard hasPlan={Boolean(plan)} goalId={goal.id} />
 
         {plan?.plan_json?.execution_steps?.length ? (
         <ExecutionSteps steps={plan.plan_json.execution_steps} />
