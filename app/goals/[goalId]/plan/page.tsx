@@ -3,6 +3,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { BackButton } from "@/components/nav/BackButton";
 import { Button } from "@/components/ui/button";
 import { GoalPlanSetupCard } from "@/components/goals/GoalPlanSetupCard";
+import { ExecutionSteps } from "@/components/goals/ExecutionSteps";
 
 type GoalPlanRow = {
   id: string;
@@ -120,48 +121,15 @@ export default async function GoalPlanPage({
           </div>
         </section>
 
-        <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-sm font-medium text-foreground">
-                {plan ? "Current plan" : "No plan yet"}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {plan
-                  ? `Version ${plan.version} saved`
-                  : "Break this goal into a step-by-step plan."}
-              </div>
-            </div>
+        <GoalPlanSetupCard hasPlan={Boolean(plan)} />
 
-            <Button className="rounded-xl">
-              {plan ? "Rebuild Plan" : "Break into Plan"}
-            </Button>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-border/50 bg-background/40 p-4">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                Timeframe
-              </div>
-              <div className="mt-2 text-sm text-foreground">
-                {plan?.timeframe_weeks ? `${plan.timeframe_weeks} weeks` : "—"}
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-border/50 bg-background/40 p-4">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                Weekly hours
-              </div>
-              <div className="mt-2 text-sm text-foreground">
-                {plan?.weekly_hours ? `${plan.weekly_hours} hrs/week` : "—"}
-              </div>
-            </div>
-          </div>
-        </section>
-
+        {plan?.plan_json?.execution_steps?.length ? (
+        <ExecutionSteps steps={plan.plan_json.execution_steps} />
+        ) : (
         <section className="rounded-2xl border border-border/40 bg-background/40 p-6 text-sm text-muted-foreground">
-          Plan output will render here.
+            Plan output will render here.
         </section>
+        )}
       </div>
     </main>
   );
