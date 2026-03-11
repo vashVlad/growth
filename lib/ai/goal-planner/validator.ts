@@ -41,13 +41,15 @@ Flag issues for:
 - vague tasks
 - vague execution_steps
 - missing definition_of_done
-- weekly workload above budget
+- weekly_plan.target_hours exceeds weekly_hours
 - missing success criteria
 - missing risks or mitigations
 - milestones not measurable
 - bad pillar alignment
 - overloaded week 1
 - unrealistic execution_steps
+- weekly_plan.target_hours must never exceed weekly_hours
+- total estimate_hours in tasks must equal target_hours
 
 Context:
 weekly_hours: ${input.weeklyHours}

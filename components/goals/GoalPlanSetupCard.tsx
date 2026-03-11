@@ -57,7 +57,7 @@ export function GoalPlanSetupCard({ hasPlan, goalId }: Props) {
 
   return (
     <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-4">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-sm font-medium text-foreground">
             {hasPlan ? "Current plan" : "No plan yet"}

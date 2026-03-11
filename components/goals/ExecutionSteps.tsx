@@ -6,7 +6,7 @@ type ExecutionStep = {
 
 export function ExecutionSteps({
   steps,
-  title = "Execution",
+  title="Next actions",
 }: {
   steps: ExecutionStep[];
   title?: string;
@@ -35,7 +35,7 @@ export function ExecutionSteps({
                       : "border-border text-transparent",
                   ].join(" ")}
                 >
-                  {done ? "✓" : "•"}
+                  {done ? "✓" : ""}
                 </div>
 
                 {!last ? (
@@ -47,7 +47,9 @@ export function ExecutionSteps({
                 <div
                   className={[
                     "text-sm leading-6",
-                    done ? "text-foreground" : "text-foreground/90",
+                    done
+                        ? "border-foreground bg-foreground text-background"
+                        : "border-border bg-background"
                   ].join(" ")}
                 >
                   {item.step}
