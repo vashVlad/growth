@@ -126,22 +126,16 @@ function SoftGoalCard({
       {/* Actions */}
       <div className="mt-5 flex flex-wrap items-start gap-3">
         <Button asChild variant="outline" className="rounded-xl">
-          <Link href={`/reflections/new?goalId=${goal.id}`}>Update</Link>
+          <Link href={`/reflections/new?goalId=${goal.id}`}>
+            Update
+          </Link>
         </Button>
 
-        <CompleteGoalButton goalId={goal.id} />
-
-        {reflectionId ? (
-          <Guidance reflectionId={reflectionId} />
-        ) : (
-          <Button
-            variant="ghost"
-            disabled
-            className="rounded-xl opacity-50 cursor-not-allowed"
-          >
-            Guidance
-          </Button>
-        )}
+        <Button asChild variant="outline" className="rounded-xl">
+          <Link href={`/goals/${goal.id}/plan`}>
+            Plan
+          </Link>
+        </Button>
       </div>
     </SoftCardShell>
   );
