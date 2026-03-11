@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import GoalAdjustForm from "@/components/adjust/GoalAdjustForm";
 import { BackButton } from "@/components/nav/BackButton";
+import { CompleteGoalButton } from "@/components/goals/CompleteGoalButton";
 
 export default async function GoalAdjustPage({
   params,
@@ -18,7 +19,6 @@ export default async function GoalAdjustPage({
 
   if (authError || !user) redirect("/login");
 
-  // ✅ IMPORTANT: unwrap params (Next requires this in your version)
   const { goalId } = await params;
 
   if (!goalId) {
@@ -83,6 +83,9 @@ export default async function GoalAdjustPage({
             Adjust goal
             </div>
         <GoalAdjustForm goal={goal} />
+        <div className="pt-4">
+          <CompleteGoalButton goalId={goal.id} />
+        </div>
       </div>
     </main>
   );
