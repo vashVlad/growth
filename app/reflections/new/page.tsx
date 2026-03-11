@@ -59,7 +59,56 @@ const executionSteps = plan?.plan_json?.execution_steps ?? [];
 const currentStep =
   executionSteps.find((s: any) => !s.completed) ?? null;
 
-    async function createWeeklyCheckIn( _prevState: ActionResult, formData: FormData): Promise<ActionResult> {
+  async function completeStep() {
+  "use server";
+
+  const supabase = await supabaseServer();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: plan } = await supabase
+    .from("goal_plans")
+    .select("id, plan_json")
+    .eq("goal_id", goalId)
+    .eq("user_id", user.id)
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!plan) redirect("/home");
+
+  const steps = plan.plan_json.execution_steps ?? [];
+
+  const index = steps.findIndex((s: any) => !s.completed);
+
+  if (index === -1) redirect("/home");
+
+  steps[index].completed = true;
+
+  const next = steps[index + 1];
+
+  await supabase
+    .from("goal_plans")
+    .update({ plan_json: { ...plan.plan_json, execution_steps: steps } })
+    .eq("id", plan.id);
+
+  if (next) {
+    await supabase
+      .from("goals")
+      .update({ next_action: next.step })
+      .eq("id", goalId)
+      .eq("user_id", user.id);
+  }
+
+  revalidatePath("/home");
+  redirect("/home");
+}
+    
+  async function createWeeklyCheckIn( _prevState: ActionResult, formData: FormData): Promise<ActionResult> {
     "use server";
       const supabase = await supabaseServer();
       const {
@@ -179,7 +228,7 @@ const currentStep =
               Focus
             </div>
 
-            <div className="mt-3 flex gap-3">
+            <div className="mt-3 flex items-start justify-between gap-4">
               <div className="flex h-5 w-5 items-center justify-center rounded-full border border-border">
               </div>
 
@@ -197,6 +246,31 @@ const currentStep =
             </div>
           </section>
         ) : null}
+
+        <div className="flex gap-3">
+          <div className="flex h-5 w-5 items-center justify-center rounded-full border border-border" />
+
+          <div>
+            <div className="text-sm text-foreground">
+              {currentStep.step}
+            </div>
+
+            {currentStep.definition_of_done ? (
+              <div className="text-xs text-muted-foreground">
+                {currentStep.definition_of_done}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <form action={completeStep}>
+          <button
+            type="submit"
+            className="text-xs rounded-xl border border-border px-3 py-1 hover:bg-muted transition"
+          >
+            Complete
+          </button>
+        </form>
         <WeeklyCheckInForm action={createWeeklyCheckIn} goalId={goalId} weekStartDate={week_start_date} />
       </div>
     </main>
