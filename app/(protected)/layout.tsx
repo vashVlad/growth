@@ -3,7 +3,11 @@ import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import AppShell from "@/components/nav/AppShell";
 
-export default async function ProtectedLayout({ children }: { children: React.ReactNode}) {
+export default async function ProtectedLayout({
+  children,
+}: {  
+  children: ReactNode;
+}) {
   const supabase = await supabaseServer();
 
   const {
@@ -27,5 +31,5 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   if (!ready) redirect("/onboarding");
 
-    return <AppShell>{children}</AppShell>;
+  return <AppShell>{children}</AppShell>;
 }

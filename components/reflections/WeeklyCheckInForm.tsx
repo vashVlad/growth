@@ -173,11 +173,11 @@ export default function WeeklyCheckInForm({
         </div>
       ) : null}
 
-      <div className="pt-1">
+      <div className="pt-2">
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-2xl border border-border bg-background px-5 py-3 text-sm font-medium shadow-sm transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-12 w-full rounded-2xl border border-border bg-background px-5 py-3 text-sm font-medium shadow-sm transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "Saving…" : "Submit weekly check-in"}
         </button>

@@ -30,6 +30,7 @@ export function GoalPlanSetupCard({ hasPlan }: Props) {
 
         <Button
           type="button"
+          variant="outline"
           className="rounded-xl"
           onClick={() => setOpen((v) => !v)}
         >
@@ -38,7 +39,7 @@ export function GoalPlanSetupCard({ hasPlan }: Props) {
       </div>
 
       {open ? (
-        <div className="grid gap-4 pt-2">
+        <div className="grid gap-5 pt-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="grid gap-2">
               <span className="text-sm text-foreground">Timeframe</span>
