@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import { BackButton } from "@/components/nav/BackButton";
 import { Button } from "@/components/ui/button";
+import { GoalPlanSetupCard } from "@/components/goals/GoalPlanSetupCard";
 
 type GoalPlanRow = {
   id: string;
