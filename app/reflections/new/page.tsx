@@ -45,6 +45,20 @@
 
     if (goalErr || !goal) redirect("/home");
 
+    const { data: plan } = await supabase
+  .from("goal_plans")
+  .select("plan_json")
+  .eq("goal_id", goalId)
+  .eq("user_id", user.id)
+  .order("version", { ascending: false })
+  .limit(1)
+  .maybeSingle();
+
+const executionSteps = plan?.plan_json?.execution_steps ?? [];
+
+const currentStep =
+  executionSteps.find((s: any) => !s.completed) ?? null;
+
     async function createWeeklyCheckIn( _prevState: ActionResult, formData: FormData): Promise<ActionResult> {
     "use server";
       const supabase = await supabaseServer();
@@ -153,11 +167,36 @@
           <h1 className="mt-2 text-2xl font-semibold leading-snug">
             {goal.title}
           </h1>
+
           <div className="mt-3 text-sm text-muted-foreground">
-            A quiet, structured review for this week. All fields are required.
+            A quiet, structured review for this week.
           </div>
         </div>
 
+        {currentStep ? (
+          <section className="mb-8 rounded-2xl border border-border/60 bg-background/60 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              Focus
+            </div>
+
+            <div className="mt-3 flex gap-3">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full border border-border">
+              </div>
+
+              <div>
+                <div className="text-sm text-foreground">
+                  {currentStep.step}
+                </div>
+
+                {currentStep.definition_of_done ? (
+                  <div className="text-xs text-muted-foreground">
+                    {currentStep.definition_of_done}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </section>
+        ) : null}
         <WeeklyCheckInForm action={createWeeklyCheckIn} goalId={goalId} weekStartDate={week_start_date} />
       </div>
     </main>
