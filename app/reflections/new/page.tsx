@@ -5,7 +5,7 @@
   import WeeklyCheckInForm from "@/components/reflections/WeeklyCheckInForm";
   import { getWeekStartDateNY } from "@/lib/dates/weekStart";
   import { BackButton } from "@/components/nav/BackButton";
-  type Alignment = "yes" | "partial" | "no";
+  type Alignment = "yes" | "partially" | "no";
 
   type ActionResult =
     | { ok: true }
@@ -13,7 +13,7 @@
     | undefined;
 
   function normalizeAlignment(v: string): Alignment | null {
-    if (v === "yes" || v === "partial" || v === "no") return v;
+    if (v === "yes" || v === "partially" || v === "no") return v;
     return null;
   }
   export default async function NewReflectionPage({
