@@ -57,7 +57,7 @@ This week:
 - Action taken: ${reflection.action_taken}
 - Easier/harder: ${reflection.easier_harder}
 - Alignment: ${reflection.alignment}
-- Draft next step: ${reflection.next_step}
+- Next execution step: ${input.executionStep}
 
 Write the Guidance now.
 `.trim();
@@ -160,15 +160,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2) Return cached note if it exists
+    // 2) Return cached note if reflection hasn't changed
     const { data: existingNote } = await supabase
       .from("ai_notes")
-      .select("content")
+      .select("content, updated_at")
       .eq("user_id", user.id)
       .eq("reflection_id", reflection.id)
       .maybeSingle();
 
-    if (existingNote?.content?.trim()) {
+    if (
+      existingNote?.content?.trim() &&
+      existingNote.updated_at &&
+      new Date(existingNote.updated_at) > new Date(reflection.week_start_date)
+    ) {
       return NextResponse.json({ content: existingNote.content, cached: true });
     }
 
