@@ -24,56 +24,9 @@ export default function WeeklyCheckInForm({
   const [state, formAction, isPending] =
     React.useActionState<ActionResult, FormData>(action, undefined);
 
-  // --- AI suggestion state (Step 9) ---
-  const [suggestion, setSuggestion] = React.useState<string | null>(null);
-  const [suggestVisible, setSuggestVisible] = React.useState(true);
-
-  const [suggestLoading, setSuggestLoading] = React.useState(false);
-
-  const nextStepRef = React.useRef<HTMLTextAreaElement | null>(null);
-
-  React.useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      // Don’t spam while saving
-      if (!goalId || !weekStartDate) return;
-
-      setSuggestLoading(true);
-      try {
-        const res = await fetch("/api/ai/next-step", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            goal_id: goalId,
-            week_start_date: weekStartDate,
-          }),
-        });
-
-        if (!res.ok) {
-          // Quietly fail (no scary error)
-          if (!cancelled) setSuggestion(null);
-          return;
-        }
-
-        const body = (await res.json().catch(() => null)) as
-          | { suggestion?: string }
-          | null;
-
-        const text = String(body?.suggestion ?? "").trim();
-        if (!cancelled) setSuggestion(text || null);
-      } catch {
-        if (!cancelled) setSuggestion(null);
-      } finally {
-        if (!cancelled) setSuggestLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [goalId, weekStartDate]);
+  const nextStepRef = React.useRef<HTMLTextAreaElement>(null);
+  const [suggestion, setSuggestion] = React.useState<string>("");
+  const [suggestVisible, setSuggestVisible] = React.useState(false);
 
   function useSuggestion() {
   const text = suggestion?.trim();
@@ -110,61 +63,12 @@ export default function WeeklyCheckInForm({
         <label className="block text-sm font-medium">Alignment</label>
         <div className="flex flex-wrap gap-2">
           <RadioPill value="yes" label="Yes" />
-          <RadioPill value="partial" label="Partially" />
+          <RadioPill value="neutral" label="Partially" />
           <RadioPill value="no" label="No" />
         </div>
         <p className="text-xs text-muted-foreground">
           Did your actions align with your stated identity and pillar focus?
         </p>
-      </div>
-
-      <Field
-        label="What is your next intentional step?"
-        name="next_step"
-        placeholder="One clear step you’ll take next…"
-        inputRef={nextStepRef}
-      />
-
-      {/* ✅ Minimal AI suggestion row (quiet, editable by default) */}
-      <div className="-mt-6">
-        {suggestLoading ? (
-          <div
-            className={`rounded-2xl border border-border/60 bg-background/60 px-4 py-3 transition-opacity duration-300 ${
-                suggestVisible ? "opacity-100" : "opacity-0"
-            }`}
-            >
-            <div className="h-3 w-28 rounded bg-muted" />
-            <div className="mt-2 h-3 w-full rounded bg-muted" />
-            <div className="mt-2 h-3 w-4/5 rounded bg-muted" />
-          </div>
-        ) : suggestion && suggestVisible ? (
-
-          <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-3 transition-opacity duration-300">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                  Suggested
-                </div>
-                <div className="mt-2 text-sm leading-relaxed text-foreground/90">
-                  {suggestion}
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={useSuggestion}
-                disabled={isPending}
-                className="shrink-0 rounded-xl border border-border bg-background px-3 py-2 text-xs font-medium text-foreground/80 shadow-sm transition hover:bg-muted disabled:opacity-60"
-              >
-                Use
-              </button>
-            </div>
-
-            <div className="mt-2 text-xs text-muted-foreground">
-              Tap “Use” to prefill. You can still edit it.
-            </div>
-          </div>
-        ) : null}
       </div>
 
       {state && !state.ok ? (
@@ -226,9 +130,10 @@ function RadioPill({
   value,
   label,
 }: {
-  value: "yes" | "partial" | "no";
+  value: "yes" | "neutral" | "no";
   label: string;
 }) {
+  
   const id = `align-${value}`;
   return (
     <div className="relative">

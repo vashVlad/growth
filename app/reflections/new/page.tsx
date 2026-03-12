@@ -143,8 +143,6 @@
       const action_taken = String(formData.get("action_taken") ?? "").trim();
       const easier_harder = String(formData.get("easier_harder") ?? "").trim();
       const alignmentRaw = String(formData.get("alignment") ?? "").trim();
-      const next_step = String(formData.get("next_step") ?? "").trim() || "";
-
       const alignment = normalizeAlignment(alignmentRaw);
 
       if (!action_taken || !easier_harder || !alignment) {
@@ -154,17 +152,17 @@
       const week_start_date = getWeekStartDateNY(new Date());
 
       const { data: saved, error } = await supabase
-        .from("reflections")
-        .upsert(
-          {
-            user_id: user.id,
-            goal_id: goalId,
-            week_start_date,
-            action_taken,
-            easier_harder,
-            alignment,
-            next_step,
-          },
+      .from("reflections")
+      .upsert(
+        {
+          user_id: user.id,
+          goal_id: goalId,
+          week_start_date,
+          action_taken,
+          easier_harder,
+          alignment,
+          next_step: null,
+        },
           { onConflict: "user_id,goal_id,week_start_date" }
         )
         .select()
@@ -227,7 +225,7 @@
       revalidatePath("/progress");
       revalidatePath("/goals");
 
-      redirect(`/home?guidance_goal=${goalId}`);
+      redirect(`/home?guidance_goal=${goalId}&step_completed=1`);
     }
 
     const week_start_date = getWeekStartDateNY(new Date());
