@@ -114,9 +114,14 @@
       redirect("/home");
     }
 
-    async function createWeeklyCheckIn( _prevState: ActionResult, formData: FormData): Promise<ActionResult> {
-    "use server";
+    async function createWeeklyCheckIn(
+      _prevState: ActionResult,
+      formData: FormData
+    ): Promise<ActionResult> {
+      "use server";
+
       const supabase = await supabaseServer();
+
       const {
         data: { user },
         error: authError,
@@ -124,15 +129,14 @@
 
       if (authError || !user) redirect("/login");
 
-      // Re-validate goal ownership inside the action (prevents tampering)
-      const { data: ownedGoal, error: ownedGoalErr } = await supabase
+      const { data: ownedGoal } = await supabase
         .from("goals")
         .select("id")
         .eq("id", goalId)
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (ownedGoalErr || !ownedGoal) {
+      if (!ownedGoal) {
         return { ok: false, message: "Goal not found." };
       }
 
@@ -149,33 +153,64 @@
 
       const week_start_date = getWeekStartDateNY(new Date());
 
-      // Upsert + require readback so we never silently “succeed”
-      const upsertPayload = {
-        user_id: user.id,
-        goal_id: goalId,
-        week_start_date,
-        action_taken,
-        easier_harder,
-        alignment,
-        next_step,
-      };
-
-      const { data: saved, error } = await supabase
+      const { error } = await supabase
         .from("reflections")
-        .upsert(upsertPayload, { onConflict: "user_id,goal_id,week_start_date" })
-        const next_step = String(formData.get("next_step") ?? "").trim();
-        .maybeSingle();
+        .upsert(
+          {
+            user_id: user.id,
+            goal_id: goalId,
+            week_start_date,
+            action_taken,
+            easier_harder,
+            alignment,
+            next_step,
+          },
+          { onConflict: "user_id,goal_id,week_start_date" }
+        );
 
       if (error) {
         return { ok: false, message: error.message };
       }
 
-      if (!saved) {
-        return {
-          ok: false,
-          message:
-            "Save returned no row. Check RLS policies for reflections and confirm updated_at exists.",
-        };
+      /* -------- COMPLETE CURRENT EXECUTION STEP -------- */
+
+      const { data: plan } = await supabase
+        .from("goal_plans")
+        .select("id, plan_json")
+        .eq("goal_id", goalId)
+        .eq("user_id", user.id)
+        .order("version", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (plan?.plan_json?.execution_steps) {
+        const steps = [...plan.plan_json.execution_steps];
+
+        const index = steps.findIndex((s: any) => !s.completed);
+
+        if (index !== -1) {
+          steps[index].completed = true;
+
+          const next = steps[index + 1];
+
+          await supabase
+            .from("goal_plans")
+            .update({
+              plan_json: {
+                ...plan.plan_json,
+                execution_steps: steps,
+              },
+            })
+            .eq("id", plan.id);
+
+          if (next) {
+            await supabase
+              .from("goals")
+              .update({ next_action: next.step })
+              .eq("id", goalId)
+              .eq("user_id", user.id);
+          }
+        }
       }
 
       revalidatePath("/home");
