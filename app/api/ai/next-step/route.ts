@@ -90,9 +90,9 @@ export async function POST(req: Request) {
     }
 
     // Fetch recent reflections for this goal (last 5)
-    const { data: recent } = await supabase
+    const { data: recent, error: recentErr } = await supabase
       .from("reflections")
-      .select("week_start_date, alignment, next_step")
+      .select("week_start_date, alignment")
       .eq("user_id", user.id)
       .eq("goal_id", goal_id)
       .order("week_start_date", { ascending: false })
