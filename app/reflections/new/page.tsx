@@ -139,6 +139,7 @@
       const action_taken = String(formData.get("action_taken") ?? "").trim();
       const easier_harder = String(formData.get("easier_harder") ?? "").trim();
       const alignmentRaw = String(formData.get("alignment") ?? "").trim();
+      const next_step = String(formData.get("next_step") ?? "").trim() || "";
 
       const alignment = normalizeAlignment(alignmentRaw);
 
@@ -156,12 +157,13 @@
         action_taken,
         easier_harder,
         alignment,
+        next_step,
       };
 
       const { data: saved, error } = await supabase
         .from("reflections")
         .upsert(upsertPayload, { onConflict: "user_id,goal_id,week_start_date" })
-        .select("id, user_id, goal_id, week_start_date, updated_at")
+        const next_step = String(formData.get("next_step") ?? "").trim();
         .maybeSingle();
 
       if (error) {
