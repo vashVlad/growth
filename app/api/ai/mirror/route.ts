@@ -211,7 +211,7 @@ export async function POST(req: Request) {
       }
 
     const patternSnapshot =
-      recentErr || !recent || recent.length === 0
+      !recent || recent.length === 0
         ? "N/A"
         : recent
             .map((r) => `- ${r.week_start_date}: ${r.alignment}`)
