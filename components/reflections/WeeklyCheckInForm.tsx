@@ -28,22 +28,6 @@ export default function WeeklyCheckInForm({
   const [suggestion, setSuggestion] = React.useState<string>("");
   const [suggestVisible, setSuggestVisible] = React.useState(false);
 
-  function useSuggestion() {
-  const text = suggestion?.trim();
-  if (!text) return;
-
-  if (nextStepRef.current) {
-    nextStepRef.current.value = text;
-    nextStepRef.current.focus();
-    const len = text.length;
-    nextStepRef.current.setSelectionRange(len, len);
-  }
-
-  // Soft fade out
-  setSuggestVisible(false);
-}
-
-
   return (
     <form action={formAction} className="space-y-9">
       <Field
@@ -133,7 +117,7 @@ function RadioPill({
   value: "yes" | "neutral" | "no";
   label: string;
 }) {
-  
+
   const id = `align-${value}`;
   return (
     <div className="relative">

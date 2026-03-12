@@ -156,6 +156,7 @@ export default async function HomePage({
 }: {
   searchParams?: { guidance_goal?: string };
 }) {
+  
   const supabase = await supabaseServer();
 
   const {
