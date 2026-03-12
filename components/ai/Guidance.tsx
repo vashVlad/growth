@@ -20,6 +20,12 @@ export function Guidance({
     }
   }, [autoOpen]);
 
+  useEffect(() => {
+    if (autoOpen) {
+      setOpen(true);
+    }
+  }, [autoOpen]);
+
   async function fetchNote() {
     setLoading(true);
     setError(null);

@@ -153,8 +153,8 @@ export async function POST(req: Request) {
       reflection.alignment,
       reflection.next_step,
     ];
-    if (required.some((v) => !String(v ?? "").trim())) {
-      return NextResponse.json(
+    if (!reflection.action_taken || !reflection.easier_harder || !reflection.alignment) {
+      return Response.json(
         { error: "Reflection is incomplete" },
         { status: 400 }
       );
