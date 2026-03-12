@@ -46,18 +46,19 @@
     if (goalErr || !goal) redirect("/home");
 
     const { data: plan } = await supabase
-  .from("goal_plans")
-  .select("plan_json")
-  .eq("goal_id", goalId)
-  .eq("user_id", user.id)
-  .order("version", { ascending: false })
-  .limit(1)
-  .maybeSingle();
+      .from("goal_plans")
+      .select("id, version, plan_json")
+      .eq("goal_id", goalId)
+      .eq("user_id", user.id)
+      .order("version", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-const executionSteps = plan?.plan_json?.execution_steps ?? [];
+    const executionSteps = Array.isArray(plan?.plan_json?.execution_steps)
+      ? plan.plan_json.execution_steps
+      : [];
 
-const currentStep =
-  executionSteps.find((s: any) => !s.completed) ?? null;
+    const currentStep = executionSteps.find((s: any) => s && !s.completed) ?? null;
 
     async function completeStep() {
       "use server";
