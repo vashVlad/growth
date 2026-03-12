@@ -47,7 +47,7 @@ export default function WeeklyCheckInForm({
         <label className="block text-sm font-medium">Alignment</label>
         <div className="flex flex-wrap gap-2">
           <RadioPill value="yes" label="Yes" />
-          <RadioPill value="neutral" label="Partially" />
+          <RadioPill value="partial" label="Partially" />
           <RadioPill value="no" label="No" />
         </div>
         <p className="text-xs text-muted-foreground">
@@ -114,7 +114,7 @@ function RadioPill({
   value,
   label,
 }: {
-  value: "yes" | "neutral" | "no";
+  value: "yes" | "partial" | "no";
   label: string;
 }) {
 
