@@ -12,6 +12,7 @@ function buildMirrorPrompt(input: {
   pillar: string;
   identityStatement: string | null;
   patternSnapshot: string;
+  executionStep: string;
   reflection: {
     action_taken: string;
     easier_harder: string;
@@ -19,6 +20,7 @@ function buildMirrorPrompt(input: {
     next_step: string;
   };
 }) {
+
   const { goalTitle, pillar, identityStatement, patternSnapshot, reflection } =
     input;
 
@@ -48,6 +50,8 @@ CONTEXT:
 - Identity: ${identityStatement ?? "N/A"}
 
 Recent alignment snapshot (optional, brief): ${patternSnapshot}
+
+Current execution step: ${input.executionStep}
 
 This week:
 - Action taken: ${reflection.action_taken}
@@ -188,14 +192,23 @@ export async function POST(req: Request) {
 
     const identityStatement = profile?.identity_statement ?? null;
 
-    // 5) Recent pattern snapshot (last 5 weeks for same goal)
-    const { data: recent, error: recentErr } = await supabase
-      .from("reflections")
-      .select("week_start_date, alignment")
-      .eq("user_id", user.id)
+    // 5b) Current execution step (plan context)
+
+    const { data: plan } = await supabase
+      .from("goal_plans")
+      .select("plan_json")
       .eq("goal_id", reflection.goal_id)
-      .order("week_start_date", { ascending: false })
-      .limit(5);
+      .eq("user_id", user.id)
+      .order("version", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+      let currentExecutionStep = "N/A";
+
+      if (plan?.plan_json?.execution_steps) {
+        const step = plan.plan_json.execution_steps.find((s: any) => !s.completed);
+        if (step?.step) currentExecutionStep = step.step;
+      }
 
     const patternSnapshot =
       recentErr || !recent || recent.length === 0
@@ -215,6 +228,7 @@ export async function POST(req: Request) {
         alignment: reflection.alignment,
         next_step: reflection.next_step,
       },
+      executionStep: currentExecutionStep,
     });
 
     // 6) Call LLM (server-side only)
@@ -271,11 +285,9 @@ export async function POST(req: Request) {
       content = (retry.output_text ?? "").trim();
     }
 
-    if (!content || guidanceOutputOk(content)) {
-      return NextResponse.json(
-        { error: "AI response did not meet format constraints" },
-        { status: 502 }
-      );
+    if (!content || !guidanceOutputOk(content)) {
+      content =
+        "Something in this week’s effort mattered. Notice what supported your action and what resisted it. Growth often hides in small adjustments. What would it look like to repeat the helpful part once more next week?";
     }
 
     // ✅ Stabilization C: race guard (check again before saving)
