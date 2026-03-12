@@ -160,21 +160,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2) Return cached note if reflection hasn't changed
-    const { data: existingNote } = await supabase
+    // Always regenerate guidance when reflection changes
+    await supabase
       .from("ai_notes")
-      .select("content, updated_at")
+      .delete()
       .eq("user_id", user.id)
-      .eq("reflection_id", reflection.id)
-      .maybeSingle();
-
-    if (
-      existingNote?.content?.trim() &&
-      existingNote.updated_at &&
-      new Date(existingNote.updated_at) > new Date(reflection.week_start_date)
-    ) {
-      return NextResponse.json({ content: existingNote.content, cached: true });
-    }
+      .eq("reflection_id", reflection.id);
 
     // 3) Goal context (title + pillar)
     const { data: goal, error: goalErr } = await supabase

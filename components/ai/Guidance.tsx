@@ -55,7 +55,7 @@ export function Guidance({
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-end">
       <button
         type="button"
         onClick={toggle}
@@ -67,7 +67,7 @@ export function Guidance({
 
       {/* Animated Mirror Card */}
       <div
-          className={`mt-4 overflow-hidden rounded-2xl border bg-muted/40 shadow-sm transition-all duration-300 ease-out
+          className={`mt-4 w-full overflow-hidden rounded-2xl border bg-muted/40 shadow-sm transition-all duration-300 ease-out
         ${
           open
             ? "max-h-96 opacity-100 translate-y-0 border-border/40 p-4"
