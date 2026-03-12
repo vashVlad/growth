@@ -129,16 +129,18 @@ function SoftGoalCard({
       </div>
 
       {/* Actions */}
-      <div className="mt-5 flex flex-wrap items-start gap-3">
-        <Button asChild variant="outline" className="rounded-xl">
-          <Link href={`/reflections/new?goalId=${goal.id}`}>
-            Update
-          </Link>
-        </Button>
+      <div className="mt-5 flex items-center justify-between">
+        <div className="flex gap-3">
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/reflections/new?goalId=${goal.id}`}>
+              Update
+            </Link>
+          </Button>
 
-        <Button asChild variant="outline" className="rounded-xl">
-          <Link href={`/goals/${goal.id}/plan`}>Plan</Link>
-        </Button>
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/goals/${goal.id}/plan`}>Plan</Link>
+          </Button>
+        </div>
 
         {reflectionId ? (
           <Guidance
@@ -146,7 +148,7 @@ function SoftGoalCard({
             autoOpen={guidanceGoalId === goal.id}
           />
         ) : null}
-      </div>
+</div>
       </SoftCardShell>
     );
   }
@@ -156,7 +158,7 @@ export default async function HomePage({
 }: {
   searchParams?: { guidance_goal?: string };
 }) {
-  
+
   const supabase = await supabaseServer();
 
   const {

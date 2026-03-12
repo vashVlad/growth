@@ -155,8 +155,9 @@
       const week_start_date = getWeekStartDateNY(new Date());
 
       const { data: saved, error } = await supabase
-      .from("reflections")
-      .upsert(
+        .from("reflections")
+        .upsert(
+          
         {
           user_id: user.id,
           goal_id: goalId,
@@ -175,8 +176,17 @@
         await supabase
           .from("ai_notes")
           .delete()
-          .eq("reflection_id", saved.id)
-          .eq("user_id", user.id);
+          .eq("user_id", user.id)
+          .in(
+            "reflection_id",
+            (
+              await supabase
+                .from("reflections")
+                .select("id")
+                .eq("goal_id", goalId)
+                .eq("user_id", user.id)
+            ).data?.map((r) => r.id) ?? []
+          );
       }
 
       if (error) {
