@@ -55,7 +55,7 @@ export function Guidance({
   }
 
   return (
-    <div className="flex flex-col items-end">
+    <div className="w-full">
       <button
         type="button"
         onClick={toggle}
