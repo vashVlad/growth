@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export function Guidance({reflectionId, autoOpen = false,}: { reflectionId: string; autoOpen?: boolean;}) {
+export function Guidance({
+  reflectionId,
+  autoOpen = false,
+}: {
+  reflectionId: string;
+  autoOpen?: boolean;
+}) {
   const [open, setOpen] = useState(autoOpen);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (autoOpen && !content && !loading) {
+      fetchNote();
+    }
+  }, [autoOpen]);
 
   async function fetchNote() {
     setLoading(true);

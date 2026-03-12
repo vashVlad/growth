@@ -5,7 +5,7 @@
   import WeeklyCheckInForm from "@/components/reflections/WeeklyCheckInForm";
   import { getWeekStartDateNY } from "@/lib/dates/weekStart";
   import { BackButton } from "@/components/nav/BackButton";
-  type Alignment = "yes" | "partial" | "no";
+  type Alignment = "yes" | "neutral" | "no";
 
   type ActionResult =
     | { ok: true }
@@ -13,7 +13,7 @@
     | undefined;
 
   function normalizeAlignment(v: string): Alignment | null {
-    if (v === "yes" || v === "partial" || v === "no") return v;
+    if (v === "yes" || v === "neutral" || v === "no") return v;
     return null;
   }
 
@@ -153,7 +153,7 @@
 
       const week_start_date = getWeekStartDateNY(new Date());
 
-      const { error } = await supabase
+      const { data: saved, error } = await supabase
         .from("reflections")
         .upsert(
           {
@@ -166,7 +166,17 @@
             next_step,
           },
           { onConflict: "user_id,goal_id,week_start_date" }
-        );
+        )
+        .select()
+        .maybeSingle();
+
+      if (saved) {
+        await supabase
+          .from("ai_notes")
+          .delete()
+          .eq("reflection_id", saved.id)
+          .eq("user_id", user.id);
+      }
 
       if (error) {
         return { ok: false, message: error.message };
@@ -215,6 +225,7 @@
 
       revalidatePath("/home");
       revalidatePath("/progress");
+      revalidatePath("/goals");
 
       redirect(`/home?guidance_goal=${goalId}`);
     }
