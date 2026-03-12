@@ -176,29 +176,6 @@
         };
       }
 
-      // Sync weekly next_step into the goal's next_action (so /home updates)
-      const { data: updatedGoal, error: goalUpdateErr } = await supabase
-        .from("goals")
-        .update({ next_action: next_step })
-        .eq("id", goalId)
-        .eq("user_id", user.id)
-        .select("id, next_action, updated_at")
-        .maybeSingle();
-
-      if (goalUpdateErr) {
-        return {
-          ok: false,
-          message: `Saved check-in, but failed to update goal: ${goalUpdateErr.message}`,
-        };
-      }
-      if (!updatedGoal) {
-        return {
-          ok: false,
-          message:
-            "Saved check-in, but goal update affected 0 rows (RLS or wrong goal).",
-        };
-      }
-
       revalidatePath("/home");
       revalidatePath("/progress");
 
