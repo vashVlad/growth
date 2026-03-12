@@ -234,12 +234,12 @@
               Focus
             </div>
 
-            <div className="mt-3 flex items-start justify-between gap-4">
+            <div className="mt-3 grid grid-cols-[1fr_auto] gap-4 items-start">
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 min-w-0">
               <div className="flex h-5 w-5 items-center justify-center rounded-full border border-border"></div>
 
-              <div>
+              <div className="min-w-0">
                 <div className="text-sm text-foreground">
                   {currentStep.step}
                 </div>

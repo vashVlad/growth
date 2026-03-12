@@ -28,31 +28,29 @@ export function ExecutionSteps({
             <div key={`${item.step}-${idx}`} className="flex gap-3">
               <div className="flex w-5 flex-col items-center">
                 <div
-                  className={[
-                    "flex h-5 w-5 items-center justify-center rounded-full border text-[11px] leading-none",
-                    done
-                      ? "border-foreground text-foreground"
-                      : "border-border text-transparent",
-                  ].join(" ")}
+                    className={[
+                        "flex h-5 w-5 items-center justify-center rounded-full border text-[11px] leading-none shrink-0",
+                        done
+                        ? "border-foreground bg-foreground text-background"
+                        : "border-border bg-background text-transparent",
+                    ].join(" ")}
                 >
-                  {done ? "✓" : ""}
+                    {done ? "✓" : ""}
                 </div>
 
                 {!last ? (
-                  <div className="my-1 w-px flex-1 bg-border/70 min-h-6" />
+                  <div className="my-1 w-px flex-1 bg-border/50 min-h-6" />
                 ) : null}
               </div>
 
               <div className="pb-4">
                 <div
-                  className={[
-                    "text-sm leading-6",
-                    done
-                        ? "border-foreground bg-foreground text-background"
-                        : "border-border bg-background"
-                  ].join(" ")}
+                    className={[
+                        "text-sm leading-6",
+                        done ? "text-foreground/80 line-through" : "text-foreground/90",
+                    ].join(" ")}
                 >
-                  {item.step}
+                    {item.step}
                 </div>
 
                 {item.definition_of_done?.trim() ? (
