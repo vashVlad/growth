@@ -210,6 +210,14 @@ export async function POST(req: Request) {
         if (step?.step) currentExecutionStep = step.step;
       }
 
+    const { data: recent } = await supabase
+      .from("reflections")
+      .select("week_start_date, alignment")
+      .eq("user_id", user.id)
+      .eq("goal_id", reflection.goal_id)
+      .order("week_start_date", { ascending: false })
+      .limit(5);  
+
     const patternSnapshot =
       !recent || recent.length === 0
         ? "N/A"
