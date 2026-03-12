@@ -16,7 +16,6 @@
     if (v === "yes" || v === "partial" || v === "no") return v;
     return null;
   }
-
   export default async function NewReflectionPage({
     searchParams,
   }: {
@@ -145,8 +144,12 @@
       const alignmentRaw = String(formData.get("alignment") ?? "").trim();
       const alignment = normalizeAlignment(alignmentRaw);
 
-      if (!action_taken || !easier_harder || !alignment) {
+      if (!action_taken || !easier_harder) {
         return { ok: false, message: "Please complete all fields." };
+      }
+
+      if (!alignment) {
+        return { ok: false, message: "Please select alignment." };
       }
 
       const week_start_date = getWeekStartDateNY(new Date());
