@@ -86,10 +86,13 @@ function EmptyPillarCard({ pillar }: { pillar: Pillar }) {
 function SoftGoalCard({
   goal,
   reflectionId,
+  guidanceGoalId,
 }: {
   goal: GoalRow;
   reflectionId?: string;
+  guidanceGoalId?: string | null;
 }) {
+
   return (
     <SoftCardShell id={`pillar-${goal.pillar}`}>
       {/* Top Row */}
@@ -134,20 +137,42 @@ function SoftGoalCard({
         <Button asChild variant="outline" className="rounded-xl">
           <Link href={`/goals/${goal.id}/plan`}>Plan</Link>
         </Button>
+
+        {reflectionId ? (
+          <Guidance
+            reflectionId={reflectionId}
+            autoOpen={guidanceGoalId === goal.id}
+          />
+        ) : (
+          <Button
+            variant="ghost"
+            disabled
+            className="rounded-xl opacity-50 cursor-not-allowed"
+          >
+            Guidance
+          </Button>
+        )}
       </div>
-    </SoftCardShell>
-  );
-}
+      </SoftCardShell>
+    );
+  }
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: { guidance_goal?: string };
+}) {      
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
   const supabase = await supabaseServer();
 
   const {
     data: { user },
     error: authError,
   } = await supabase.auth.getUser();
+
+  const guidanceGoalId = searchParams?.guidance_goal ?? null;
 
   if (authError || !user) redirect("/login");
 
@@ -252,10 +277,12 @@ export default async function HomePage() {
               key={g.id}
               goal={g}
               reflectionId={reflectionByGoal.get(g.id)}
+              guidanceGoalId={guidanceGoalId}
             />
           );
         })}
       </section>
+
 
       {/* Footer */}
       <div className="mt-8 sm:mt-10 max-w-[65ch] text-xs text-muted-foreground">

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-export function Guidance({ reflectionId }: { reflectionId: string }) {
-  const [open, setOpen] = useState(false);
+export function Guidance({reflectionId, autoOpen = false,}: { reflectionId: string; autoOpen?: boolean;}) {
+  const [open, setOpen] = useState(autoOpen);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
