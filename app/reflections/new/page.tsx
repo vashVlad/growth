@@ -216,7 +216,7 @@
       revalidatePath("/home");
       revalidatePath("/progress");
 
-      redirect("/home");
+      redirect(`/home?guidance_goal=${goalId}`);
     }
 
     const week_start_date = getWeekStartDateNY(new Date());

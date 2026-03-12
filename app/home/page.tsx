@@ -8,6 +8,8 @@ import { Guidance } from "@/components/ai/Guidance";
 import { getWeekStartDateNY } from "@/lib/dates/weekStart";
 import { CompleteGoalButton } from "@/components/goals/CompleteGoalButton";
 
+export const dynamic = "force-dynamic";
+
 type Pillar = "career" | "personal" | "internal";
 
 type GoalRow = {
@@ -143,15 +145,7 @@ function SoftGoalCard({
             reflectionId={reflectionId}
             autoOpen={guidanceGoalId === goal.id}
           />
-        ) : (
-          <Button
-            variant="ghost"
-            disabled
-            className="rounded-xl opacity-50 cursor-not-allowed"
-          >
-            Guidance
-          </Button>
-        )}
+        ) : null}
       </div>
       </SoftCardShell>
     );
@@ -161,10 +155,7 @@ export default async function HomePage({
   searchParams,
 }: {
   searchParams?: { guidance_goal?: string };
-}) {      
-
-export const dynamic = "force-dynamic";
-
+}) {
   const supabase = await supabaseServer();
 
   const {
