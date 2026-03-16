@@ -61,8 +61,7 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
   }, [autoOpen]);
 
   return (
-    <>
-      {/* BUTTON */}
+    <div className="flex flex-col items-end">
       <button
         type="button"
         onClick={toggle}
@@ -72,7 +71,6 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
         {open ? "Close insight" : "✦ Guidance"}
       </button>
 
-      {/* MIRROR PANEL */}
       {open && (
         <div className="mt-4 w-full rounded-2xl border border-border/30 bg-muted/30 p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
@@ -100,6 +98,6 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }

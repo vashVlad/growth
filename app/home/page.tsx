@@ -129,27 +129,29 @@ function SoftGoalCard({
       </div>
 
       {/* Actions */}
-      <div className="mt-5 flex items-center justify-between gap-3">
-        <div className="flex gap-3">
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href={`/reflections/new?goalId=${goal.id}`}>
-              Update
-            </Link>
-          </Button>
+      <div className="mt-5">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-3">
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link href={`/reflections/new?goalId=${goal.id}`}>
+                Update
+              </Link>
+            </Button>
 
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href={`/goals/${goal.id}/plan`}>
-              Plan
-            </Link>
-          </Button>
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link href={`/goals/${goal.id}/plan`}>
+                Plan
+              </Link>
+            </Button>
+          </div>
+
+          {reflectionId ? (
+            <Guidance
+              reflectionId={reflectionId}
+              autoOpen={guidanceGoalId === goal.id}
+            />
+          ) : null}
         </div>
-
-        {reflectionId ? (
-          <Guidance
-            reflectionId={reflectionId}
-            autoOpen={guidanceGoalId === goal.id}
-          />
-        ) : null}
       </div>
       </SoftCardShell>
     );
