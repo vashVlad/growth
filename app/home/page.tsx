@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { HomeFocusController } from "@/components/focus/HomeFocusController";
 import { Guidance } from "@/components/ai/Guidance";
 import { getWeekStartDateNY } from "@/lib/dates/weekStart";
-import { CompleteGoalButton } from "@/components/goals/CompleteGoalButton";
+import { GoalCardActions } from "@/components/home/GoalCardActions";
 
 export const dynamic = "force-dynamic";
 
@@ -129,35 +129,13 @@ return (
     </div>
 
     {/* Actions */}
-    <div className="mt-5">
 
-      {/* Button Row */}
-      <div className="flex items-center justify-between">
-
-        <div className="flex gap-3">
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href={`/reflections/new?goalId=${goal.id}`}>
-              Update
-            </Link>
-          </Button>
-
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href={`/goals/${goal.id}/plan`}>
-              Plan
-            </Link>
-          </Button>
-        </div>
-
-        {reflectionId && (
-          <Guidance
-            reflectionId={reflectionId}
-            autoOpen={guidanceGoalId === goal.id}
-          />
-        )}
-
-      </div>
-
-    </div>
+    <GoalCardActions
+      goalId={goal.id}
+      reflectionId={reflectionId}
+      autoOpen={guidanceGoalId === goal.id}
+    />
+    
     </SoftCardShell>
   );
 }

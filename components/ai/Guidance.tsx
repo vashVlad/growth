@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 
 type Props = {
   reflectionId: string;
-  autoOpen?: boolean;
+  open: boolean;
 };
 
-export function Guidance({ reflectionId, autoOpen = false }: Props) {
-  const [open, setOpen] = useState(autoOpen);
+export function Guidance({ reflectionId, open }: Props) {
   const [content, setContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,56 +28,35 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
   }
 
   useEffect(() => {
-    if (autoOpen) {
-      setOpen(true);
+    if (open && !content) {
       fetchNote();
     }
-  }, [autoOpen]);
+  }, [open]);
 
-  function toggle() {
-    const next = !open;
-    setOpen(next);
-
-    if (next && !content) fetchNote();
-  }
+  if (!open) return null;
 
   return (
-    <div className="w-full">
-      {/* BUTTON ROW */}
-      <div className="flex justify-end">
-        <button
-          onClick={toggle}
-          className="inline-flex items-center rounded-xl border border-border/40 bg-background px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:border-border transition-colors"
-        >
-          {open ? "Close insight" : "✦ Guidance"}
-        </button>
+    <div className="mt-4 w-full rounded-2xl border border-border/30 bg-muted/30 p-4 shadow-sm">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="text-sm font-semibold text-foreground">
+          ✦ Mirror — Behavioral Note
+        </div>
+
+        {loading && (
+          <span className="text-xs text-muted-foreground">
+            Writing…
+          </span>
+        )}
       </div>
 
-      {/* MIRROR PANEL */}
-      {open && (
-        <div className="mt-4 w-full rounded-2xl border border-border/30 bg-muted/30 p-4 shadow-sm">
-          <div className="mb-2 flex items-center justify-between">
-            <div className="text-sm font-semibold text-foreground">
-              ✦ Mirror — Behavioral Note
-            </div>
-
-            {loading && (
-              <span className="text-xs text-muted-foreground">
-                Writing…
-              </span>
-            )}
-          </div>
-
-          {content ? (
-            <p className="whitespace-pre-wrap text-sm leading-6 text-foreground/90">
-              {content}
-            </p>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Generating insight…
-            </p>
-          )}
-        </div>
+      {content ? (
+        <p className="whitespace-pre-wrap text-sm leading-6 text-foreground/90">
+          {content}
+        </p>
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          Generating insight…
+        </p>
       )}
     </div>
   );
