@@ -129,8 +129,11 @@ return (
     </div>
 
     {/* Actions */}
-    <div className="mt-5 space-y-4">
+    <div className="mt-5">
+
+      {/* Button Row */}
       <div className="flex items-center justify-between">
+
         <div className="flex gap-3">
           <Button asChild variant="outline" className="rounded-xl">
             <Link href={`/reflections/new?goalId=${goal.id}`}>
@@ -144,14 +147,15 @@ return (
             </Link>
           </Button>
         </div>
-      </div>
 
-      {reflectionId && (
-        <Guidance
-          reflectionId={reflectionId}
-          autoOpen={guidanceGoalId === goal.id}
-        />
-      )}
+        {reflectionId && (
+          <Guidance
+            reflectionId={reflectionId}
+            autoOpen={guidanceGoalId === goal.id}
+          />
+        )}
+
+      </div>
 
     </div>
     </SoftCardShell>
