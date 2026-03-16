@@ -137,6 +137,7 @@ return (
 
     {/* Actions */}
     <div className="mt-5 space-y-4">
+      {/* BUTTON ROW */}
       <div className="flex items-center justify-between">
         <div className="flex gap-3">
           <Button asChild variant="outline" className="rounded-xl">
@@ -151,13 +152,15 @@ return (
             </Link>
           </Button>
         </div>
-
-        {guidance?.button}
       </div>
 
-      {/* mirror note */}
-      {guidance?.panel}
-
+      {/* GUIDANCE */}
+      {reflectionId && (
+        <Guidance
+          reflectionId={reflectionId}
+          autoOpen={guidanceGoalId === goal.id}
+        />
+      )}
     </div>
     </SoftCardShell>
   );
