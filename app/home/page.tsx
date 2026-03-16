@@ -179,8 +179,11 @@ export default async function HomePage({
     error: authError,
   } = await supabase.auth.getUser();
 
-  const guidanceGoalId = searchParams?.guidance_goal ?? null;
-
+const guidanceGoalId =
+  typeof searchParams?.guidance_goal === "string"
+    ? searchParams.guidance_goal
+    : null;
+    
   if (authError || !user) redirect("/login");
 
   // Profile guard
