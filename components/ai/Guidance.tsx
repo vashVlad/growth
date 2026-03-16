@@ -17,9 +17,7 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
 
     const res = await fetch("/api/ai/mirror", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reflection_id: reflectionId }),
     });
 
@@ -42,18 +40,18 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
     if (next && !content) fetchNote();
   }
 
-  return (
-    <>
-      {/* BUTTON */}
+  return {
+    button: (
       <button
         onClick={toggle}
         className="inline-flex items-center rounded-xl border border-border/40 bg-background px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:border-border transition-colors"
       >
         {open ? "Close insight" : "✦ Guidance"}
       </button>
+    ),
 
-      {/* NOTE */}
-      {open && (
+    panel:
+      open && (
         <div className="mt-4 w-full rounded-2xl border border-border/30 bg-muted/30 p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-sm font-semibold text-foreground">
@@ -61,9 +59,7 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
             </div>
 
             {loading && (
-              <span className="text-xs text-muted-foreground">
-                Writing…
-              </span>
+              <span className="text-xs text-muted-foreground">Writing…</span>
             )}
           </div>
 
@@ -77,7 +73,6 @@ export function Guidance({ reflectionId, autoOpen = false }: Props) {
             </p>
           )}
         </div>
-      )}
-    </>
-  );
+      ),
+  };
 }

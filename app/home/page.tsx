@@ -95,67 +95,73 @@ function SoftGoalCard({
   guidanceGoalId?: string | null;
 }) {
 
-  return (
-    <SoftCardShell id={`pillar-${goal.pillar}`}>
-      {/* Top Row */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          {pillarLabel(goal.pillar)}
-        </div>
+const guidance = reflectionId
+? Guidance({
+    reflectionId,
+    autoOpen: guidanceGoalId === goal.id,
+  })
+: null;
 
-        <Link
-          href={`/goals/${goal.id}/adjust`}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Adjust
-        </Link>
+return (
+  <SoftCardShell id={`pillar-${goal.pillar}`}>
+    {/* Top Row */}
+    <div className="flex items-start justify-between gap-4">
+      <div className="text-xs uppercase tracking-widest text-muted-foreground">
+        {pillarLabel(goal.pillar)}
       </div>
 
-      {/* Title */}
-      <div className="mt-3 text-xl sm:text-2xl font-semibold leading-snug text-foreground">
-        {goal.title}
+      <Link
+        href={`/goals/${goal.id}/adjust`}
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        Adjust
+      </Link>
+    </div>
+
+    {/* Title */}
+    <div className="mt-3 text-xl sm:text-2xl font-semibold leading-snug text-foreground">
+      {goal.title}
+    </div>
+
+    {/* Details */}
+    <div className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
+      <div>
+        <span className="text-foreground/80">Milestone:</span>{" "}
+        {goal.milestone?.trim() ? goal.milestone : "—"}
+      </div>
+      <div>
+        <span className="text-foreground/80">Current step:</span>{" • "}
+        {goal.next_action?.trim() ? goal.next_action : "—"}
+      </div>
+    </div>
+
+    {/* Actions */}
+    <div className="mt-5 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-3">
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/reflections/new?goalId=${goal.id}`}>
+              Update
+            </Link>
+          </Button>
+
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/goals/${goal.id}/plan`}>
+              Plan
+            </Link>
+          </Button>
+        </div>
+
+        {guidance?.button}
       </div>
 
-      {/* Details */}
-      <div className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
-        <div>
-          <span className="text-foreground/80">Milestone:</span>{" "}
-          {goal.milestone?.trim() ? goal.milestone : "—"}
-        </div>
-        <div>
-          <span className="text-foreground/80">Current step:</span>{" • "}
-          {goal.next_action?.trim() ? goal.next_action : "—"}
-        </div>
-      </div>
+      {/* mirror note */}
+      {guidance?.panel}
 
-      {/* Actions */}
-      <div className="mt-5 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex gap-3">
-            <Button asChild variant="outline" className="rounded-xl">
-              <Link href={`/reflections/new?goalId=${goal.id}`}>
-                Update
-              </Link>
-            </Button>
-
-            <Button asChild variant="outline" className="rounded-xl">
-              <Link href={`/goals/${goal.id}/plan`}>
-                Plan
-              </Link>
-            </Button>
-          </div>
-
-          {reflectionId && (
-            <Guidance
-              reflectionId={reflectionId}
-              autoOpen={guidanceGoalId === goal.id}
-            />
-          )}
-        </div>
-      </div>
-      </SoftCardShell>
-    );
-  }
+    </div>
+    </SoftCardShell>
+  );
+}
 
 export default async function HomePage({
   searchParams,
