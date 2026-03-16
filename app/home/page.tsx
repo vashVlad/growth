@@ -95,13 +95,6 @@ function SoftGoalCard({
   guidanceGoalId?: string | null;
 }) {
 
-const guidance = reflectionId
-? Guidance({
-    reflectionId,
-    autoOpen: guidanceGoalId === goal.id,
-  })
-: null;
-
 return (
   <SoftCardShell id={`pillar-${goal.pillar}`}>
     {/* Top Row */}
@@ -137,7 +130,6 @@ return (
 
     {/* Actions */}
     <div className="mt-5 space-y-4">
-      {/* BUTTON ROW */}
       <div className="flex items-center justify-between">
         <div className="flex gap-3">
           <Button asChild variant="outline" className="rounded-xl">
@@ -154,13 +146,13 @@ return (
         </div>
       </div>
 
-      {/* GUIDANCE */}
       {reflectionId && (
         <Guidance
           reflectionId={reflectionId}
           autoOpen={guidanceGoalId === goal.id}
         />
       )}
+
     </div>
     </SoftCardShell>
   );
@@ -183,7 +175,7 @@ const guidanceGoalId =
   typeof searchParams?.guidance_goal === "string"
     ? searchParams.guidance_goal
     : null;
-    
+
   if (authError || !user) redirect("/login");
 
   // Profile guard
