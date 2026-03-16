@@ -129,7 +129,7 @@ function SoftGoalCard({
       </div>
 
       {/* Actions */}
-      <div className="mt-5">
+      <div className="mt-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex gap-3">
             <Button asChild variant="outline" className="rounded-xl">
@@ -145,12 +145,12 @@ function SoftGoalCard({
             </Button>
           </div>
 
-          {reflectionId ? (
+          {reflectionId && (
             <Guidance
               reflectionId={reflectionId}
               autoOpen={guidanceGoalId === goal.id}
             />
-          ) : null}
+          )}
         </div>
       </div>
       </SoftCardShell>
