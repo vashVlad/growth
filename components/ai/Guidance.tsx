@@ -1,47 +1,46 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-export function Guidance({
-  reflectionId,
-  autoOpen = false,
-}: {
+type Props = {
   reflectionId: string;
   autoOpen?: boolean;
-}) {
+};
+
+export function Guidance({ reflectionId, autoOpen = false }: Props) {
   const [open, setOpen] = useState(autoOpen);
-  const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (autoOpen && !content && !loading) {
-      fetchNote();
-    }
-  }, [autoOpen]);
+  // prevents duplicate API calls
+  const fetched = useRef(false);
 
-  useEffect(() => {
-    if (autoOpen) {
-      setOpen(true);
-    }
-  }, [autoOpen]);
+  async function fetchGuidance() {
+    if (fetched.current) return;
 
-  async function fetchNote() {
+    fetched.current = true;
     setLoading(true);
     setError(null);
 
     try {
       const res = await fetch("/api/ai/mirror", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ reflection_id: reflectionId }),
       });
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error ?? "Failed to generate guidance");
+
+      if (!res.ok) {
+        throw new Error(json?.error || "Failed to generate guidance");
+      }
+
       setContent(json.content);
-    } catch (e: any) {
-      setError(e?.message ?? "Something went wrong");
+    } catch (err: any) {
+      setError(err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -51,30 +50,40 @@ export function Guidance({
     const next = !open;
     setOpen(next);
 
-    if (next && !content && !loading) fetchNote();
+    if (next) fetchGuidance();
   }
+
+  useEffect(() => {
+    if (autoOpen) {
+      setOpen(true);
+      fetchGuidance();
+    }
+  }, [autoOpen]);
 
   return (
     <>
-      {/* Button only (stays in action row) */}
+      {/* BUTTON */}
       <button
         type="button"
         onClick={toggle}
         disabled={loading}
-        className="inline-flex items-center rounded-xl border border-border/40 bg-background px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:border-border transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="inline-flex items-center rounded-xl border border-border/40 bg-background px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:border-border transition-colors disabled:opacity-50"
       >
         {open ? "Close insight" : "✦ Guidance"}
       </button>
 
-      {/* Mirror panel (renders BELOW card content) */}
+      {/* MIRROR PANEL */}
       {open && (
-        <div className="mt-4 w-full rounded-2xl border border-border/40 bg-muted/40 p-4 shadow-sm">
+        <div className="mt-4 w-full rounded-2xl border border-border/30 bg-muted/30 p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-sm font-semibold text-foreground">
               ✦ Mirror — Behavioral Note
             </div>
+
             {loading && (
-              <div className="text-xs text-muted-foreground">Writing…</div>
+              <span className="text-xs text-muted-foreground">
+                Writing…
+              </span>
             )}
           </div>
 
@@ -86,7 +95,7 @@ export function Guidance({
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Open Guidance to generate a calm margin note.
+              Generating reflection insight…
             </p>
           )}
         </div>

@@ -123,13 +123,13 @@ function SoftGoalCard({
           {goal.milestone?.trim() ? goal.milestone : "—"}
         </div>
         <div>
-          <span className="text-foreground/80">Current step:</span>{" ● "}
+          <span className="text-foreground/80">Current step:</span>{" • "}
           {goal.next_action?.trim() ? goal.next_action : "—"}
         </div>
       </div>
 
       {/* Actions */}
-      <div className="mt-5 flex items-center justify-between">
+      <div className="mt-5 flex items-center justify-between gap-3">
         <div className="flex gap-3">
           <Button asChild variant="outline" className="rounded-xl">
             <Link href={`/reflections/new?goalId=${goal.id}`}>
