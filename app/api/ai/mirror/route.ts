@@ -198,11 +198,17 @@ export async function POST(req: Request) {
       .limit(1)
       .maybeSingle();
 
-      let currentExecutionStep = "N/A";
+      let completedStep = "N/A";
+      let nextStep = "N/A";
 
       if (plan?.plan_json?.execution_steps) {
-        const step = plan.plan_json.execution_steps.find((s: any) => !s.completed);
-        if (step?.step) currentExecutionStep = step.step;
+        const steps = plan.plan_json.execution_steps;
+
+        const lastCompleted = [...steps].reverse().find((s: any) => s.completed);
+        const upcoming = steps.find((s: any) => !s.completed);
+
+        if (lastCompleted?.step) completedStep = lastCompleted.step;
+        if (upcoming?.step) nextStep = upcoming.step;
       }
 
     const { data: recent } = await supabase
@@ -229,9 +235,9 @@ export async function POST(req: Request) {
         action_taken: reflection.action_taken,
         easier_harder: reflection.easier_harder,
         alignment: reflection.alignment,
-        next_step: reflection.next_step,
+        next_step: "",
       },
-      executionStep: currentExecutionStep,
+      executionStep: `${completedStep} → ${nextStep}`,
     });
 
     // 6) Call LLM (server-side only)

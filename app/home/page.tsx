@@ -123,7 +123,7 @@ function SoftGoalCard({
           {goal.milestone?.trim() ? goal.milestone : "—"}
         </div>
         <div>
-          <span className="text-foreground/80">Current next step:</span>{" "}
+          <span className="text-foreground/80">Current step:</span>{" ● "}
           {goal.next_action?.trim() ? goal.next_action : "—"}
         </div>
       </div>

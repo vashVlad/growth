@@ -55,7 +55,8 @@ export function Guidance({
   }
 
   return (
-    <div className="w-full">
+    <>
+      {/* Button only (stays in action row) */}
       <button
         type="button"
         onClick={toggle}
@@ -65,36 +66,31 @@ export function Guidance({
         {open ? "Close insight" : "✦ Guidance"}
       </button>
 
-      {/* Animated Mirror Card */}
-      <div
-          className={`mt-4 w-full overflow-hidden rounded-2xl border bg-muted/40 shadow-sm transition-all duration-300 ease-out
-        ${
-          open
-            ? "max-h-96 opacity-100 translate-y-0 border-border/40 p-4"
-            : "max-h-0 opacity-0 -translate-y-1 border-transparent p-0"
-        }`}
-      >
-        <div className="mb-2 flex items-center justify-between">
-          <div className="text-sm font-semibold text-foreground">
-            ✦ Mirror — Behavioral Note
+      {/* Mirror panel (renders BELOW card content) */}
+      {open && (
+        <div className="mt-4 w-full rounded-2xl border border-border/40 bg-muted/40 p-4 shadow-sm">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="text-sm font-semibold text-foreground">
+              ✦ Mirror — Behavioral Note
+            </div>
+            {loading && (
+              <div className="text-xs text-muted-foreground">Writing…</div>
+            )}
           </div>
-          {loading && (
-            <div className="text-xs text-muted-foreground">Writing…</div>
+
+          {error ? (
+            <p className="text-sm text-red-600">{error}</p>
+          ) : content ? (
+            <p className="whitespace-pre-wrap text-sm leading-6 text-foreground/90">
+              {content}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Open Guidance to generate a calm margin note.
+            </p>
           )}
         </div>
-
-        {error ? (
-          <p className="text-sm text-red-600">{error}</p>
-        ) : content ? (
-          <p className="whitespace-pre-wrap text-sm leading-6 text-foreground/90">
-            {content}
-          </p>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Open Guidance to generate a calm margin note.
-          </p>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 }
