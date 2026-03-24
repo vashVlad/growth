@@ -1,0 +1,124 @@
+[33m935f113[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Back up to working settings
+[33m13c4d53[m fix: TS never error + safe next_action parsing
+[33m9123eeb[m fix: prevent object from being saved into next_action
+[33m38f8f31[m fix: prevent object rendering in goal fields
+[33m6219e71[m fix: remove plan data from home (final crash fix)
+[33ma9d5026[m fix: remove crashing JSON.stringify debug
+[33mb55a7c9[m fix: remove goal_plans from home query (serialization crash)
+[33m47d3b6f[m debug: disable Guidance component
+[33m7e78d5d[m debug: disable Guidance component
+[33m341e477[m fix: remove goal_plans from home query (serialization crash)
+[33maf872c6[m fix: prevent object rendering crash in execution steps
+[33m2963aa1[m fix crash: sanitize goal_plans data for SSR
+[33m433713e[m fix home crash by normalizing execution steps
+[33m0ec8c55[m fix home crash by normalizing execution steps from goal plans
+[33m0cdb1da[m fix execution steps parsing (support object + string formats)
+[33m2f980ec[m refine home UI: add execution steps preview
+[33mcaf5ddc[m refine home UI: add execution steps preview
+[33mc5f5216[m refine home UI: add execution steps preview, improve goal clarity, adjust hero copy and button hierarchy
+[33ma1f1ff1[m Update Home UI
+[33md1504a2[m Update Home UI
+[33m7b838bc[m Update Home UI
+[33mb409e58[m Update Home UI
+[33m50ca0d2[m Update Home UI
+[33m76c88d4[m Update Home UI
+[33m8936484[m Update Home UI
+[33mbb80e55[m Update Home UI
+[33md635034[m Update Home UI
+[33m82108bf[m Update Home UI
+[33mcf620be[m Update Home UI
+[33m8badc39[m Update Home UI
+[33ma5438dd[m Update Home UI
+[33md478983[m Update Home UI
+[33m0afac99[m Update Natural -> Partially
+[33m21feec7[m Update Natural -> Partially
+[33mb653af2[m Update Natural -> Partially
+[33md2ae8fd[m Goal Card Guidence show up
+[33m50ae4ff[m UI change in Update
+[33m521ec07[m Logistic and UI change in Update
+[33mdeb5cac[m Mirror fix
+[33m245830d[m Mirror fix
+[33mf803837[m Mirror fix
+[33mefdceff[m Mirror fix
+[33m8717a4e[m Error fix
+[33m170e9c3[m Error fix
+[33mb117fd0[m Error fix
+[33m79bcc61[m Error fix
+[33m36f343d[m Error fix
+[33mab6b50c[m UI Update Page Clean up
+[33m9154eb8[m UI Update Page Clean up
+[33m5150be3[m UI Plan Text fix, and sum else
+[33mcd166a5[m UI Error
+[33mb66d0dc[m UI Update modifications
+[33mdb60a1b[m UI Update modifications
+[33m63fa7e8[m UI Update modifications
+[33mee5fe90[m UI Update modifications
+[33m25562bb[m UI modifications
+[33mad290e6[m UI modifications
+[33m2d5b104[m Aditional Goal information
+[33ma137012[m AI Hooks
+[33mc10693a[m AI Steps Brakedown
+[33m4049896[m Plan Execution Steps
+[33m20ce910[m Plan Card development
+[33m1ee67f9[m Plan execution
+[33m063368e[m UI Modifications
+[33m476e8a0[m UI Modifications
+[33m3d05629[m UI Modifications
+[33m9834563[m Refine navigation to Calm-style top bar and consistent back button
+[33m9a365d5[m Fix duplicated hero/focus and restore goals grid on home
+[33madb7329[m Tighten pill UI for calmer layout
+[33m4109135[m Tighten pill UI for calmer layout
+[33mc4214f7[m Tighten TodayFocus spacing and pill UI for calmer layout
+[33ma946b89[m UI Modifications
+[33mbdf1acd[m UI Modifications
+[33me860f64[m Home div fix
+[33mc9cf970[m Simplify AppShell nav: use Identity label
+[33mdb09585[m UI Modifications
+[33m46d30b9[m UI Modifications
+[33me3a4f9a[m UI Modifications
+[33mc0f606c[m UI Modifications
+[33mda0bfb3[m UI Modifications
+[33mb638e5e[m UI Modifications
+[33mcbbccb0[m UI Modifications
+[33m2adc151[m More UI changes
+[33mfa491f1[m UI Modifications
+[33me389838[m Use Tailwind v4 import in globals
+[33m01c00f5[m Fix Tailwind/PostCSS configs for Vercel
+[33mb9fd453[m Fix Tailwind config for Vercel build
+[33m1c5080e[m UI coreactions for Signup
+[33m64c998b[m AuthForm modification
+[33m5b8253b[m Fix Tailwind config for production build
+[33m33f506a[m Fix build issues and remove old src project files
+[33m350656a[m Fix logout route
+[33m6496ad9[m Fix Tailwind configuration properly
+[33mcfe69e4[m Fix PostCSS/Tailwind config for Vercel
+[33me852368[m Add supabaseServer alias module
+[33ma3c8c98[m Fix ProfileAdjustPage supabaseServer import
+[33m353592a[m Fix Label component Radix import
+[33m03a9ad6[m Install OpenAI SDK
+[33maa3638b[m Fix Radix Slot import
+[33m0312796[m Install missing UI dependencies
+[33m0ffd7f1[m Fix supabase imports and install @supabase/ssr
+[33m6b21487[m Fix tsconfig path alias to match folder structure
+[33m9aeb918[m Delete README.md content
+[33m944b711[m Growth V1 ready for deploy
+[33m0cc9705[m rebase: continue
+[33mafada39[m rebase: continue
+[33m983f3d8[m[33m ([m[1;32mrecovered-old-growth[m[33m, [m[1;32mrecovered-old[m[33m)[m Growth Book project details
+[33m109ffda[m Apply Antigravity updates
+[33mcde03d2[m Apply Antigravity updates
+[33mb020972[m Apply Antigravity updates
+[33m5d6412a[m Apply Antigravity updates
+[33me1461cd[m Apply Antigravity updates
+[33m9648739[m Apply Antigravity updates
+[33m7bce182[m Apply Antigravity updates
+[33m1cf6134[m Apply Antigravity updates
+[33mac05b0c[m Apply Antigravity updates
+[33mb58acf7[m Apply Antigravity updates
+[33m770ad6b[m Apply Antigravity updates
+[33mbca3d25[m Apply Antigravity updates
+[33mba8a860[m Describe change
+[33mcd90072[m Initial commit
+[33m558b9c6[m feat: Milestone 7 Core Questions + UI Polish
+[33mc36566e[m feat: complete milestones 1-3 (PWA core, edit/delete, calendar, export)
+[33mc93fb59[m Initial commit from Create Next App
