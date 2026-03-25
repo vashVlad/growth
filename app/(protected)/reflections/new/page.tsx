@@ -19,7 +19,7 @@
   export default async function HomePage({
     searchParams,
   }: {
-    searchParams: Promise<{ guidance_goal?: string }>;
+    searchParams: Promise<{ goalId?: string | string[] }>;
   }) {
     const sp = await searchParams;
     const rawGoalId = sp.goalId;
