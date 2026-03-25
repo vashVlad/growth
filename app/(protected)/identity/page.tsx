@@ -28,46 +28,52 @@ export default async function IdentityPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-3xl px-5 py-10">
-        {/* IDENTITY label + Adjust */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between">
+          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+            Identity
+          </div>
 
-          <Button asChild variant="ghost" className="h-8 rounded-xl px-2">
-            <Link href="/identity/adjust" className="text-sm">
-              Adjust
-            </Link>
-          </Button>
+          <Link
+            href="/identity/adjust"
+            className="text-xs text-muted-foreground hover:text-foreground transition"
+          >
+            Edit
+          </Link>
         </div>
 
         {/* Title */}
         <div className="max-w-[65ch]">
-          <div className="font-serif text-3xl leading-snug text-foreground">
+          <h1 className="mt-4 font-serif text-3xl leading-tight tracking-tight">
             Becoming
-          </div>
-          <div className="mt-4 text-sm text-muted-foreground">
+          </h1>
+
+          <p className="mt-2 text-sm text-muted-foreground">
             Your current direction.
-          </div>
+          </p>
         </div>
 
         {/* Content */}
-        <section className="mt-10 space-y-10 max-w-[65ch]">
+        <div className="mt-8 space-y-6">
           <div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground">
               Identity statement
             </div>
-            <div className="mt-3 font-serif text-2xl leading-relaxed text-foreground">
+
+            <p className="mt-3 max-w-[60ch] text-[1.05rem] leading-relaxed text-foreground">
               {statement}
-            </div>
+            </p>
           </div>
 
           <div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground">
               Behaviors
             </div>
-            <div className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-foreground/90">
+
+            <p className="mt-3 text-sm text-muted-foreground">
               {behaviors}
-            </div>
+            </p>
           </div>
-        </section>
+        </div>
       </div>
     </main>
   );
