@@ -16,10 +16,10 @@
     if (v === "yes" || v === "partially" || v === "no") return v;
     return null;
   }
-  export default async function NewReflectionPage({
+  export default async function HomePage({
     searchParams,
   }: {
-    searchParams: Promise<{ goalId?: string | string[] }>;
+    searchParams: Promise<{ guidance_goal?: string }>;
   }) {
     const sp = await searchParams;
     const rawGoalId = sp.goalId;

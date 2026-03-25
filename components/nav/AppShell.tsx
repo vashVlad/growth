@@ -38,21 +38,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background">
       {/* Calm sticky top bar */}
       <header className="sticky top-0 z-30 border-b border-border/50 bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-14 w-full max-w-3xl items-center justify-between px-5">
+        <div className="mx-auto flex h-14 w-full max-w-2xl items-center justify-center px-5">
           <Link
             href="/home"
             className="font-serif text-lg tracking-tight text-foreground hover:opacity-80 transition"
           >
             Growth
           </Link>
-
-          <nav className="flex items-center gap-2">
-            {!onHome ? <TopLink href="/home" label="Home" /> : null}
-            <TopLink href="/progress" label="Progress" active={onProgress} />
-          </nav>
         </div>
       </header>
-
+      
       {/* Content */}
       <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">{children}</div>
       <BottomNav />
