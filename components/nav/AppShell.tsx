@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import BottomNav from "@/components/nav/BottomNav";
 
 function TopLink({
   href,
@@ -54,6 +55,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Content */}
       <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">{children}</div>
+      <BottomNav />
     </div>
   );
 }
