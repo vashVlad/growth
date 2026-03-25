@@ -7,6 +7,7 @@ import { HomeFocusController } from "@/components/focus/HomeFocusController";
 import { Guidance } from "@/components/ai/Guidance";
 import { getWeekStartDateNY } from "@/lib/dates/weekStart";
 import { GoalCardActions } from "@/components/home/GoalCardActions";
+import { ExecutionStepsPreview } from "@/components/goals/ExecutionStepsPreview";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ type GoalRow = {
   milestone: string | null;
   next_action: string | null;
   status: string;
+  execution_steps: string[];
 };
 
 const PILLAR_ORDER: Pillar[] = ["career", "personal", "internal"];
@@ -34,6 +36,18 @@ function sortGoals(goals: GoalRow[]) {
   const map = new Map<Pillar, GoalRow>();
   for (const g of goals) if (!map.has(g.pillar)) map.set(g.pillar, g);
   return PILLAR_ORDER.map((p) => map.get(p) ?? null);
+}
+
+function getExecutionSteps(plan: any): string[] {
+  if (!plan || !Array.isArray(plan.execution_steps)) return [];
+
+  return plan.execution_steps
+    .map((s: any) => {
+      if (typeof s === "string") return s;
+      if (s && typeof s === "object") return String(s.step ?? "");
+      return "";
+    })
+    .filter(Boolean);
 }
 
 function InlineError({ message }: { message: string }) {
@@ -124,7 +138,7 @@ return (
       </div>
       <div>
         <span className="text-foreground/80">Current step:</span>{" • "}
-        {goal.next_action?.trim() ? goal.next_action : "—"}
+        <ExecutionStepsPreview steps={goal.execution_steps ?? null} />
       </div>
     </div>
 
@@ -177,14 +191,18 @@ const guidanceGoalId =
   // Load active goals (ordered so "most recent" for each pillar wins)
   const { data: goals, error: goalsError } = await supabase
     .from("goals")
-    .select(
-      "id, pillar, title, milestone, next_action, status, updated_at, created_at"
-    )
+    .select("id, pillar, title, milestone, next_action, status, updated_at, created_at")
     .eq("user_id", user.id)
     .eq("status", "active")
     .order("updated_at", { ascending: false })
     .order("created_at", { ascending: false });
 
+  const { data: plans } = await supabase
+    .from("goal_plans")
+    .select("goal_id, plan_json, version")
+    .eq("user_id", user.id)
+    .order("version", { ascending: false });
+    
   // Load reflections for current week
   const weekStart = getWeekStartDateNY();
   const { data: reflections, error: reflectionsError } = await supabase
@@ -193,17 +211,35 @@ const guidanceGoalId =
     .eq("user_id", user.id)
     .eq("week_start_date", weekStart);
 
-  const reflectionByGoal = new Map<string, string>();
-  for (const r of reflections ?? []) reflectionByGoal.set(r.goal_id, r.id);
+  const latestPlanByGoal = new Map<string, any>();
 
-  const normalized: GoalRow[] = (goals ?? []).map((g: any) => ({
-    id: g.id,
-    pillar: g.pillar,
-    title: g.title,
-    milestone: g.milestone,
-    next_action: g.next_action,
-    status: g.status,
-  }));
+  for (const p of plans ?? []) {
+    if (!latestPlanByGoal.has(p.goal_id)) {
+      latestPlanByGoal.set(p.goal_id, p.plan_json);
+    }
+  }
+
+  const reflectionByGoal = new Map<string, string>();
+
+  for (const r of reflections ?? []) {
+    if (r.goal_id && !reflectionByGoal.has(r.goal_id)) {
+      reflectionByGoal.set(r.goal_id, r.id);
+    }
+  }
+
+  const normalized: GoalRow[] = (goals ?? []).map((g: any) => {
+    const plan = latestPlanByGoal.get(g.id);
+
+    return {
+      id: g.id,
+      pillar: g.pillar,
+      title: g.title,
+      milestone: g.milestone,
+      next_action: g.next_action,
+      status: g.status,
+      execution_steps: getExecutionSteps(plan),
+    };
+  });
 
   const ordered = sortGoals(normalized);
 
