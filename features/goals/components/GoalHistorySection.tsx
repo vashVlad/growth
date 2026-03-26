@@ -1,6 +1,7 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { SoftDisclosure } from "@/components/ui/SoftDisclosure";
 import { CompletionSummaryButton } from "@/components/ai/CompletionSummaryButton";
+import ExecutionTimeline from "@/components/goals/ExecutionTimeline";
 
 type Pillar = "career" | "personal" | "internal";
 type GoalStatus = "active" | "completed" | "archived";
@@ -80,7 +81,7 @@ function chip(text: string) {
   );
 }
 
-export default async function GoalHistorySection() {
+export default async function GoalHistorySection( {plans = [],} : {plans?: any[];} ) {
   const supabase = await supabaseServer();
   const {
     data: { user },
@@ -149,9 +150,12 @@ export default async function GoalHistorySection() {
   return (
     <section className="space-y-3">
       {goalRows.map((g) => {
+        const plan = plans.find((p) => p.goal_id === g.id);
+        const steps = plan?.plan_json?.execution_steps ?? [];
         const list = reflectionsByGoal.get(g.id) ?? [];
-        const latest = list[0];
         const chronological = [...list].reverse();
+        const reflectionsForGoal = chronological;
+        const latest = list[0];
 
         const checkIns = list.length;
 
@@ -210,16 +214,7 @@ export default async function GoalHistorySection() {
               {chip(span)}
             </div>
 
-            {lastIntention ? (
-              <div className="mt-4">
-                <div className="text-[11px] uppercase tracking-widest text-muted-foreground/70">
-                  Last intention
-                </div>
-                <div className="mt-1 text-sm text-foreground/85 line-clamp-2">
-                  {lastIntention}
-                </div>
-              </div>
-            ) : null}
+            <ExecutionTimeline steps={steps} reflections={reflectionsForGoal} />
 
             {isCompleted ? (
               <div className="mt-4">

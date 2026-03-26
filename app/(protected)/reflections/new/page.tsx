@@ -88,6 +88,7 @@
       if (index === -1) redirect("/home");
 
       steps[index].completed = true;
+      steps[index].completed_at = new Date().toISOString();
 
       const next = steps[index + 1];
 
