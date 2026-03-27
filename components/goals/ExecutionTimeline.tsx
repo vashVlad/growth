@@ -31,8 +31,6 @@ export default function ExecutionTimeline({
       {steps.map((step, i) => {
         const isOpen = openIndex === i;
 
-        const reflection = reflections[i]; // simple mapping for now
-
         return (
           <div key={i}>
             {/* Step row */}
@@ -52,30 +50,7 @@ export default function ExecutionTimeline({
             </button>
 
             {/* Expanded reflection */}
-            {isOpen && reflection ? (
-              <div className="ml-6 mt-2 rounded-xl border border-border/30 bg-background/30 p-3 text-sm text-muted-foreground">
-                <div className="text-xs text-muted-foreground">
-                  {reflection.week_start_date}
-                </div>
-
-                <div className="mt-1 text-foreground/80">
-                  {reflection.alignment}
-                </div>
-
-                <div className="mt-2 space-y-1">
-                  <div>
-                    <span className="text-foreground/80">Action:</span>{" "}
-                    {reflection.action_taken}
-                  </div>
-                  <div>
-                    <span className="text-foreground/80">
-                      Easier/Harder:
-                    </span>{" "}
-                    {reflection.easier_harder}
-                  </div>
-                </div>
-              </div>
-            ) : null}
+            
           </div>
         );
       })}
