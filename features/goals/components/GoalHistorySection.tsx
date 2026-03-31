@@ -1,7 +1,6 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { SoftDisclosure } from "@/components/ui/SoftDisclosure";
 import { CompletionSummaryButton } from "@/components/ai/CompletionSummaryButton";
-import ExecutionTimeline from "@/components/goals/ExecutionTimeline";
 
 type Pillar = "career" | "personal" | "internal";
 type GoalStatus = "active" | "completed" | "archived";
@@ -75,13 +74,13 @@ function formatShortDate(iso: string | null | undefined) {
 
 function chip(text: string) {
   return (
-    <span className="inline-flex items-center rounded-full border border-border/50 bg-background/40 px-2.5 py-1 text-xs text-muted-foreground">
+    <span className="inline-flex items-center rounded-full border border-border/50 bg-background/40 px-2.5 py-1 text-[11px] text-muted-foreground/70">
       {text}
     </span>
   );
 }
 
-export default async function GoalHistorySection( {plans = [],} : {plans?: any[];} ) {
+export default async function GoalHistorySection() {
   const supabase = await supabaseServer();
   const {
     data: { user },
@@ -150,8 +149,6 @@ export default async function GoalHistorySection( {plans = [],} : {plans?: any[]
   return (
     <section className="space-y-3">
       {goalRows.map((g) => {
-        const plan = plans.find((p) => p.goal_id === g.id);
-        const steps = plan?.plan_json?.execution_steps ?? [];
         const list = reflectionsByGoal.get(g.id) ?? [];
         const chronological = [...list].reverse();
         const reflectionsForGoal = chronological;
@@ -194,33 +191,25 @@ export default async function GoalHistorySection( {plans = [],} : {plans?: any[]
             className="rounded-2xl border border-border/60 bg-background/60 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
           >
             <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              {pillarLabel(g.pillar)} • {statusLabel(g.status)}
+              {pillarLabel(g.pillar)}
             </div>
 
-            <div className="mt-2 text-[22px] font-semibold tracking-tight leading-snug text-foreground">
+            <div className="mt-4 text-[22px] font-semibold tracking-tight leading-snug text-foreground">
               {g.title}
             </div>
 
             {milestone ? (
-              <div className="mt-1 text-sm text-muted-foreground">
+              <div className="mt-2 text-sm text-muted-foreground">
                 <span className="text-foreground/70">Milestone:</span>{" "}
                 <span className="text-muted-foreground">{milestone}</span>
               </div>
             ) : null}
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {chip(alignmentTone(latest?.alignment))}
-              {chip(`${checkIns} check-in${checkIns === 1 ? "" : "s"}`)}
-              {chip(span)}
-            </div>
-
-            <ExecutionTimeline steps={steps} reflections={reflectionsForGoal} />
-
-            {isCompleted ? (
-              <div className="mt-4">
-                <CompletionSummaryButton goalId={g.id} />
-              </div>
-            ) : null}
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              {latest?.action_taken?.trim()
+                ? `You ${latest.action_taken.trim().charAt(0).toLowerCase() + latest.action_taken.trim().slice(1)}`
+                : g.title}
+            </p>
 
             <div className="mt-4">
               <SoftDisclosure title="View journey">
@@ -233,36 +222,21 @@ export default async function GoalHistorySection( {plans = [],} : {plans?: any[]
                     {chronological.map((r) => (
                       <div
                         key={r.id}
-                        className="rounded-xl border border-border/30 bg-background/30 p-4"
+                        className="rounded-xl border border-border/20 bg-background/20 p-4"
                       >
                         <div>
                           <div className="text-xs text-muted-foreground">
                             {formatShortDate(r.week_start_date)}
                           </div>
-                          <div className="mt-0.5 text-sm text-foreground/80">
+                          <div className="mt-0.5 text-[11px] text-muted-foreground/70">
                             {alignmentTone(r.alignment)}
                           </div>
                         </div>
 
-                        {r.updated_at || r.created_at ? (
-                          <div className="mt-1 text-[10px] text-muted-foreground/50">
-                            Edited: {formatStamp(r.updated_at ?? r.created_at)}
-                          </div>
-                        ) : null}
-
-                        <div className="mt-3 space-y-2 text-sm text-muted-foreground">
-                          <div>
-                            <span className="text-foreground/80">Action:</span>{" "}
-                            {r.action_taken}
-                          </div>
-                          <div>
-                            <span className="text-foreground/80">Easier/Harder:</span>{" "}
-                            {r.easier_harder}
-                          </div>
-                          <div>
-                            <span className="text-foreground/80">Intention:</span>{" "}
-                            {r.next_step}
-                          </div>
+                        <div className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+                          <div>{r.action_taken}</div>
+                          <div>{r.easier_harder}</div>
+                          <div className="italic">{r.next_step}</div>
                         </div>
                       </div>
                     ))}
