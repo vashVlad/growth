@@ -77,13 +77,15 @@ export function LifeArchitectureSummaryButton({ userId }: { userId: string }) {
   }
 
   return (
-    <section className="rounded-2xl border border-border bg-background">
+    <section className="rounded-2xl border border-border/30 bg-background/40">
       <div className="p-6">
         <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <div className="text-[15px] font-semibold tracking-tight">Life Architecture</div>
-            <div className="mt-1 text-sm text-muted-foreground">
-              A calm reflection across your recent patterns.
+          <div className="min-w-0 max-w-[60ch]">
+            <div className="text-[15px] font-medium tracking-tight text-foreground/90">
+              Life Architecture
+            </div>
+            <div className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
+              A quiet reflection across your recent patterns.
             </div>
           </div>
 
@@ -91,7 +93,7 @@ export function LifeArchitectureSummaryButton({ userId }: { userId: string }) {
             type="button"
             onClick={toggle}
             disabled={pending}
-            className="rounded-xl border border-border/70 bg-background/60 px-3 py-2 text-xs text-foreground/80 hover:bg-muted/60 transition-colors disabled:opacity-50"
+            className="shrink-0 rounded-lg border border-border/20 bg-transparent px-2 py-1 text-[10px] font-normal text-muted-foreground/70 transition-colors disabled:opacity-50"
           >
             {open ? "Hide" : "Insight"}
           </button>
@@ -101,22 +103,18 @@ export function LifeArchitectureSummaryButton({ userId }: { userId: string }) {
           className={`mt-4 overflow-hidden transition-all duration-300 ease-out
           ${open ? "max-h-[900px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-1"}`}
         >
-          <div className="rounded-xl border border-border/30 bg-background/30 p-5">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground/70">
-              AI insight
-            </div>
-
-            {pending && <div className="mt-2 text-sm text-muted-foreground">Thinking…</div>}
+          <div className="rounded-xl border border-border/15 bg-background/15 p-5">
+            {pending && <div className="text-sm leading-relaxed text-muted-foreground">Thinking…</div>}
 
             {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
 
             {content ? (
-              <div className="mt-3 max-w-[72ch] whitespace-pre-wrap text-[14px] leading-7 text-foreground/85">
+              <div className="mt-3 max-w-[72ch] whitespace-pre-wrap text-[14px] leading-relaxed text-foreground/85">
                 {content}
               </div>
             ) : (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Open to generate a calm reflection across your recent patterns.
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Open for a reflection across your recent patterns.
               </p>
             )}
           </div>
