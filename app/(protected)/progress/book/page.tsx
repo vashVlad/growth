@@ -35,7 +35,7 @@ export default async function ProgressBookPage() {
         </div>
 
         <p className="text-xs text-muted-foreground/70">
-          {goalRows.length} {goalRows.length === 1 ? "chapter" : "chapters"}
+          {goalRows.length} {goalRows.length === 1 ? "completed chapter" : "completed chapters"}
         </p>
 
         {goalRows.length === 0 ? (

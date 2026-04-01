@@ -24,7 +24,7 @@ return (
           href="/progress/book"
           className="mt-4 inline-block text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          View full journey
+          Open Progress Book
         </Link>
       </div>
 
