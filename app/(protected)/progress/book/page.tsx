@@ -11,7 +11,7 @@ export default async function ProgressBookPage() {
     }
     return (
       <main className="min-h-screen bg-background">
-        <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-10">
+        <div className="mx-auto w-full max-w-2xl px-5 py-10 space-y-10">
           <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
             {result.message}
           </div>
@@ -33,6 +33,10 @@ export default async function ProgressBookPage() {
             One calm read through what you completed—story, not stats.
           </p>
         </div>
+
+        <p className="text-xs text-muted-foreground/70">
+          {goalRows.length} {goalRows.length === 1 ? "chapter" : "chapters"}
+        </p>
 
         {goalRows.length === 0 ? (
           <section aria-label="Chapters">
