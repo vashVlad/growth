@@ -51,7 +51,7 @@ export default function WeeklyCheckInForm({
           <RadioPill value="no" label="No" />
         </div>
         <p className="text-xs text-muted-foreground">
-          Did your actions align with your stated identity and pillar focus?
+          Did this week reflect the person you're becoming?
         </p>
       </div>
 
@@ -60,6 +60,13 @@ export default function WeeklyCheckInForm({
           {state.message}
         </div>
       ) : null}
+
+      <Field
+        label="What will you do next?"
+        name="next_step"
+        placeholder="The next concrete action you will take..."
+        inputRef={nextStepRef}
+      />
 
       <div className="pt-2">
         <button
@@ -129,6 +136,7 @@ function RadioPill({
         required
         className="peer sr-only"
       />
+      
       <label
         htmlFor={id}
         className="inline-flex cursor-pointer select-none items-center rounded-full border border-border bg-background px-4 py-2 text-sm shadow-sm transition hover:bg-muted peer-checked:border-primary/30 peer-checked:bg-primary/5"

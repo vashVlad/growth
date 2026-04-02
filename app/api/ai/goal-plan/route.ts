@@ -97,9 +97,6 @@ export async function POST(req: Request) {
       pass += 1;
     }
 
-    const firstIncomplete =
-      plan.execution_steps.find((s) => !s.completed)?.step?.trim() || goal.next_action || null;
-
     const { data: latestPlan } = await supabase
       .from("goal_plans")
       .select("version")
@@ -129,12 +126,6 @@ export async function POST(req: Request) {
     if (insertError) {
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
-
-    await supabase
-      .from("goals")
-      .update({ next_action: firstIncomplete })
-      .eq("id", goal.id)
-      .eq("user_id", user.id);
 
     return NextResponse.json({
       ok: true,
