@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { ProgressBookChapters } from "@/features/goals/components/ProgressBookChapters";
 import { fetchProgressGoalHistory } from "@/features/goals/data/progressGoalHistory.server";
+import { formatProgressNarrative } from "@/lib/narrative/formatProgress";
+import { generateProgressInsight } from "@/lib/ai/progressInsight";
 
 export default async function ProgressBookPage() {
   const result = await fetchProgressGoalHistory();
@@ -21,6 +23,24 @@ export default async function ProgressBookPage() {
   }
 
   const { goalRows, reflectionsByGoal } = result;
+
+  const formattedReflections = formatProgressNarrative({
+    reflectionsByGoal,
+  });
+
+  const insightsByGoal = new Map<string, string | null>();
+
+  for (const [goalId, reflections] of formattedReflections.entries()) {
+    const goalRow = goalRows.find((goal) => String(goal.id) === String(goalId));
+
+    const insight = await generateProgressInsight({
+      goalTitle: goalRow?.title ?? "Untitled goal",
+      milestone: goalRow?.milestone ?? null,
+      reflections,
+    });
+
+    insightsByGoal.set(goalId, insight);
+  }
 
   return (
     <main className="min-h-screen bg-background">
@@ -47,7 +67,8 @@ export default async function ProgressBookPage() {
         ) : (
           <ProgressBookChapters
             goalRows={goalRows}
-            reflectionsByGoal={reflectionsByGoal}
+            reflectionsByGoal={formattedReflections}
+            insightsByGoal={insightsByGoal}
           />
         )}
       </div>

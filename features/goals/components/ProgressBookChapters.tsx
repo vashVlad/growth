@@ -1,19 +1,13 @@
 import { GoalCardNarrative } from "@/features/goals/components/GoalCardNarrative";
-import type {
-  ProgressDbGoal,
-  ProgressDbReflection,
-} from "@/features/goals/data/progressGoalHistory.server";
+import type {ProgressDbGoal, ProgressDbReflection} from "@/features/goals/data/progressGoalHistory.server";
 import { journeyMomentLine } from "@/features/goals/lib/journeyMomentLine";
-import {
-  formatShortDate,
-  pillarLabel,
-} from "@/features/goals/lib/progressDisplayFormat";
+import {formatShortDate, pillarLabel} from "@/features/goals/lib/progressDisplayFormat";
 
-/**
- * Chapters ordered by `updated_at` ascending (earlier last-update first), then
- * `id` for stability. Interprets `updated_at` as the best available proxy for
- * “when this goal last settled” in the absence of a dedicated completed_at.
- */
+type FormattedReflection = ProgressDbReflection & {
+  formatted_action?: string;
+};
+
+
 function chaptersForBook(goalRows: ProgressDbGoal[]): ProgressDbGoal[] {
   return [...goalRows].sort((a, b) => {
     const ta = new Date(a.updated_at).getTime();
@@ -27,41 +21,44 @@ function chaptersForBook(goalRows: ProgressDbGoal[]): ProgressDbGoal[] {
 export function ProgressBookChapters({
   goalRows,
   reflectionsByGoal,
+  insightsByGoal,
 }: {
   goalRows: ProgressDbGoal[];
   reflectionsByGoal: Map<string, ProgressDbReflection[]>;
+  insightsByGoal?: Map<string, string | null>;
 }) {
   const ordered = chaptersForBook(goalRows);
 
   return (
-    <section className="space-y-20" aria-label="Chapters">
+    <section className="space-y-14" aria-label="Chapters">
       {ordered.map((g, index) => {
-        const list = reflectionsByGoal.get(g.id) ?? [];
+        const list = (reflectionsByGoal.get(g.id) ?? []) as FormattedReflection[];
         const chronological = [...list].reverse();
         const latest = list[0];
         const milestone = g.milestone?.trim() ? g.milestone.trim() : null;
+        const insight = insightsByGoal?.get(g.id);
 
         return (
-          <article key={g.id} className="space-y-6 py-10">
+          <article key={g.id} className="space-y-6 pt-10">
             {/* Chapter Label */}
-            <div className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/60">
               Chapter {index + 1} • {pillarLabel(g.pillar)}
             </div>
 
             {/* Title */}
-            <h2 className="mt-3 font-serif text-[32px] leading-tight text-foreground">
+            <h2 className="mt-3 font-serif text-[30px] leading-snug text-foreground">
               {g.title}
             </h2>
 
             {/* Milestone */}
             {milestone ? (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-2">
                 Milestone: {milestone}
               </p>
             ) : null}
 
             {/* Narrative */}
-            <div className="pt-6 space-y-3">
+            <div className="pt-6 space-y-4 max-w-[52ch]">
               <GoalCardNarrative
                 goalId={g.id}
                 status={g.status === "completed" ? "completed" : "archived"}
@@ -72,29 +69,29 @@ export function ProgressBookChapters({
             </div>
 
             {/* Moments */}
-            <div className="pt-4">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            <div className="pt-6">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70 mb-3">
                 Moments
               </p>
 
               {chronological.length === 0 ? (
                 <div className="text-xs text-muted-foreground">
-                  No check-ins found for this goal.
+                  This chapter has no recorded moments.
                 </div>
               ) : (
-                <div className="space-y-6 pl-2">
+                <div className="space-y-6 pl-1">
                   {chronological.map((r) => {
                     const moment = journeyMomentLine(
-                      r.action_taken,
+                      r.formatted_action ?? r.action_taken,
                       r.easier_harder
                     );
 
                     return (
-                      <div key={r.id} className="space-y-2 py-2">
+                      <div key={r.id} className="space-y-1">
                         <div className="text-xs text-muted-foreground">
                           {formatShortDate(r.week_start_date)}
                         </div>
-                        <div className="text-[15px] leading-relaxed text-foreground/90">
+                        <div className="text-[15px] leading-[1.8]text-foreground/90">
                           {moment}
                         </div>
                       </div>
@@ -103,11 +100,13 @@ export function ProgressBookChapters({
                 </div>
               )}
             </div>
-
-            {/* Divider */}
-            <div className="pt-8">
-              <div className="h-px w-full bg-border/30" />
-            </div>
+            {insight ? (
+              <div className="pt-8 pb-6 max-w-[52ch]">
+                <p className="text-[15px] leading-[1.75] text-muted-foreground/70">
+                  {insight}
+                </p>
+              </div>
+            ) : null}
           </article>
         );
       })}
