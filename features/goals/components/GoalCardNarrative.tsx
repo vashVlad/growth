@@ -20,9 +20,14 @@ function fallbackNarrative(
     const normalized = t
       .replace(/\bmy\b/gi, "your")
       .replace(/\bi\b/gi, "you");
-    return `You ${normalized.charAt(0).toLowerCase() + normalized.slice(1)}.`;
+    let result = normalized.trim();
+    result = result.charAt(0).toUpperCase() + result.slice(1);
+
+    if (!/[.!?]$/.test(result)) result += ".";
+
+    return result;
   }
-  return `You worked on ${title.toLowerCase()}.`;
+  return `${title.charAt(0).toUpperCase() + title.slice(1)}.`;
 }
 
 async function loadSummary(goalId: string, fb: string): Promise<string> {
