@@ -34,65 +34,54 @@ Next Step: ${r.next_step}
     .join("\n\n");
 
  const prompt = `
-You are writing a short reflection at the end of a chapter in a personal progress journal.
+  You are writing a short reflection at the end of a chapter in a personal progress journal.
 
-Goal:
-${goalTitle}
+  Goal:
+  ${goalTitle}
 
-Milestone:
-${milestone ?? "None"}
+  Milestone:
+  ${milestone ?? "None"}
 
-Reflections:
-${content}
+  Reflections:
+  ${content}
 
-Write a short reflection (2–3 sentences max) that follows this structure:
+  Write a short reflection (2–3 sentences max) that focuses on how things evolved over time.
 
-1. Describe how the work shifted (e.g., building → fixing → finishing)
-2. Highlight where difficulty appeared (especially small changes causing larger problems)
-3. Keep it grounded in the experience, not interpretation
+  The reflection should:
+  - describe how the experience became more stable, consistent, or natural
+  - highlight how earlier friction changed or settled
+  - capture the overall direction of progress (not specific events)
 
-Then optionally add one short reflective question (max 1).
+  Then optionally add one short reflective question (max 1).
 
-The question must:
-- focus on the experience itself (not a specific event)
-- be short and natural
-- refer back indirectly (e.g. "those moments", "that stage", "the final stretch")
-- NOT repeat the situation already described
-- NOT suggest improvement or solutions
-- NOT ask for recall (avoid "which", "when", "what took longest")
+  The question must:
+  - focus on the experience itself
+  - be simple and natural
+  - refer indirectly (e.g. "those moments", "that stage")
+  - NOT suggest improvement or solutions
 
-Style:
-- calm, simple, and human
-- like a quiet note written in the margin of a book
-- clear, natural phrasing (no complex wording)
-- use everyday language (e.g. "those moments", "the final stretch")
-- keep sentences short and easy to read
+  Style:
+  - calm, grounded, and human
+  - like a quiet note written after looking back over time
+  - simple, natural phrasing
 
-Avoid:
-- starting with "Over time"
-- phrases like "you tend to", "this suggests", "patterns show"
-- technical or analytical language
-- mentioning AI, tools, or systems
-- sounding like advice, evaluation, or a report
-- poetic or metaphor-heavy language
-- vague phrases like "progress stayed on track"
-- abstract words like "process", "patterns"
-- repeating the same situation in the question
-- long or overly detailed questions
+  Avoid:
+  - describing individual events in detail
+  - analytical or technical language
+  - phrases like "pattern", "process", "friction"
+  - sounding like a report or explanation
+  - giving advice or future suggestions
+  - repeating reflection wording directly
 
-Important:
-- Do NOT use "I"
-- Do NOT analyze the person
-- Do NOT explain behavior
-- Do NOT generalize
-- Keep observations concrete and specific
-- Focus on what happened, not what it means
-- the question should feel like a natural thought, not a restatement
-- prefer present tense in the question (e.g. "What does that feel like?")
+  Important:
+  - Do NOT use "I"
+  - Do NOT analyze the person
+  - Do NOT explain behavior
+  - Focus on how things changed over time
+  - keep it concise and natural
 
-Write it as a quiet observation, not an explanation.
-Keep it concise and easy to read.
-`;
+  Write it as a quiet observation of how things have settled or shifted.
+  `;
 
   const res = await openai.chat.completions.create({
     model: "gpt-5-mini",
