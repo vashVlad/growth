@@ -34,49 +34,53 @@ Next Step: ${r.next_step}
     .join("\n\n");
 
  const prompt = `
-You are writing a short analytical insight at the end of a chapter in a personal progress journal.
+  You are writing a short insight at the end of a chapter in a personal progress journal.
 
-Goal:
-${goalTitle}
+  Goal:
+  ${goalTitle}
 
-Milestone:
-${milestone ?? "None"}
+  Milestone:
+  ${milestone ?? "None"}
 
-Reflections:
-${content || "No reflections recorded."}
+  Reflections:
+  ${content || "No reflections recorded."}
 
-Write a short insight (3–5 sentences max).
+  Write a concise insight (2–4 sentences max).
 
-The insight must:
-- identify how behavior changed over time
-- explain what reduced friction or improved consistency
-- highlight a clear pattern (e.g., inconsistency → structure, friction → stability)
+  The insight must:
+  - capture ONE clear pattern (not multiple)
+  - describe how things changed over time
+  - explain what made progress easier or more stable
 
-If there are no reflections:
-- infer carefully from the goal and milestone
-- mention that patterns are less visible due to lack of recorded data
-- still provide a calm, reasonable interpretation
+  Optional:
+  - include one short reflective question (max 1)
 
-Optional:
-- include one short reflective question (max 1)
+  Style:
+  - calm, simple, and clear
+  - like a margin note, not a report
+  - easy to read in one pass
 
-Style:
-- calm, neutral, analytical
-- clear and grounded language
-- no poetic phrasing
-- no storytelling or recap
+  Avoid:
+  - repeating the same idea in different wording
+  - expressing the same pattern more than once
+  - stacking multiple explanations
+  - analytical or technical language
+  - poetic phrasing
+  - describing events step-by-step
+  - giving advice
 
-Avoid:
-- describing events in detail
-- vague phrases like "settled into rhythm"
-- giving advice or instructions
-- "you should", "you can", "next time"
 
-Important:
-- do NOT return null
-- always return a complete paragraph
-- focus on patterns, not individual actions
-`;
+  Important:
+  - compress the insight into one clear idea
+  - prefer brevity over completeness
+  - always return a result (never null)
+
+  If there are no reflections:
+  - infer lightly from the goal and milestone
+  - keep it simple and neutral
+
+  Write it as a short, effortless observation.
+  `;
 
   const res = await openai.chat.completions.create({
     model: "gpt-5-mini",

@@ -30,12 +30,13 @@ export default async function ProgressBookPage() {
 
   const insightsByGoal = new Map<string, string | null>();
 
-  for (const [goalId, reflections] of formattedReflections.entries()) {
-    const goalRow = goalRows.find((goal) => String(goal.id) === String(goalId));
+  for (const goal of goalRows) {
+    const goalId = String(goal.id);
+    const reflections = formattedReflections.get(goalId) ?? [];
 
     const insight = await generateProgressInsight({
-      goalTitle: goalRow?.title ?? "Untitled goal",
-      milestone: goalRow?.milestone ?? null,
+      goalTitle: goal.title ?? "Untitled goal",
+      milestone: goal.milestone ?? null,
       reflections,
     });
 
