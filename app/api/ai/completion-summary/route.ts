@@ -46,24 +46,21 @@ Goal:
 Weekly history (oldest to newest):
 ${history}
 
-Write a "Completion Reflection" with exactly these sections:
+Write a short completion summary (1–2 sentences max).
 
-What actually happened:
-(2–3 short sentences.)
+The sentence must:
+- start with "You"
+- be grammatically correct
+- describe what was done and how (natural phrasing)
+- use "your" instead of "my"
+- sound like a natural sentence a person would say
 
-What this shows about me:
-(2 short sentences. Focus on behavior patterns, not personality labels.)
-
-What helped the most:
-(1 short sentence.)
-
-What got in the way:
-(1 short sentence.)
-
-A natural next direction:
-(1 short sentence. Offer a direction, not a command.)
-
-Optional: If the user has no reflections, be honest and keep it short.
+Do NOT:
+- include multiple sections
+- include labels
+- repeat verbs (e.g. "completed maintained")
+- use raw reflection wording directly
+- sound robotic or analytical
 `.trim();
 }
 
