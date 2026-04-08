@@ -277,13 +277,14 @@ export function GoalCardNarrative({
   return (
     <>
       <p className="mt-4 text-sm leading-relaxed text-foreground/85">
-        You completed the first version of the platform by working through
-        debugging and refining the UI.
+        {capSummaryAtTwoSentences(summaryDisplayLine(summary))}
       </p>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        Debugging felt frustrating because small changes could break things, but
-        you adapted.
-      </p>
+
+      {easierHarder ? (
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {whatChangedDisplayText(easierHarder)}
+        </p>
+      ) : null}
     </>
   );
 }
