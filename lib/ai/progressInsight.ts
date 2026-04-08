@@ -20,7 +20,7 @@ export async function generateProgressInsight({
   milestone: string | null;
   reflections: ReflectionInput[];
 }): Promise<string | null> {
-  if (!reflections || reflections.length === 0) return null;
+  if (!reflections) reflections = [];
 
   const content = reflections
     .map(
@@ -34,59 +34,61 @@ Next Step: ${r.next_step}
     .join("\n\n");
 
  const prompt = `
-  You are writing a short reflection at the end of a chapter in a personal progress journal.
+You are writing a short analytical insight at the end of a chapter in a personal progress journal.
 
-  Goal:
-  ${goalTitle}
+Goal:
+${goalTitle}
 
-  Milestone:
-  ${milestone ?? "None"}
+Milestone:
+${milestone ?? "None"}
 
-  Reflections:
-  ${content}
+Reflections:
+${content || "No reflections recorded."}
 
-  Write a short reflection (2–3 sentences max) that focuses on how things evolved over time.
+Write a short insight (3–5 sentences max).
 
-  The reflection should:
-  - describe how the experience became more stable, consistent, or natural
-  - highlight how earlier friction changed or settled
-  - capture the overall direction of progress (not specific events)
+The insight must:
+- identify how behavior changed over time
+- explain what reduced friction or improved consistency
+- highlight a clear pattern (e.g., inconsistency → structure, friction → stability)
 
-  Then optionally add one short reflective question (max 1).
+If there are no reflections:
+- infer carefully from the goal and milestone
+- mention that patterns are less visible due to lack of recorded data
+- still provide a calm, reasonable interpretation
 
-  The question must:
-  - focus on the experience itself
-  - be simple and natural
-  - refer indirectly (e.g. "those moments", "that stage")
-  - NOT suggest improvement or solutions
+Optional:
+- include one short reflective question (max 1)
 
-  Style:
-  - calm, grounded, and human
-  - like a quiet note written after looking back over time
-  - simple, natural phrasing
+Style:
+- calm, neutral, analytical
+- clear and grounded language
+- no poetic phrasing
+- no storytelling or recap
 
-  Avoid:
-  - describing individual events in detail
-  - analytical or technical language
-  - phrases like "pattern", "process", "friction"
-  - sounding like a report or explanation
-  - giving advice or future suggestions
-  - repeating reflection wording directly
+Avoid:
+- describing events in detail
+- vague phrases like "settled into rhythm"
+- giving advice or instructions
+- "you should", "you can", "next time"
 
-  Important:
-  - Do NOT use "I"
-  - Do NOT analyze the person
-  - Do NOT explain behavior
-  - Focus on how things changed over time
-  - keep it concise and natural
-
-  Write it as a quiet observation of how things have settled or shifted.
-  `;
+Important:
+- do NOT return null
+- always return a complete paragraph
+- focus on patterns, not individual actions
+`;
 
   const res = await openai.chat.completions.create({
     model: "gpt-5-mini",
     messages: [{ role: "user", content: prompt }],
   });
 
-  return res.choices[0]?.message?.content?.trim() || null;
+  const output = res.choices[0]?.message?.content?.trim();
+
+  if (!output) {
+    return "Progress appears steady, though patterns are not clearly defined yet.";
+  }
+
+  return output;
+  
 }

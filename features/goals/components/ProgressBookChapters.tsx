@@ -100,6 +100,9 @@ export function ProgressBookChapters({
                 </div>
               )}
             </div>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground/70 mb-2">
+              Insight
+            </p>
             {insight ? (
               <div className="pt-8 pb-6 max-w-[52ch]">
                 <p className="text-[15px] leading-[1.75] text-muted-foreground/70">
