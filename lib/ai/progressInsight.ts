@@ -45,7 +45,7 @@ Next Step: ${r.next_step}
   Reflections:
   ${content || "No reflections recorded."}
 
-  Write a concise insight (2–4 sentences max).
+  Write a concise insight (2–3 sentences max).
 
   The insight must:
   - capture ONE clear pattern (not multiple)
@@ -74,6 +74,11 @@ Next Step: ${r.next_step}
   - compress the insight into one clear idea
   - prefer brevity over completeness
   - always return a result (never null)
+  - keep each sentence short and simple
+  - avoid long or complex sentences
+  - express only one idea per sentence
+  - avoid phrases like "shifted from X to Y"
+  - avoid expressive wording like "stumbling block"
 
   If there are no reflections:
   - infer lightly from the goal and milestone
