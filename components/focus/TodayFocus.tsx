@@ -37,7 +37,7 @@ export function TodayFocus({
   return (
     <div className="space-y-2 max-w-[65ch]">
       {/* Label */}
-      <div className="text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
         Today’s Focus
       </div>
 

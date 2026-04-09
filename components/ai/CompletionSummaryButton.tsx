@@ -98,7 +98,7 @@ export function CompletionSummaryButton({ goalId }: { goalId: string }) {
         }`}
       >
         <div className="rounded-xl border border-border/30 bg-background/30 p-5">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground/70">
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80/70">
             AI insight
           </div>
 

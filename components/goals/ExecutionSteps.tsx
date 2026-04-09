@@ -15,7 +15,7 @@ export function ExecutionSteps({
 
   return (
     <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
         {title}
       </div>
 

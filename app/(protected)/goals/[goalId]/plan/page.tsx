@@ -95,7 +95,7 @@ export default async function GoalPlanPage({
 
   const plan = latestPlan as GoalPlanRow | null;
 
-  return (
+   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12">
 

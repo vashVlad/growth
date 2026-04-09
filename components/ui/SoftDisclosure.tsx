@@ -24,7 +24,7 @@ export function SoftDisclosure({
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-out ${
-          open ? "max-h-[900px] opacity-100 mt-3" : "max-h-0 opacity-0 mt-0"
+          open ? "max-h-[900px] opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
         }`}
       >
         {open ? <div className="space-y-3">{children}</div> : null}

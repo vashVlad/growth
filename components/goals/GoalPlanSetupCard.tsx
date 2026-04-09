@@ -56,7 +56,7 @@ export function GoalPlanSetupCard({ hasPlan, goalId }: Props) {
   }
 
   return (
-    <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-5">
+    <section className="rounded-2xl border border-border/30 bg-background/3 0 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-sm font-medium text-foreground">

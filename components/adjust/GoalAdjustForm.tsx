@@ -107,7 +107,7 @@ export default function GoalAdjustForm({ goal }: { goal: Goal }) {
         <>
           <div className="space-y-4">
             <div>
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
                 Adjustment reflection
               </div>
               <div className="mt-1 text-sm text-muted-foreground">

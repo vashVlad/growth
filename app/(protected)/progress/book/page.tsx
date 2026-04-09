@@ -45,7 +45,7 @@ export default async function ProgressBookPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-10">
+      <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12 space-y-10">
         <div className="max-w-[60ch]">
           <h1 className="font-serif text-[36px] leading-snug text-foreground">
             Progress Book

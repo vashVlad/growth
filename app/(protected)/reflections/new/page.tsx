@@ -174,7 +174,7 @@ export default async function HomePage({
 
         {currentStep && (
           <section className="mb-8 rounded-2xl border border-border/60 bg-background/60 p-5">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+            <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
               Suggested focus
             </div>
 

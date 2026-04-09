@@ -37,7 +37,7 @@ function CardShell({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+    <section className="rounded-2xl border border-border/40 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
       <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
         {title}
       </div>
@@ -131,7 +131,7 @@ export function GoalPlanCard({
             {plan.risks.map((r, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-border/40 bg-background/40 p-4"
+                className="rounded-xl border border-border/30 bg-background/30 p-5"
               >
                 <div className="text-sm font-medium text-foreground">
                   {r.risk}

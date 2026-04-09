@@ -24,10 +24,7 @@ export default async function GoalAdjustPage({
   if (!goalId) {
     return (
       <main className="min-h-screen bg-background">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-        <div className="mb-6">
-          <BackButton fallbackHref="/home" />
-        </div>
+        <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Adjust goal
         </div>
       </main>
@@ -44,8 +41,8 @@ export default async function GoalAdjustPage({
   if (error) {
     return (
       <main className="min-h-screen bg-background">
-        <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-4">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+        <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12 space-y-4">
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Adjust goal
           </div>
           <div className="text-sm text-red-600">DB error: {error.message}</div>
@@ -61,8 +58,8 @@ export default async function GoalAdjustPage({
   if (!goal) {
     return (
       <main className="min-h-screen bg-background">
-        <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-4">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+        <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12 space-y-4">
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Adjust goal
           </div>
           <div className="text-sm text-red-600">Goal not found (or not owned).</div>
@@ -78,8 +75,8 @@ export default async function GoalAdjustPage({
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-8">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12 space-y-4">
+        <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Adjust goal
             </div>
         <GoalAdjustForm goal={goal} />

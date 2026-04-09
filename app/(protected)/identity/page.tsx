@@ -29,7 +29,7 @@ export default async function IdentityPage() {
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12">
         <div className="flex items-center justify-between mb-6">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Identity
           </div>
 

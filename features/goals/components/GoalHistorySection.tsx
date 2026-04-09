@@ -13,7 +13,7 @@ export default async function GoalHistorySection() {
   if (!result.ok) {
     if (result.error === "auth") {
       return (
-        <div className="rounded-2xl border border-border/60 bg-background/60 p-6 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-border/40 bg-background/60 p-6 text-sm text-muted-foreground">
           Please log in again.
         </div>
       );
@@ -47,10 +47,10 @@ export default async function GoalHistorySection() {
         return (
           <div
             key={g.id}
-            className="rounded-2xl border border-border/60 bg-background/60 px-6 py-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+            className="rounded-2xl border border-border/40 bg-background/60 px-6 py-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
           >
             <div className="max-w-[540px]">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
                 {pillarLabel(g.pillar)}
               </div>
 

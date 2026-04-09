@@ -30,7 +30,7 @@ export default async function GoalUpdatePlaceholderPage({
         </Button>
 
         <div className="mt-8 space-y-2">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Update
           </div>
           <div className="text-xl font-medium text-foreground">
