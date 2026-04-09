@@ -5,17 +5,18 @@ import AppShell from "@/components/nav/AppShell";
 
 export default async function ProtectedLayout({
   children,
-}: {  
+}: {
   children: ReactNode;
 }) {
   const supabase = await supabaseServer();
 
   const {
-    data: { user },
-    error: userErr,
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (userErr || !user) redirect("/login");
+  const user = session?.user ?? null;
+
+  if (!user) redirect("/login");
 
   const { data: profile, error: profileErr } = await supabase
     .from("profile")

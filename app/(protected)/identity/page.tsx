@@ -27,8 +27,8 @@ export default async function IdentityPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-3xl px-5 py-10">
-        <div className="flex items-center justify-between">
+      <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12">
+        <div className="flex items-center justify-between mb-6">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">
             Identity
           </div>
@@ -43,29 +43,29 @@ export default async function IdentityPage() {
 
         {/* Title */}
         <div className="max-w-[65ch]">
-          <h1 className="mt-4 font-serif text-3xl leading-tight tracking-tight">
+          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight max-w-[22ch]">
             Becoming
           </h1>
 
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground">
             Your current direction.
           </p>
         </div>
 
         {/* Content */}
-        <div className="mt-8 space-y-6">
+        <div className="mt-4 space-y-8">
           <div>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+            <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
               Identity statement
             </div>
 
-            <p className="mt-3 max-w-[60ch] text-[1.05rem] leading-relaxed text-foreground">
+            <p className="mt-3 max-w-prose text-[1.05rem] leading-relaxed text-foreground">              
               {statement}
             </p>
           </div>
 
           <div>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+            <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
               Behaviors
             </div>
 

@@ -16,10 +16,10 @@ export function SoftDisclosure({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between rounded-xl border border-border/40 bg-background/40 px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
-      >
-        <span>{title}</span>
-        <span className="text-muted-foreground/70">{open ? "▲" : "▼"}</span>
+        className="text-sm text-muted-foreground hover:text-foreground transition-colors mt-2">
+        <span>
+          {title} <span className="text-muted-foreground/60 text-xs">{open ? "▴" : "▾"}</span>
+        </span>
       </button>
 
       <div

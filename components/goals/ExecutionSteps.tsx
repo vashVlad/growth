@@ -19,7 +19,7 @@ export function ExecutionSteps({
         {title}
       </div>
 
-      <div className="mt-4 space-y-0">
+      <div className="mt-4 space-y-2">
         {steps.map((item, idx) => {
           const last = idx === steps.length - 1;
           const done = Boolean(item.completed);
@@ -43,7 +43,7 @@ export function ExecutionSteps({
                 ) : null}
               </div>
 
-              <div className="pb-4">
+              <div className="pb-5">
                 <div
                     className={[
                         "text-sm leading-6",

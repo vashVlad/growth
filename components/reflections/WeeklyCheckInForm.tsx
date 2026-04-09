@@ -29,8 +29,8 @@ export default function WeeklyCheckInForm({
   const [suggestVisible, setSuggestVisible] = React.useState(false);
 
   return (
-    <form action={formAction} className="space-y-9">
-      <Field
+    <form action={formAction} className="space-y-10">
+      <Field  
         autoFocus
         label="What action did you take?"
         name="action_taken"
@@ -43,9 +43,9 @@ export default function WeeklyCheckInForm({
         placeholder="What helped, what got in the way, what surprised you…"
       />
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <label className="block text-sm font-medium">Alignment</label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3 mt-2">
           <RadioPill value="yes" label="Yes" />
           <RadioPill value="partially" label="Partially" />
           <RadioPill value="no" label="No" />
@@ -56,7 +56,7 @@ export default function WeeklyCheckInForm({
       </div>
 
       {state && !state.ok ? (
-        <div className="rounded-2xl border border-border bg-background px-4 py-3 text-sm">
+        <div className="rounded-2xl border border-border bg-background px-5 py-4 text-sm">
           {state.message}
         </div>
       ) : null}
@@ -68,7 +68,7 @@ export default function WeeklyCheckInForm({
         inputRef={nextStepRef}
       />
 
-      <div className="pt-2">
+      <div className="pt-6 space-y-3">
         <button
           type="submit"
           disabled={isPending}
@@ -99,7 +99,7 @@ function Field({
   inputRef?: React.RefObject<HTMLTextAreaElement | null>;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <label htmlFor={name} className="block text-sm font-medium">
         {label}
       </label>
@@ -108,7 +108,7 @@ function Field({
         id={name}
         name={name}
         required
-        rows={4}
+        rows={5}
         autoFocus={autoFocus}
         placeholder={placeholder}
         className="w-full resize-none rounded-2xl border border-border bg-background px-4 py-3 text-sm leading-relaxed shadow-sm outline-none transition focus:border-primary/30 focus:ring-2 focus:ring-primary/10"

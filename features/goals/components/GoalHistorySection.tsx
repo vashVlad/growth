@@ -29,14 +29,14 @@ export default async function GoalHistorySection() {
 
   if (goalRows.length === 0) {
     return (
-      <div className="rounded-2xl border border-border/40 bg-background/60 p-6 text-sm text-muted-foreground">
+      <div className="rounded-2xl border border-border/40 bg-background/60 mt-4 text-sm text-muted-foreground">
         No completed or archived goals yet.
       </div>
     );
   }
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-6">
       {goalRows.map((g) => {
         const list = reflectionsByGoal.get(g.id) ?? [];
         const chronological = [...list].reverse();
@@ -47,68 +47,70 @@ export default async function GoalHistorySection() {
         return (
           <div
             key={g.id}
-            className="rounded-2xl border border-border/60 bg-background/60 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+            className="rounded-2xl border border-border/60 bg-background/60 px-6 py-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
           >
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              {pillarLabel(g.pillar)}
-            </div>
-
-            <div className="mt-4 text-[22px] font-semibold tracking-tight leading-snug text-foreground">
-              {g.title}
-            </div>
-
-            {milestone ? (
-              <div className="mt-2 text-sm text-muted-foreground">
-                <span className="text-foreground/70">Milestone:</span>{" "}
-                <span className="text-muted-foreground">{milestone}</span>
+            <div className="max-w-[540px]">
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                {pillarLabel(g.pillar)}
               </div>
-            ) : null}
 
-            <GoalCardNarrative
-              goalId={g.id}
-              status={g.status === "completed" ? "completed" : "archived"}
-              title={g.title}
-              actionTaken={latest?.action_taken}
-              easierHarder={latest?.easier_harder}
-            />
+              <div className="mt-2 text-[22px] font-semibold tracking-tight leading-snug text-foreground">
+                {g.title}
+              </div>
 
-            <div className="mt-4">
-              <SoftDisclosure title="View journey">
-                {chronological.length === 0 ? (
-                  <div className="text-xs text-muted-foreground">
-                    No check-ins found for this goal.
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {chronological.map((r, i) => {
-                      const isFirst = i === 0;
-                      const isLast = i === chronological.length - 1;
-                      const fadeOldest =
-                        isFirst && chronological.length > 1 ? "opacity-80" : "";
-                      const actionClass = isLast
-                        ? "text-sm leading-relaxed text-foreground"
-                        : "text-sm leading-relaxed text-foreground/85";
-                      const moment = journeyMomentLine(
-                        r.action_taken,
-                        r.easier_harder
-                      );
+              {milestone ? (
+                <div className="mt-3 text-sm text-muted-foreground">
+                  <span className="text-foreground/70">Milestone:</span>{" "}
+                  <span className="text-muted-foreground">{milestone}</span>
+                </div>
+              ) : null}
 
-                      return (
-                        <div key={r.id} className={fadeOldest}>
-                          <div className="text-[11px] leading-relaxed text-muted-foreground/70">
-                            {formatShortDate(r.week_start_date)}
+              <GoalCardNarrative
+                goalId={g.id}
+                status={g.status === "completed" ? "completed" : "archived"}
+                title={g.title}
+                actionTaken={latest?.action_taken}
+                easierHarder={latest?.easier_harder}
+              />
+
+              <div className="mt-5">
+                <SoftDisclosure title="View journey">
+                  {chronological.length === 0 ? (
+                    <div className="text-xs text-muted-foreground">
+                      No check-ins found for this goal.
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {chronological.map((r, i) => {
+                        const isFirst = i === 0;
+                        const isLast = i === chronological.length - 1;
+                        const fadeOldest =
+                          isFirst && chronological.length > 1 ? "opacity-80" : "";
+                        const actionClass = isLast
+                          ? "text-sm leading-relaxed text-foreground"
+                          : "text-sm leading-relaxed text-foreground/85";
+                        const moment = journeyMomentLine(
+                          r.action_taken,
+                          r.easier_harder
+                        );
+
+                        return (
+                          <div key={r.id} className={fadeOldest}>
+                            <div className="text-[11px] leading-relaxed text-muted-foreground/70">
+                              {formatShortDate(r.week_start_date)}
+                            </div>
+                            <div className={`mt-2 ${actionClass}`}>
+                              {moment}
+                            </div>
                           </div>
-                          <div className={`mt-2 ${actionClass}`}>
-                            {moment}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </SoftDisclosure>
+                        );
+                      })}
+                    </div>
+                  )}
+                </SoftDisclosure>
+              </div>
             </div>
-          </div>
+        </div>
         );
       })}
     </section>

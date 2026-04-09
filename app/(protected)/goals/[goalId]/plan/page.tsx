@@ -97,17 +97,10 @@ export default async function GoalPlanPage({
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-8">
-        <div className="mb-2">
-          <BackButton fallbackHref="/home" />
-        </div>
+      <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12">
 
-        <section className="space-y-3">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-            Plan
-          </div>
-
-          <h1 className="font-serif text-3xl leading-snug text-foreground">
+        <section className="space-y-5 max-w-prose">
+          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight max-w-[22ch]">
             {goal.title}
           </h1>
 
@@ -116,12 +109,14 @@ export default async function GoalPlanPage({
             {goal.milestone?.trim() ? goal.milestone : "—"}
           </div>
 
-          <div className="text-sm text-muted-foreground max-w-[60ch]">
+          <div className="text-sm text-muted-foreground leading-relaxed">
             Turn this goal into a realistic execution plan.
           </div>
         </section>
 
-        <GoalPlanSetupCard hasPlan={Boolean(plan)} goalId={goal.id} />
+        <div className="pt-2">
+          <GoalPlanSetupCard hasPlan={Boolean(plan)} goalId={goal.id} />
+        </div>
 
         {plan?.plan_json ? (
         <GoalPlanCard
@@ -130,9 +125,9 @@ export default async function GoalPlanPage({
             savedAt={plan.updated_at ?? plan.created_at}
         />
         ) : (
-        <section className="rounded-2xl border border-border/40 bg-background/40 p-6 text-sm text-muted-foreground">
+          <section className="rounded-2xl border border-border/40 bg-background/40 p-6 text-sm text-muted-foreground max-w-[560px]">            
             Plan output will render here.
-        </section>
+          </section>
         )}
       </div>
     </main>

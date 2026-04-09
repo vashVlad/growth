@@ -160,14 +160,16 @@ export default async function HomePage({
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-6 pb-10">
-        <div className="mt-8 mb-10">
-          <h1 className="mt-2 text-3xl font-serif font-medium leading-tight tracking-tight">
+        <div className="mt-10 mb-12 space-y-3">
+          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight max-w-[22ch]">
             {goal.title}
           </h1>
 
-          <div className="mt-3 text-sm text-muted-foreground">
+          <div className="mt-4 text-sm text-muted-foreground">
             A quiet moment to reflect on this week.
           </div>
+
+          <div className="mt-6" />
         </div>  
 
         {currentStep && (

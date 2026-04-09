@@ -21,17 +21,15 @@ export default async function IdentityAdjustPage() {
     .single();
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
+    <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-10">
       <div className="mb-6">
-        <div className="mb-6">
-          <BackButton fallbackHref="/home" />
-        </div>
-        <h1 className="text-xs uppercase tracking-widest text-muted-foreground">Adjust identity</h1>
-        <p className="mt-1 text-sm text-neutral-600">
+        <h1 className="text-[11px] uppercase tracking-widest text-muted-foreground/80">Adjust identity</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
           Make a soft adjustment — but leave a brief reflection first.
         </p>
       </div>
-
+      
+      <div className="pt-2" />
       <ProfileAdjustForm initialIdentity={profile?.identity_statement ?? ''} />
     </div>
   );

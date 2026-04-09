@@ -38,10 +38,10 @@ function CardShell({
 }) {
   return (
     <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
         {title}
       </div>
-      <div className="mt-4">{children}</div>
+      <div className="mt-4 max-w-[560px]">{children}</div>
     </section>
   );
 }
@@ -61,7 +61,7 @@ export function GoalPlanCard({
   savedAt?: string | null;
 }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       {plan.execution_steps?.length ? (
         <ExecutionSteps steps={plan.execution_steps} />
       ) : null}
@@ -72,7 +72,7 @@ export function GoalPlanCard({
             {plan.milestones.map((m) => (
               <div
                 key={m.id}
-                className="rounded-xl border border-border/40 bg-background/40 p-4"
+                className="rounded-xl border border-border/30 bg-background/30 p-4"
               >
                 <div className="text-sm font-medium text-foreground">
                   {m.title}
@@ -92,7 +92,7 @@ export function GoalPlanCard({
             {plan.weekly_plan.map((week) => (
               <div
                 key={week.week}
-                className="rounded-xl border border-border/40 bg-background/40 p-4"
+                className="rounded-xl border border-border/30 bg-background/30 p-5"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="text-sm font-medium text-foreground">

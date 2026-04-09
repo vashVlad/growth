@@ -54,9 +54,11 @@ function SoftCardShell({
   return (
     <section
       id={id}
-      className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+      className="rounded-2xl border border-border/60 bg-background/60 px-6 py-6 sm:px-7 sm:py-7 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
     >
-      {children}
+      <div className="max-w-[560px]">
+        {children} 
+      </div>
     </section>
   );
 }
@@ -117,7 +119,7 @@ return (
     </div>
 
     {/* Details */}
-    <div className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
+    <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
       <div>
         <span className="text-foreground/80">Milestone:</span>{" "}
         {goal.milestone?.trim() ? goal.milestone : "—"}
@@ -129,12 +131,13 @@ return (
     </div>
 
     {/* Actions */}
-
-    <GoalCardActions
-      goalId={goal.id}
-      reflectionId={reflectionId}
-      autoOpen={guidanceGoalId === goal.id}
-    />
+    <div className="mt-5">
+      <GoalCardActions
+        goalId={goal.id}
+        reflectionId={reflectionId}
+        autoOpen={guidanceGoalId === goal.id}
+      />
+    </div>
     
     </SoftCardShell>
   );
@@ -225,13 +228,13 @@ const guidanceGoalId =
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">
       {/* HERO + FOCUS (single instance) */}
-      <section className="space-y-5 sm:space-y-6">
+      <section className="space-y-6 sm:space-y-7">
         <div className="space-y-3">
           <div className="text-xs uppercase tracking-widest text-muted-foreground">
             Today
           </div>
 
-          <h1 className="font-serif text-[2rem] leading-[1.08] tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+          <h1 className="font-serif text-[2rem] leading-[1.12] tracking-tight text-foreground sm:text-3xl lg:text-4xl max-w-[20ch]">
             {identityLine}
           </h1>
 
@@ -251,7 +254,7 @@ const guidanceGoalId =
       ) : null}
 
       {/* GOALS GRID (restored) */}
-      <section className="mt-6 sm:mt-8 grid gap-4">
+      <section className="mt-7 sm:mt-9 grid gap-5">
         {ordered.map((g, idx) => {
           const pillar = PILLAR_ORDER[idx];
 

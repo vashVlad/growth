@@ -56,7 +56,7 @@ export function GoalPlanSetupCard({ hasPlan, goalId }: Props) {
   }
 
   return (
-    <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-4">
+    <section className="rounded-2xl border border-border/60 bg-background/60 p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-sm font-medium text-foreground">
@@ -81,7 +81,7 @@ export function GoalPlanSetupCard({ hasPlan, goalId }: Props) {
       </div>
 
       {open ? (
-        <div className="grid gap-5 pt-4">
+        <div className="grid gap-6 pt-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="grid gap-2">
               <span className="text-sm text-foreground">Timeframe</span>
@@ -137,7 +137,7 @@ export function GoalPlanSetupCard({ hasPlan, goalId }: Props) {
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-          <div className="pt-2">
+          <div className="pt-4">
             <Button
               type="button"
               variant="outline"

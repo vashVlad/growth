@@ -71,6 +71,8 @@ export function TodayFocus({
       <div className="text-sm text-muted-foreground leading-relaxed">
         Choose one pillar to move forward today.
       </div>
+
+      <div className="mt-6" />
     </div>
   );
 }
