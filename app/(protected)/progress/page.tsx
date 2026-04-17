@@ -12,7 +12,7 @@ export default async function ProgressPage() {
   
 return (
   <main className="min-h-screen bg-background">
-    <div className="mx-auto w-full max-w-3xl px-5 py-10 space-y-10">
+    <div className="mx-auto w-full max-w-3xl px-5 py-6 space-y-10">
       <div className="max-w-[60ch]">
         <h1 className="font-serif text-[36px] leading-snug text-foreground">
           Your goal history.

@@ -105,12 +105,12 @@ export function GoalCardNarrative({
 
   return (
     <>
-      <p className="mt-4 text-sm leading-relaxed text-foreground/85">
+      <p className="text-sm leading-relaxed text-foreground/85">
         {summary}
       </p>
 
       {easierHarder ? (
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           {safeTrim(easierHarder)}
         </p>
       ) : null}

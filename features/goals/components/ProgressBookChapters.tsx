@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { GoalCardNarrative } from "@/features/goals/components/GoalCardNarrative";
 import type {ProgressDbGoal, ProgressDbReflection} from "@/features/goals/data/progressGoalHistory.server";
 import { journeyMomentLine } from "@/features/goals/lib/journeyMomentLine";
@@ -30,7 +31,7 @@ export function ProgressBookChapters({
   const ordered = chaptersForBook(goalRows);
 
   return (
-    <section className="space-y-14" aria-label="Chapters">
+      <section className="mt-12" aria-label="Chapters">
       {ordered.map((g, index) => {
         const list = (reflectionsByGoal.get(g.id) ?? []) as FormattedReflection[];
         const chronological = [...list].reverse();
@@ -39,26 +40,35 @@ export function ProgressBookChapters({
         const insight = insightsByGoal?.get(g.id);
 
         return (
-          <article key={g.id} className="space-y-6 pt-10">
+          <article
+            key={g.id}
+            className={clsx(
+            "space-y-6",
+            index === 0 ? "pt-0" : "mt-40 pt-8"
+          )}
+          >
             {/* Chapter Label */}
-            <div className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/60">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/60 mt-10">
               Chapter {index + 1} • {pillarLabel(g.pillar)}
             </div>
 
             {/* Title */}
-            <h2 className="mt-3 font-serif text-[30px] leading-snug text-foreground">
+            <h2
+              className="mt-3 font-serif leading-[1.05] tracking-[-0.02em] text-foreground"
+              style={{ fontSize: "30px" }}
+            >
               {g.title}
             </h2>
 
             {/* Milestone */}
             {milestone ? (
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-sm text-muted-foreground">
                 Milestone: {milestone}
               </p>
             ) : null}
 
             {/* Narrative */}
-            <div className="pt-6 space-y-4 max-w-[52ch]">
+            <div className="pt-1 space-y-3 max-w-[52ch]">
               <GoalCardNarrative
                 goalId={g.id}
                 status={g.status === "completed" ? "completed" : "archived"}
@@ -69,7 +79,7 @@ export function ProgressBookChapters({
             </div>
 
             {/* Moments */}
-            <div className="pt-6">
+            <div className="pt-1">
               <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70 mb-3">
                 Moments
               </p>
@@ -91,7 +101,7 @@ export function ProgressBookChapters({
                         <div className="text-xs text-muted-foreground">
                           {formatShortDate(r.week_start_date)}
                         </div>
-                        <div className="text-[15px] leading-[1.8]text-foreground/90">
+                        <div className="text-[15px] leading-[1.8] text-foreground/90">
                           {moment}
                         </div>
                       </div>
@@ -105,7 +115,7 @@ export function ProgressBookChapters({
                 Insight
               </p>
 
-              <p className="text-sm leading-relaxed text-muted-foreground max-w-[58ch]">
+              <p className="text-sm leading-relaxed text-muted-foreground max-w-[58ch] mb-10">
                 {insight || "Progress appears steady, though patterns are not clearly defined yet."}
               </p>
             </>

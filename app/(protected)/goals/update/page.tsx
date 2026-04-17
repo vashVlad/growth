@@ -23,12 +23,6 @@ export default async function GoalUpdatePlaceholderPage({
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-5 py-10">
-        <Button asChild variant="ghost" className="h-8 px-2 rounded-xl">
-          <Link href="/home" className="text-sm">
-            ← Back
-          </Link>
-        </Button>
-
         <div className="mt-8 space-y-2">
           <div className="text-[11px] uppercase tracking-widest text-muted-foreground/80">
             Update

@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { adjustGoal } from "@/app/actions/adjustments";
+import { CompleteGoalButton } from "../goals/CompleteGoalButton";
 
 type Goal = {
   id: string;
@@ -90,16 +91,17 @@ export default function GoalAdjustForm({ goal }: { goal: Goal }) {
               onChange={(e) => setNextAction(e.target.value)}
             />
           </div>
+          <div className="flex items-center justify-between">
+  <CompleteGoalButton goalId={goal.id} />
 
-          <div className="flex justify-end">
-            <button
-              disabled={!canContinue}
-              onClick={() => setStep(2)}
-              className="rounded-xl bg-foreground px-4 py-2 text-sm text-background disabled:opacity-40"
-            >
-              Continue
-            </button>
-          </div>
+  <button
+    disabled={!canContinue}
+    onClick={() => setStep(2)}
+    className="rounded-xl bg-foreground px-4 py-2 text-sm text-background disabled:opacity-40"
+  >
+    Continue
+  </button>
+</div>
         </>
       )}
 

@@ -35,7 +35,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const onProgress = pathname === "/progress" || pathname?.startsWith("/progress/");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* Calm sticky top bar */}
       <header className="sticky top-0 z-30 border-b border-border/50 bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-2xl items-center justify-center px-5">
@@ -49,7 +49,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </header>
       
       {/* Content */}
-      <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-10">{children}</div>
+      <div className="mx-auto w-full max-w-3xl px-5 py-10 sm:py-12 pb-40">{children}</div>
       <BottomNav />
     </div>
   );

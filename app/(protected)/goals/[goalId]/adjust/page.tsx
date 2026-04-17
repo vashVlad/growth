@@ -80,9 +80,6 @@ export default async function GoalAdjustPage({
             Adjust goal
             </div>
         <GoalAdjustForm goal={goal} />
-        <div className="pt-4">
-          <CompleteGoalButton goalId={goal.id} />
-        </div>
       </div>
     </main>
   );

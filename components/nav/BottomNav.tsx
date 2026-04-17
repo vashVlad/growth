@@ -14,7 +14,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 border-t border-border/40 bg-background/80 backdrop-blur">
+    <div className="sticky bottom-0 left-0 right-0 border-t border-border/40 bg-background/80 backdrop-blur">
       <div className="mx-auto flex max-w-2xl justify-around px-6 py-3">
         {items.map((item) => {
           const active = pathname.startsWith(item.href);

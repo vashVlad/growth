@@ -45,22 +45,23 @@ export default async function ProgressBookPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12 space-y-10">
-        <div className="max-w-[60ch]">
+      <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-16">
+        <div className="max-w-[60ch] space-y-6">
           <h1 className="font-serif text-[36px] leading-snug text-foreground">
             Progress Book
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             One calm read through what you completed—story, not stats.
           </p>
+
+          <p className="text-xs text-muted-foreground/70">
+            {goalRows.length} {goalRows.length === 1 ? "completed chapter" : "completed chapters"}
+          </p>
+
         </div>
 
-        <p className="text-xs text-muted-foreground/70">
-          {goalRows.length} {goalRows.length === 1 ? "completed chapter" : "completed chapters"}
-        </p>
-
         {goalRows.length === 0 ? (
-          <section aria-label="Chapters">
+          <section aria-label="Chapters" className="space-y-40">
             <p className="text-sm leading-relaxed text-muted-foreground">
               No completed or archived goals yet.
             </p>
