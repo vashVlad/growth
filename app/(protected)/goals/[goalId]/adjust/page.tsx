@@ -2,8 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import GoalAdjustForm from "@/components/adjust/GoalAdjustForm";
-import { BackButton } from "@/components/nav/BackButton";
-import { CompleteGoalButton } from "@/components/goals/CompleteGoalButton";
 
 export default async function GoalAdjustPage({
   params,

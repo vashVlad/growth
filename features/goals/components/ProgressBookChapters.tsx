@@ -44,7 +44,7 @@ export function ProgressBookChapters({
             key={g.id}
             className={clsx(
             "space-y-6",
-            index === 0 ? "pt-0" : "mt-40 pt-8"
+            index === 0 ? "pt-0" : "mt-25 pt-8"
           )}
           >
             {/* Chapter Label */}

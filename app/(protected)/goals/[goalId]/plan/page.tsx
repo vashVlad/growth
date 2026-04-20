@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import { BackButton } from "@/components/nav/BackButton";
-import { Button } from "@/components/ui/button";
 import { GoalPlanSetupCard } from "@/components/goals/GoalPlanSetupCard";
 import { GoalPlanCard } from "@/components/goals/GoalPlanCard";
 

@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { supabaseServer } from "@/lib/supabase/server";
 import WeeklyCheckInForm from "@/components/reflections/WeeklyCheckInForm";
 import { getWeekStartDateNY } from "@/lib/dates/weekStart";
-import { BackButton } from "@/components/nav/BackButton";
 
 type Alignment = "yes" | "partially" | "no";
 

@@ -39,9 +39,6 @@ export default async function NewGoalPage({
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-6 py-10">
-        <div className="mb-6">
-          <BackButton fallbackHref="/home" />
-        </div>
 
         <div className="mt-10 max-w-[60ch]">
           <div className="font-serif text-3xl leading-snug text-foreground">

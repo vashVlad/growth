@@ -1,6 +1,5 @@
 import { supabaseServer } from '@/lib/supabase/server';
 import ProfileAdjustForm from '@/components/adjust/ProfileAdjustForm';
-import { BackButton } from "@/components/nav/BackButton";
 
 export default async function IdentityAdjustPage() {
   const supabase = await supabaseServer();

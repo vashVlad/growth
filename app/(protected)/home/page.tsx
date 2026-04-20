@@ -234,7 +234,7 @@ const guidanceGoalId =
             Today
           </div>
 
-          <h1 className="font-serif text-[2rem] leading-[1.12] tracking-tight text-foreground sm:text-3xl lg:text-4xl max-w-[20ch]">
+          <h1 className="w-full font-serif text-[2rem] leading-[1.12] tracking-tight text-foreground sm:text-3xl lg:text-4xl">
             {identityLine}
           </h1>
 

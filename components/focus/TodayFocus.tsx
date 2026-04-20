@@ -42,7 +42,7 @@ export function TodayFocus({
       </div>
 
       {/* Pill container */}
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+      <div className="w-full rounded-2xl border border-border/60 bg-background/60 p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
         <div className="grid grid-cols-3 gap-1.5">
           {PILLARS.filter((p) => available.includes(p.value)).map((p) => {
             const isActive = p.value === active;
