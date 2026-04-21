@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 import NewGoalForm from "@/components/goals/NewGoalForm";
-import { BackButton } from "@/components/nav/BackButton";
 
 
 type Pillar = "career" | "personal" | "internal";

@@ -56,7 +56,7 @@ function SoftCardShell({
       id={id}
       className="rounded-2xl border border-border/60 bg-background/60 px-6 py-6 sm:px-7 sm:py-7 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
     >
-      <div className="max-w-[560px]">
+      <div className="space-y-2 w-full max-w-4xl mx-auto px-4">
         {children} 
       </div>
     </section>
@@ -100,7 +100,7 @@ function SoftGoalCard({
 return (
   <SoftCardShell id={`pillar-${goal.pillar}`}>
     {/* Top Row */}
-    <div className="flex items-start justify-between gap-4">
+    <div className="flex items-start justify-between">
       <div className="text-xs uppercase tracking-widest text-muted-foreground">
         {pillarLabel(goal.pillar)}
       </div>
@@ -121,11 +121,11 @@ return (
     {/* Details */}
     <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
       <div>
-        <span className="text-foreground/80">Milestone:</span>{" "}
+        <span className="text-foreground/80">Milestone: </span>{" "}
         {goal.milestone?.trim() ? goal.milestone : "—"}
       </div>
       <div>
-        <span className="text-foreground/80">Current step:</span>{" • "}
+        <span className="text-foreground/80">Current step: </span>{" • "}
         {goal.next_action?.trim() ? goal.next_action : "—"}
       </div>
     </div>

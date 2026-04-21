@@ -87,8 +87,8 @@ export default async function GoalHistorySection() {
                         const fadeOldest =
                           isFirst && chronological.length > 1 ? "opacity-80" : "";
                         const actionClass = isLast
-                          ? "text-sm leading-relaxed text-foreground"
-                          : "text-sm leading-relaxed text-foreground/85";
+                          ? "text-sm leading-relaxed text-foreground mb-6"
+                          : "text-sm leading-relaxed text-foreground/85 mb-6";
                         const moment = journeyMomentLine(
                           r.action_taken,
                           r.easier_harder

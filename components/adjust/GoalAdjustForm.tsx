@@ -160,7 +160,7 @@ export default function GoalAdjustForm({ goal }: { goal: Goal }) {
 
           {error && <div className="text-sm text-red-600">{error}</div>}
 
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between pr-1">
             <button
               disabled={!canSave || pending}
               onClick={handleSave}

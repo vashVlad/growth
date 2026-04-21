@@ -105,7 +105,7 @@ export function GoalCardNarrative({
 
   return (
     <>
-      <p className="text-sm leading-relaxed text-foreground/85">
+      <p className="text-sm leading-relaxed text-foreground/85 mt-2 mb-2">
         {summary}
       </p>
 
