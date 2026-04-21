@@ -160,7 +160,7 @@ export default async function HomePage({
     <main className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-6 pb-10">
         <div className="mt-10 mb-12 space-y-3">
-          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight max-w-[22ch]">
+          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight">
             {goal.title}
           </h1>
 

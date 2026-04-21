@@ -99,7 +99,7 @@ export default async function GoalPlanPage({
       <div className="mx-auto w-full max-w-2xl px-4 py-14 space-y-12">
 
         <section className="space-y-5 max-w-prose">
-          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight max-w-[22ch]">
+          <h1 className="text-3xl font-serif font-medium leading-[1.2] tracking-tight">
             {goal.title}
           </h1>
 
