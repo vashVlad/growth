@@ -45,9 +45,12 @@ export default async function IdentityPage() {
             </p>
           </div>
 
-          <button className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            href="/identity/adjust"
+            className="text-xs text-muted-foreground hover:text-foreground transition"
+          >
             Edit
-          </button>
+          </Link>
         </div>
 
         {/* Content */}
