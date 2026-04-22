@@ -54,7 +54,7 @@ function SoftCardShell({
   return (
     <section
       id={id}
-      className="rounded-2xl border border-border/60 bg-background/60 px-6 py-6 sm:px-7 sm:py-7 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+      className="rounded-2xl border border-border/60 bg-background/60 px-2 py-6 sm:px-7 sm:py-7 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
     >
       <div className="space-y-2 w-full max-w-4xl mx-auto px-4">
         {children} 
